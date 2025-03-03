@@ -1,1 +1,31 @@
-<!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+<!-- Mise en place du layout -->
+<!-- Accueil comme titre de page -->
+<!-- La balise main définit par la classe CSS 'center-main' comme paramètre contenuPage -->
+
+<html xmlns:th="http://www.thymeleaf.org"
+	data-th-replace="~{layouts/layout :: layout-encheres( 
+					titrePage=~{:: title},
+					contenuPage=~{:: .center-main},
+					ressourcesSupp=~{})}">
+
+<head>
+
+    <!-- Utilisation correcte de th:text pour insérer dynamiquement le titre de la page -->
+    <title >Bienvenue ENI-Enchères</title>
+
+</head>
+
+<body>
+
+    <main class="center-main">
+       
+        <section class="center-section">
+            <h1>Enchères ENI</h1>
+        </section>
+        
+    </main>
+
+</body>
+
+</html>

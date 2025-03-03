@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org"
+		data-th-replace="~{layouts/layout :: layout-encheres( 
+						titrePage=~{:: title},
+						contenuPage=~{:: main},
+						ressourcesSupp=~{:: #ressources-css})}"> 
+
+<head>
+
+	<!-- Créer comme titre de page -->
+	<title>Créer</title>
+	
+	<!-- Ajout de CSS utilisateur-form.css -->
+	<th:block id="ressources-css">
+		<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}" />
+	</th:block>
+	
+</head>
+
+<body>
+
+	<main>
+	
+		<!-- Utilisation du fragment formulaire -->
+		<div data-th-replace="~{fragments/fragment-utilisateur-detail :: 
+		frag-utilisateurr-form('/utilisateurs/creer', 'Inscription')}">
+		</div>
+	
+	</main>
+	
+</body>
+
+</html>
