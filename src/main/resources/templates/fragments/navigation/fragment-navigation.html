@@ -1,8 +1,6 @@
 
 <nav xmlns:th="http://www.thymeleaf.org" data-th-fragment="frag-nav">
-	
 	<ul>
-		
 		<li><a href="/Accueil" data-th-text="#{index.title}"></a></li>
 		
 		<!-- S'inscrire-->
@@ -17,7 +15,5 @@
          <li data-th-if="${#authorization.expression('isAuthenticated()')}">
               <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a>
          </li>
-	
 	</ul>
-	
 </nav>
