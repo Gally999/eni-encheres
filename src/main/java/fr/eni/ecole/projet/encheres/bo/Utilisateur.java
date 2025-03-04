@@ -1,10 +1,9 @@
-
 package fr.eni.ecole.projet.encheres.bo;
 
 import java.util.Objects;
 
 public class Utilisateur {
-	
+
 	private String pseudo;
 	private String nom;
 	private String prenom;
@@ -14,7 +13,7 @@ public class Utilisateur {
 	private int credit;
 	private boolean admin;
 	private Adresse adresse;
-	
+
 	public Utilisateur() {
 	}
 
@@ -144,6 +143,6 @@ public class Utilisateur {
 		Utilisateur other = (Utilisateur) obj;
 		return Objects.equals(email, other.email) && Objects.equals(nom, other.nom)
 				&& Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo);
-	}	
-		
+	}
+
 }
