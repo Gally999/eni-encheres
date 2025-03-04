@@ -1,18 +1,46 @@
 
 package fr.eni.ecole.projet.encheres.bo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Utilisateur {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
+public class Utilisateur implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	@NotBlank
+	@Pattern(regexp="^[a-zA-Z0-9_]+$")
 	private String pseudo;
+	
+	@NotBlank
+	@Size(min = 4, max=250)
 	private String nom;
+	
+	@NotBlank
+	@Size(min = 4, max=250)
 	private String prenom;
+	
+	@NotBlank
+	@Pattern(regexp="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
 	private String email;
+	
+	@Pattern(regexp="^(\\+\\d{1,3}[- ]?)?\\(?\\d{1,4}\\)?[- ]?\\d{1,4}[- ]?\\d{1,4}[- ]?\\d{1,4}$")
 	private String telephone;
+	
+	@NotBlank
+	@Size(min = 8, max=20)
+	@Pattern(regexp="^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,20}$")
 	private String motDePasse;
+	
 	private int credit;
+	
 	private boolean admin;
+	
+	@NotBlank
 	private Adresse adresse;
 	
 	

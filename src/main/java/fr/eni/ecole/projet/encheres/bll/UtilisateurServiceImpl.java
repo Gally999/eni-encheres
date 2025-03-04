@@ -1,0 +1,332 @@
+
+
+package fr.eni.ecole.projet.encheres.bll;
+
+import java.util.List;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import fr.eni.ecole.projet.encheres.bo.Adresse;
+import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.dal.UtilisateurDAO;
+import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
+import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
+
+@Service
+public class UtilisateurServiceImpl implements UtilisateurService{
+
+	
+	private UtilisateurDAO utilisateurDAO;
+	
+	
+	
+	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO) {
+		this.utilisateurDAO = utilisateurDAO;
+		
+	}
+
+	@Override
+	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
+			int credit, boolean admin, Adresse adresse) {
+		Utilisateur utilisateur = new Utilisateur( pseudo,  nom,  prenom,  email,  telephone,  motDePasse,
+				 credit,  admin,  adresse);
+		utilisateurDAO.create(utilisateur);
+	}
+
+	@Override
+	public List<Utilisateur> getUtilisateurs() {
+		return utilisateurDAO.findAll();
+	}
+
+	@Override
+	public Utilisateur findByEmail(String emailUtilisateur) {
+		
+		// Il nous faut l'utilisateur et les ventes-achats associés ?
+		Utilisateur u = utilisateurDAO.read(emailUtilisateur);
+		
+		
+		return u;
+	}
+	
+
+	@Override
+	public void update(Utilisateur utilisateur) {
+		// Validation des données de la couche présentation
+		BusinessException be = new BusinessException();
+		boolean isValid = true;
+		isValid &= validerUtilisateur(utilisateur, be);
+		isValid &= validerNom(utilisateur.getNom(), be);
+		isValid &= validerPrenom(utilisateur.getPrenom(), be);
+		isValid &= validerEmail(utilisateur.getEmail(), be);
+		isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
+		isValid &= validerPseudo(utilisateur.getPseudo(), be);
+		isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
+		isValid &= validerTelephone(utilisateur.getTelephone(), be);
+		isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
+		isValid &= validerAdresse(utilisateur.getAdresse(), be);
+		
+		
+		if (isValid) {
+			try {
+				utilisateurDAO.update(utilisateur);
+			} catch (DataAccessException e) {// Exception de la couche DAL
+				// Rollback automatique
+				be.add(BusinessCode.BLL_UTILISATEURS_UPDATE_ERREUR);
+				throw be;
+			}
+		} else {
+			throw be;
+		}
+	}
+
+	
+
+	@Override
+	//gestion de la transaction
+	@Transactional
+	public void add(Utilisateur utilisateur) {
+		
+			// Validation des données de la couche présentation
+			BusinessException be = new BusinessException();
+			boolean isValid = true;
+			isValid &= validerUtilisateur(utilisateur, be);
+			isValid &= validerNom(utilisateur.getNom(), be);
+			isValid &= validerPrenom(utilisateur.getPrenom(), be);
+			isValid &= validerEmail(utilisateur.getEmail(), be);
+			isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
+			isValid &= validerPseudo(utilisateur.getPseudo(), be);
+			isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
+			isValid &= validerTelephone(utilisateur.getTelephone(), be);
+			isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
+			isValid &= validerAdresse(utilisateur.getAdresse(), be);
+			
+			
+			
+			if (isValid) {
+				utilisateurDAO.create(utilisateur);
+				//Attention, il faut aussi compléter l'appel de la méthode pour gérer l'insertion en base des ventes-achats
+				
+				
+			} else {
+				throw be;
+			}
+		
+			//unicité de l'email
+			Utilisateur utilisateurAvecEmailIdentique = utilisateurDAO.read(utilisateur.getEmail());
+			if(utilisateurAvecEmailIdentique == null) {
+				utilisateurDAO.create(utilisateur);
+			}
+			
+			//unicité du pseudo
+			Utilisateur utilisateurAvecPseudoIdentique = utilisateurDAO.read(utilisateur.getPseudo());
+			if(utilisateurAvecPseudoIdentique == null) {
+				utilisateurDAO.create(utilisateur);
+			}
+	}
+		
+	/**
+	 * Méthodes de validation des BO
+	 */
+	private boolean validerUtilisateur(Utilisateur u, BusinessException be) {
+		if (u == null) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_NULL);
+		return false;
+		}
+		return true;
+	}
+		
+	private boolean validerNom(String nom, BusinessException be) {
+		if (nom == null || nom.isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_NOM_BLANK);
+		return false;
+		}
+		if (nom.length() < 4 || nom.length() > 250) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_NOM_LENGTH);
+		return false;
+		}
+		return true;
+	}
+		
+	private boolean validerPrenom(String prenom, BusinessException be) {
+		if (prenom == null || prenom.isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PRENOM_BLANK);
+		return false;
+		}
+		if (prenom.length() < 4 || prenom.length() > 250) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PRENOM_LENGTH);
+		return false;
+		}
+		return true;
+	}
+	
+	
+	private boolean validerTelephone(String telephone, BusinessException be) {
+		// Regex to check valid telephone
+		String regex ="^(\\+\\d{1,3}[- ]?)?\\(?\\d{1,4}\\)?[- ]?\\d{1,4}[- ]?\\d{1,4}[- ]?\\d{1,4}$";
+
+		if (!telephone.matches(regex)) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_TELEPHONE_PATTERN);
+			return false;
+		}
+		return true;
+	}
+	
+	
+	private boolean validerMotDePasse(String motDePasse, BusinessException be) {
+		if (motDePasse == null || motDePasse.isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PASSWORD_BLANK);
+		return false;
+		}
+		// Regex to check valid Password
+		String regex ="^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,20}$";
+
+		if (!motDePasse.matches(regex)) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PASSWORD_PATTERN);
+			return false;
+		}
+		return true;
+	}
+	
+	
+	private boolean validerAdresse(Adresse adresse, BusinessException be) {
+		
+		if (adresse.getRue() == null || adresse.getRue().isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_RUE_BLANK);
+		return false;
+		}
+		// Regex to check valid rue
+		String regex1 ="^\\d{1,5},\\s?[a-zA-ZÀ-ÿ0-9\\s\\-]+$";
+
+		if (!adresse.getRue().matches(regex1)) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_RUE_PATTERN);
+			return false;
+		}
+		if (adresse.getCodePostal() == null || adresse.getCodePostal().isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_CODE_POSTAL_BLANK);
+		return false;
+		}
+		// Regex to check valid code postal
+		String regex2 = "^\\d{5}$";
+		if (!adresse.getCodePostal().matches(regex2)) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_CODE_POSTAL_PATTERN);
+		return false;
+		}
+		if (adresse.getVille() == null || adresse.getVille().isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_VILLE_BLANK);
+		return false;
+		}
+		if (adresse.getVille().length() < 4 || adresse.getVille().length() > 250) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_VILLE_LENGTH);
+		return false;
+		}
+		return true;
+	}
+	
+	
+	
+	private boolean validerEmail(String email, BusinessException be) {
+		if (email == null || email.isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_EMAIL_BLANK);
+		return false;
+		}
+		// Regex to check valid email
+		String regex ="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+		if (!email.matches(regex)) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_EMAIL_PATTERN);
+		return false;
+		}
+		return true;
+	}
+	
+	private boolean validerPseudo(String pseudo, BusinessException be) {
+		if (pseudo == null || pseudo.isBlank()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_BLANK);
+		return false;
+		}
+		// Regex to check valid pseudo
+		String regex = "^[a-zA-Z0-9_]+$";
+		if (!pseudo.matches(regex)) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_PATTERN);
+		return false;
+		}
+		return true;
+	}
+	
+	
+	private boolean validerUniqueEmail(String email, BusinessException be) {
+		int count = utilisateurDAO.uniqueEmail(email);
+		if (count == 1) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL);
+		return false;
+		}
+		return true;
+	}
+
+	
+	private boolean validerEmailExiste(String emailUtilisateur, BusinessException be) {
+		// L'email doit exister - s'il n'existe pas il y aura levée de l'exception
+		// DataAccessException
+		// Il faut gérer les 2 cas
+		try {
+			Utilisateur u = utilisateurDAO.read(emailUtilisateur);
+			if (u == null) {
+				// Il n'y a pas d'utilisateur correspondant en base
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+				return false;
+			}
+		} catch (DataAccessException e) {
+				// Impossible de trouver un utilisateur
+				// Il n'y a pas d'utilisateur correspondant en base
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int uniqueEmail(String email) {
+		return 0;
+	}
+	
+
+	private boolean validerUniquePseudo(String pseudo, BusinessException be) {
+		int count = utilisateurDAO.uniquePseudo(pseudo);
+		if (count == 1) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_PSEUDO);
+		return false;
+		}
+		return true;
+	}
+
+	
+	private boolean validerPseudoExiste(String pseudoUtilisateur, BusinessException be) {
+		
+		try {
+			Utilisateur u = utilisateurDAO.read(pseudoUtilisateur);
+			if (u == null) {
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+				return false;
+			}
+		} catch (DataAccessException e) {
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+				return false;
+		}
+		return true;
+	}
+
+	
+	@Override
+	public int uniquePseudo(String pseudo) {
+		return 0;
+	}
+	
+	
+
+	
+
+		
+		
+}
