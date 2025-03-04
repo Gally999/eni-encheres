@@ -96,12 +96,9 @@ public class Utilisateur implements Serializable{
 		return motDePasse;
 	}
 
-<<<<<<< Updated upstream
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
-=======
->>>>>>> Stashed changes
 
 	public int getCredit() {
 		return credit;

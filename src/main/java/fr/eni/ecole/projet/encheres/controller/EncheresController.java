@@ -1,6 +1,5 @@
 package fr.eni.ecole.projet.encheres.controller;
 
-<<<<<<< Updated upstream
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -34,8 +33,4 @@ public class EncheresController {
 		return "view-encheres";
 	}
 	
-=======
-public class EncheresController {
-
->>>>>>> Stashed changes
 }

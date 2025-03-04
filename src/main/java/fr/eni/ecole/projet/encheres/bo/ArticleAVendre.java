@@ -121,10 +121,6 @@ public class ArticleAVendre {
 		this.categorie = categorie;
 	}
 
-<<<<<<< Updated upstream
-=======
-	
->>>>>>> Stashed changes
 	public Utilisateur getVendeur() {
 		return vendeur;
 	}
@@ -154,13 +150,7 @@ public class ArticleAVendre {
 
 	@Override
 	public String toString() {
-<<<<<<< Updated upstream
-		return "ArticleAVendre [id=" + id + ", nom=" + nom + ", description=" + description + ", dateDebutEncheres="
-				+ dateDebutEncheres + ", dateFinEncheres=" + dateFinEncheres + ", statut=" + statut + ", prixInitial="
-				+ prixInitial + ", prixVente=" + prixVente + ", adresseRetrait=" + adresseRetrait + ", categorie="
-				+ categorie + ", vendeur=" + vendeur + "]";
-	}
-=======
+
 		StringBuilder builder = new StringBuilder();
 		builder.append("ArticleAVendre [id=");
 		builder.append(id);
@@ -188,6 +178,4 @@ public class ArticleAVendre {
 		return builder.toString();
 	}
 
->>>>>>> Stashed changes
-	
 }
