@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +45,17 @@ public class EncheresSecurityConfig {
 			form.loginPage("/login").permitAll();
 			form.defaultSuccessUrl("/");
 		});
+		
+		// Déconnexion
+		http.logout(logout -> 
+			logout
+				.invalidateHttpSession(true)
+				.clearAuthentication(true)
+				.deleteCookies("JSESSIONID")
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/")
+				.permitAll()
+		);
 
 		return http.build();
 	}
