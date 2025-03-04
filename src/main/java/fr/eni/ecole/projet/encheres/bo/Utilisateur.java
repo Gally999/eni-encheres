@@ -1,3 +1,4 @@
+
 package fr.eni.ecole.projet.encheres.bo;
 
 import java.util.Objects;
