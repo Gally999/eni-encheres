@@ -3,10 +3,6 @@ package fr.eni.ecole.projet.encheres.exceptions;
 public class BusinessCode {
 	//Clefs de validation des BO
 	public static final String VALIDATION_UTILISATEUR_NULL = "validation.utilisateur.null";
-	public static final String VALIDATION_UTILISATEUR_NOM_BLANK = "validation.utilisateur.nom.blank";
-	public static final String VALIDATION_UTILISATEUR_NOM_LENGTH = "validation.utilisateur.nom.length";
-	public static final String VALIDATION_UTILISATEUR_PRENOM_BLANK = "validation.utilisateur.prenom.blank";
-	public static final String VALIDATION_UTILISATEUR_PRENOM_LENGTH = "validation.utilisateur.prenom.length";
 	public static final String VALIDATION_UTILISATEUR_EMAIL_BLANK = "validation.utilisateur.email.blank";
 	public static final String VALIDATION_UTILISATEUR_EMAIL_PATTERN = "validation.utilisateur.email.pattern";
 	public static final String VALIDATION_UTILISATEUR_UNIQUE_EMAIL = "validation.utilisateur.unique.email";
@@ -24,4 +20,5 @@ public class BusinessCode {
 	public static final String VALIDATION_UTILISATEUR_RUE_PATTERN = "validation.utilisateur.rue.pattern";
 	public static final String VALIDATION_UTILISATEUR_CODE_POSTAL_PATTERN ="validation.utilisateur.codePostal.pattern";
 	public static final String VALIDATION_UTILISATEUR_TELEPHONE_PATTERN = "validation.utilisateur.telephone.pattern";
+	public static final String VALIDATION_UTILISATEUR_ADRESSE_NULL = "validation.utilisateur.adresse.null";
 }

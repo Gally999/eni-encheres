@@ -5,7 +5,9 @@
 		data-th-action="@{${action}}"
 		data-th-object="${utilisateur}" method="post">
 		
-		<h1 data-th-text="statut" ></h1>
+		<h1 data-th-text="${titreForm}" ></h1>
+		<div data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>
+
 		
 		<ul class="flex-outer">
 		<li>
@@ -44,16 +46,16 @@
         	<!-- Trois champs de texte à remplir -->
        		 <input type="text" id="imputRue"  required data-th-field="*{rue}"/>
        		 <div	data-th-replace="~{fragments/errors/fragment-error :: frag-error('rue')}"></div>
-       		 <input type="text" id="imputCpo"   required data-th-field="*{cpo}"/>
-       		 <div	data-th-replace="~{fragments/errors/fragment-error :: frag-error('cpo')}"></div>
+       		 <input type="text" id="imputCodePostal"   required data-th-field="*{codePostal}"/>
+       		 <div	data-th-replace="~{fragments/errors/fragment-error :: frag-error('codePostal')}"></div>
        		 <input type="text" id="imputVille"  required data-th-field="*{ville}"/>
        		 <div	data-th-replace="~{fragments/errors/fragment-error :: frag-error('ville')}"></div>
        	</li>		
 		
 		<li>
-			<label for="mdp">Mot de passe (*): </label> 
-			<input type="password" id="mdp" required data-th-field="*{mdp}"/>
-			<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('mdp')}"></div>>
+			<label for="motDePasse">Mot de passe (*): </label> 
+			<input type="password" id="mdp" required data-th-field="*{motDePasse}"/>
+			<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('motDePasse')}"></div>>
 		
 			<label for="mdpVerif">Confirmation Mot de passe (*): </label> 
 			<input	type="password" id="mdpVerif" required data-th-field="*{mdpVerif}"/>

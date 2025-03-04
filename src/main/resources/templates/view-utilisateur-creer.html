@@ -8,11 +8,12 @@
 <head>
 
 	<!-- Créer comme titre de page -->
-	<title>Créer</title>
+	  <title data-th-text="#{frag-utilisateur-inscription.title}"></title>
 	
 	<!-- Ajout de CSS utilisateur-form.css -->
 	<th:block id="ressources-css">
 		<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}" />
+		<link rel="stylesheet" data-th-href="@{/css/error.css}" />
 	</th:block>
 	
 </head>
@@ -23,7 +24,7 @@
 	
 		<!-- Utilisation du fragment formulaire -->
 		<div data-th-replace="~{fragments/fragment-utilisateur-detail :: 
-		frag-utilisateurr-form('/utilisateurs/creer', 'Inscription')}">
+		frag-utilisateurr-form('/utilisateurs/inscription', 'Inscription')}">
 		</div>
 	
 	</main>

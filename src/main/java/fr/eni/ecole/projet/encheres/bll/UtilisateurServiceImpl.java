@@ -57,14 +57,10 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		BusinessException be = new BusinessException();
 		boolean isValid = true;
 		isValid &= validerUtilisateur(utilisateur, be);
-		isValid &= validerNom(utilisateur.getNom(), be);
-		isValid &= validerPrenom(utilisateur.getPrenom(), be);
 		isValid &= validerEmail(utilisateur.getEmail(), be);
 		isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
-		isValid &= validerPseudo(utilisateur.getPseudo(), be);
 		isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
 		isValid &= validerTelephone(utilisateur.getTelephone(), be);
-		isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
 		isValid &= validerAdresse(utilisateur.getAdresse(), be);
 		
 		
@@ -92,11 +88,8 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			BusinessException be = new BusinessException();
 			boolean isValid = true;
 			isValid &= validerUtilisateur(utilisateur, be);
-			isValid &= validerNom(utilisateur.getNom(), be);
-			isValid &= validerPrenom(utilisateur.getPrenom(), be);
 			isValid &= validerEmail(utilisateur.getEmail(), be);
 			isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
-			isValid &= validerPseudo(utilisateur.getPseudo(), be);
 			isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
 			isValid &= validerTelephone(utilisateur.getTelephone(), be);
 			isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
@@ -137,38 +130,17 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		return true;
 	}
 		
-	private boolean validerNom(String nom, BusinessException be) {
-		if (nom == null || nom.isBlank()) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_NOM_BLANK);
-		return false;
-		}
-		if (nom.length() < 4 || nom.length() > 250) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_NOM_LENGTH);
-		return false;
-		}
-		return true;
-	}
-		
-	private boolean validerPrenom(String prenom, BusinessException be) {
-		if (prenom == null || prenom.isBlank()) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_PRENOM_BLANK);
-		return false;
-		}
-		if (prenom.length() < 4 || prenom.length() > 250) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_PRENOM_LENGTH);
-		return false;
-		}
-		return true;
-	}
-	
-	
 	private boolean validerTelephone(String telephone, BusinessException be) {
-		// Regex to check valid telephone
-		String regex ="^(\\+\\d{1,3}[- ]?)?\\(?\\d{1,4}\\)?[- ]?\\d{1,4}[- ]?\\d{1,4}[- ]?\\d{1,4}$";
+		
+		if (telephone != null) {
+			
+			// Regex to check valid telephone
+			String regex ="^(\\+\\d{1,3}[- ]?)?\\(?\\d{1,4}\\)?[- ]?\\d{1,4}[- ]?\\d{1,4}[- ]?\\d{1,4}$";
 
-		if (!telephone.matches(regex)) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_TELEPHONE_PATTERN);
-			return false;
+			if (!telephone.matches(regex)) {
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_TELEPHONE_PATTERN);
+				return false;
+			}
 		}
 		return true;
 	}
@@ -192,12 +164,17 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	
 	private boolean validerAdresse(Adresse adresse, BusinessException be) {
 		
+		if (adresse == null ) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_ADRESSE_NULL);
+			return false;
+		}
+				
 		if (adresse.getRue() == null || adresse.getRue().isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_RUE_BLANK);
-		return false;
+			return false;
 		}
 		// Regex to check valid rue
-		String regex1 ="^\\d{1,5},\\s?[a-zA-ZÀ-ÿ0-9\\s\\-]+$";
+		String regex1 ="^\\d+\\s[A-ZÀ-ÿ\\s\\-]+$";
 
 		if (!adresse.getRue().matches(regex1)) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_RUE_PATTERN);
@@ -205,21 +182,21 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 		if (adresse.getCodePostal() == null || adresse.getCodePostal().isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_CODE_POSTAL_BLANK);
-		return false;
+			return false;
 		}
 		// Regex to check valid code postal
 		String regex2 = "^\\d{5}$";
 		if (!adresse.getCodePostal().matches(regex2)) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_CODE_POSTAL_PATTERN);
-		return false;
+			return false;
 		}
 		if (adresse.getVille() == null || adresse.getVille().isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_VILLE_BLANK);
-		return false;
+			return false;
 		}
 		if (adresse.getVille().length() < 4 || adresse.getVille().length() > 250) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_VILLE_LENGTH);
-		return false;
+			return false;
 		}
 		return true;
 	}
@@ -229,38 +206,24 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	private boolean validerEmail(String email, BusinessException be) {
 		if (email == null || email.isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_EMAIL_BLANK);
-		return false;
+			return false;
 		}
 		// Regex to check valid email
 		String regex ="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
 		if (!email.matches(regex)) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_EMAIL_PATTERN);
-		return false;
+			return false;
 		}
 		return true;
 	}
 	
-	private boolean validerPseudo(String pseudo, BusinessException be) {
-		if (pseudo == null || pseudo.isBlank()) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_BLANK);
-		return false;
-		}
-		// Regex to check valid pseudo
-		String regex = "^[a-zA-Z0-9_]+$";
-		if (!pseudo.matches(regex)) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_PATTERN);
-		return false;
-		}
-		return true;
-	}
-	
-	
+		
 	private boolean validerUniqueEmail(String email, BusinessException be) {
 		int count = utilisateurDAO.uniqueEmail(email);
 		if (count == 1) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL);
-		return false;
+			return false;
 		}
 		return true;
 	}
@@ -296,7 +259,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		int count = utilisateurDAO.uniquePseudo(pseudo);
 		if (count == 1) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_PSEUDO);
-		return false;
+			return false;
 		}
 		return true;
 	}

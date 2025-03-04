@@ -15,12 +15,13 @@ public class ArticleAVendre {
 	private int prixVente;
 	private Adresse adresseRetrait;
 	private Categorie categorie;
+	private Utilisateur vendeur;
 	
 	public ArticleAVendre() {
 	}
 
 	public ArticleAVendre(String nom, String description, LocalDate dateDebutEncheres, LocalDate dateFinEncheres,
-			int statut, int prixInitial, int prixVente, Adresse adresseRetrait, Categorie categorie) {
+			int statut, int prixInitial, int prixVente, Adresse adresseRetrait, Categorie categorie, Utilisateur vendeur) {
 		this.nom = nom;
 		this.description = description;
 		this.dateDebutEncheres = dateDebutEncheres;
@@ -30,12 +31,13 @@ public class ArticleAVendre {
 		this.prixVente = prixVente;
 		this.adresseRetrait = adresseRetrait;
 		this.categorie = categorie;
+		this.vendeur = vendeur;
 	}
 
 	public ArticleAVendre(long id, String nom, String description, LocalDate dateDebutEncheres,
 			LocalDate dateFinEncheres, int statut, int prixInitial, int prixVente, Adresse adresseRetrait,
-			Categorie categorie) {
-		this(nom, description, dateDebutEncheres, dateFinEncheres, statut, prixInitial, prixVente, adresseRetrait, categorie)
+			Categorie categorie, Utilisateur vendeur) {
+		this(nom, description, dateDebutEncheres, dateFinEncheres, statut, prixInitial, prixVente, adresseRetrait, categorie, vendeur);
 		this.id = id;
 	}
 
@@ -119,9 +121,21 @@ public class ArticleAVendre {
 		this.categorie = categorie;
 	}
 
+<<<<<<< Updated upstream
+=======
+	
+>>>>>>> Stashed changes
+	public Utilisateur getVendeur() {
+		return vendeur;
+	}
+
+	public void setVendeur(Utilisateur vendeur) {
+		this.vendeur = vendeur;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(categorie, dateDebutEncheres, description, id, nom, prixInitial);
+		return Objects.hash(categorie, dateDebutEncheres, description, id, nom, prixInitial, vendeur);
 	}
 
 	@Override
@@ -135,14 +149,45 @@ public class ArticleAVendre {
 		ArticleAVendre other = (ArticleAVendre) obj;
 		return Objects.equals(categorie, other.categorie) && Objects.equals(dateDebutEncheres, other.dateDebutEncheres)
 				&& Objects.equals(description, other.description) && id == other.id && Objects.equals(nom, other.nom)
-				&& prixInitial == other.prixInitial;
+				&& prixInitial == other.prixInitial && Objects.equals(vendeur, other.vendeur);
 	}
 
 	@Override
 	public String toString() {
+<<<<<<< Updated upstream
 		return "ArticleAVendre [id=" + id + ", nom=" + nom + ", description=" + description + ", dateDebutEncheres="
 				+ dateDebutEncheres + ", dateFinEncheres=" + dateFinEncheres + ", statut=" + statut + ", prixInitial="
 				+ prixInitial + ", prixVente=" + prixVente + ", adresseRetrait=" + adresseRetrait + ", categorie="
-				+ categorie + "]";
+				+ categorie + ", vendeur=" + vendeur + "]";
 	}
+=======
+		StringBuilder builder = new StringBuilder();
+		builder.append("ArticleAVendre [id=");
+		builder.append(id);
+		builder.append(", nom=");
+		builder.append(nom);
+		builder.append(", description=");
+		builder.append(description);
+		builder.append(", dateDebutEncheres=");
+		builder.append(dateDebutEncheres);
+		builder.append(", dateFinEncheres=");
+		builder.append(dateFinEncheres);
+		builder.append(", statut=");
+		builder.append(statut);
+		builder.append(", prixInitial=");
+		builder.append(prixInitial);
+		builder.append(", prixVente=");
+		builder.append(prixVente);
+		builder.append(", adresseRetrait=");
+		builder.append(adresseRetrait);
+		builder.append(", categorie=");
+		builder.append(categorie);
+		builder.append(", vendeur=");
+		builder.append(vendeur);
+		builder.append("]");
+		return builder.toString();
+	}
+
+>>>>>>> Stashed changes
+	
 }

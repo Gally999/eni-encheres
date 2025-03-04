@@ -5,11 +5,14 @@
 		
 		<li><a href="/Accueil" data-th-text="#{index.title}"></a></li>
 		
+		<!-- S'inscrire-->
+        <li><a href="/creer" data-th-text="#{index.new}"></a></li>
+				
 		 <!-- Gestion de la connexion via Spring Security Dialect-->
          <li data-th-if="${!#authorization.expression('isAuthenticated()')}">
              <a href="/login" data-th-text="#{frag-entete.a.connexion}"></a>
          </li>
-
+                  
          <!--Gestion de la déconnexion via Spring Security Dialect-->
          <li data-th-if="${#authorization.expression('isAuthenticated()')}">
               <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a>

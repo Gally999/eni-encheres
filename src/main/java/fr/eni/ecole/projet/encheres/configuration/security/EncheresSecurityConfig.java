@@ -31,9 +31,9 @@ public class EncheresSecurityConfig {
 					// permettre à tout le monde d'accéder à l'URL racine
 					.requestMatchers("/*").permitAll()
 
-					// Permettre à tous les utilisateurs d'afficher correctement les images et la
-					// css
-					.requestMatchers("/css/*").permitAll().requestMatchers("/images/*").permitAll()
+					// Permettre à tous les utilisateurs d'afficher correctement les images et la css
+					.requestMatchers("/css/*").permitAll()
+					.requestMatchers("/images/*").permitAll()
 
 					// Toutes autres url et méthodes HTTP ne sont pas permises
 					.anyRequest().denyAll();
