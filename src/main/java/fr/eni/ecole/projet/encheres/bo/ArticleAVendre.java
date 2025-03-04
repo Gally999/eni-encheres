@@ -1,5 +1,6 @@
 package fr.eni.ecole.projet.encheres.bo;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -15,12 +16,13 @@ public class ArticleAVendre {
 	private int prixVente;
 	private Adresse adresseRetrait;
 	private Categorie categorie;
+	private Utilisateur vendeur;
 	
 	public ArticleAVendre() {
 	}
 
 	public ArticleAVendre(String nom, String description, LocalDate dateDebutEncheres, LocalDate dateFinEncheres,
-			int statut, int prixInitial, int prixVente, Adresse adresseRetrait, Categorie categorie) {
+			int statut, int prixInitial, int prixVente, Adresse adresseRetrait, Categorie categorie, Utilisateur vendeur) {
 		this.nom = nom;
 		this.description = description;
 		this.dateDebutEncheres = dateDebutEncheres;
@@ -30,12 +32,13 @@ public class ArticleAVendre {
 		this.prixVente = prixVente;
 		this.adresseRetrait = adresseRetrait;
 		this.categorie = categorie;
+		this.vendeur = vendeur;
 	}
 
 	public ArticleAVendre(long id, String nom, String description, LocalDate dateDebutEncheres,
 			LocalDate dateFinEncheres, int statut, int prixInitial, int prixVente, Adresse adresseRetrait,
-			Categorie categorie) {
-		this(nom, description, dateDebutEncheres, dateFinEncheres, statut, prixInitial, prixVente, adresseRetrait, categorie)
+			Categorie categorie, Utilisateur vendeur) {
+		this(nom, description, dateDebutEncheres, dateFinEncheres, statut, prixInitial, prixVente, adresseRetrait, categorie, vendeur)
 		this.id = id;
 	}
 
@@ -119,9 +122,17 @@ public class ArticleAVendre {
 		this.categorie = categorie;
 	}
 
+	public Utilisateur getVendeur() {
+		return vendeur;
+	}
+
+	public void setVendeur(Utilisateur vendeur) {
+		this.vendeur = vendeur;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(categorie, dateDebutEncheres, description, id, nom, prixInitial);
+		return Objects.hash(categorie, dateDebutEncheres, description, id, nom, prixInitial, vendeur);
 	}
 
 	@Override
@@ -135,7 +146,7 @@ public class ArticleAVendre {
 		ArticleAVendre other = (ArticleAVendre) obj;
 		return Objects.equals(categorie, other.categorie) && Objects.equals(dateDebutEncheres, other.dateDebutEncheres)
 				&& Objects.equals(description, other.description) && id == other.id && Objects.equals(nom, other.nom)
-				&& prixInitial == other.prixInitial;
+				&& prixInitial == other.prixInitial && Objects.equals(vendeur, other.vendeur);
 	}
 
 	@Override
@@ -143,6 +154,7 @@ public class ArticleAVendre {
 		return "ArticleAVendre [id=" + id + ", nom=" + nom + ", description=" + description + ", dateDebutEncheres="
 				+ dateDebutEncheres + ", dateFinEncheres=" + dateFinEncheres + ", statut=" + statut + ", prixInitial="
 				+ prixInitial + ", prixVente=" + prixVente + ", adresseRetrait=" + adresseRetrait + ", categorie="
-				+ categorie + "]";
+				+ categorie + ", vendeur=" + vendeur + "]";
 	}
+	
 }
