@@ -1,5 +1,6 @@
 package fr.eni.ecole.projet.encheres.bll;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,8 +26,11 @@ public class EncheresServiceImpl implements EncheresService {
 
 	@Override
 	public List<ArticleAVendre> consulterEncheresActives() {
-		
-		return articleDAO.findAllActive();
+		List<ArticleAVendre> allActive = articleDAO.findAllActive();
+		if (allActive == null) {
+			allActive = new ArrayList<>();
+		}
+		return allActive;
 	}
 
 }
