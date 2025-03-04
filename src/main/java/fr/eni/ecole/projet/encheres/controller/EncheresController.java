@@ -30,7 +30,6 @@ public class EncheresController {
 		List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives();
 		// Ajout des enchères actives dans le model
 		model.addAttribute("encheresActives", encheresActives);
-		
 		return "view-encheres";
 	}
 	

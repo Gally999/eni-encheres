@@ -17,7 +17,9 @@ import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 @Repository
 public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	
-	private static final String FIND_ALL_ACTIVES = "SELECT * FROM Articles_A_Vendre WHERE statut_enchere = 1;";
+	private static final String FIND_ALL_ACTIVES = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
+													+ "	FROM Articles_A_Vendre " 
+													+ "	WHERE statut_enchere = 1;";
 
 	
 	private final NamedParameterJdbcTemplate jdbcTemplate;
