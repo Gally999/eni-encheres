@@ -6,9 +6,9 @@
     <section id="nav-title">
         
         <h1>
-            <a href="/"><img data-th-src="@{/images/logoENI.png}" alt="Logo de l'application">
-                <span data-th-text="ENI-Enchères"></span></a>
-        </h1>
+            <a href="/"><img data-th-src="@{/images/logoENI.png}" alt="Logo de l'application"></a>
+            <a href="/" data-th-text="#{nom-application}"></a>
+         </h1>
 
         <div>
             <a href="/?language=fr"><img src="/images/French.webp" alt="Français"></a>
@@ -16,26 +16,8 @@
         </div>
         
     </section>
-
-    <nav>
     
-        <ul>
+    <!-- Intégration du fragment de navigation -->
+	<div data-th-replace="~{fragments/navigation/fragment-navigation :: frag-nav}"></div>
         
-            <!-- Accueil -->
-            <li>Accueil</li>
-
-<!--             Gestion de la connexion via Spring Security Dialect -->
-<!--             <li data-th-if="${!#authorization.expression('isAuthenticated()')}"> -->
-<!--                 <a href="/login" data-th-text="#{frag-entete.a.connexion}"></a> -->
-<!--             </li> -->
-
-<!--             Gestion de la déconnexion via Spring Security Dialect -->
-<!--             <li data-th-if="${#authorization.expression('isAuthenticated()')}"> -->
-<!--                 <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a> -->
-<!--             </li> -->
-            
-        </ul>
-        
-    </nav>
-    
 </header>

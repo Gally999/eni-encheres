@@ -1,18 +1,20 @@
 
-
 <nav xmlns:th="http://www.thymeleaf.org" data-th-fragment="frag-nav">
-	
 	
 	<ul>
 		
+		<li><a href="/Accueil" data-th-text="#{index.title}"></a></li>
 		
+		 <!-- Gestion de la connexion via Spring Security Dialect-->
+         <li data-th-if="${!#authorization.expression('isAuthenticated()')}">
+             <a href="/login" data-th-text="#{frag-entete.a.connexion}"></a>
+         </li>
 
-		<!-- Gestion de la connexion et déconnexion via Spring Security Dialect -->
-		<li data-th-if="${!#authorization.expression('isAuthenticated()')}">
-			<a href="/login" data-th-text="#{frag-nav.a.connexion}"></a>
-		</li>
-		<li data-th-if="${#authorization.expression('isAuthenticated()')}">
-			<a href="/logout" data-th-text="#{frag-nav.a.deconnexion}"></a>
-		</li>
+         <!--Gestion de la déconnexion via Spring Security Dialect-->
+         <li data-th-if="${#authorization.expression('isAuthenticated()')}">
+              <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a>
+         </li>
+	
 	</ul>
+	
 </nav>
