@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	data-th-replace="~{layouts/layout :: layout-encheres( 
+					titrePage=~{:: title},
+					contenuPage=~{:: main},
+					ressourcesSupp=~{:: #ressources-css})}">
+
+<head>
+<!-- Films comme titre de page -->
+<title data-th-text="#{view-encheres.title}"></title>
+<!-- Ajout de CSS general.css -->
+<th:block id="ressources-css">
+	<link rel="stylesheet" data-th-href="@{/css/general.css}">
+</th:block>
+
+</head>
+<body>
+	<main>
+		<h1 data-th-text="#{view-encheres.h1}"></h1>
+		<ul class="article-ul">
+			<li class="article-cards" data-th-each="article : ${encheresActives}">
+				<h3 data-th-text="${article.nom}"></h3>
+				<p>Prix : 
+					<span data-th-text="${article.prixVente} ? ${article.prixVente} : ${article.prixInitial}"></span>
+				 point(s)</p>
+				<p>Fin de l'enchère : <span data-th-text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span></p>
+				<p>Vendeur : <span data-th-text="${article.vendeur.pseudo}"></span></p>
+			</li>
+		</ul>
+	</main>
+</body>
+</html>

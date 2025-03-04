@@ -50,6 +50,7 @@ header a:hover {
 main {
 	margin-top: 15px;
 	margin-left: 15px;
+	height: 100vh;
 }
 
 main h1 {
@@ -78,4 +79,26 @@ header a {
 /* 
 Module 04 - TP 6
 I18N*/
-#nav-title div>a>img {width: 25px;}
+#nav-title div>a>img {
+	width: 25px;
+}
+
+.article-ul {
+	display: flex;
+}
+
+.article-cards {
+	padding: 1%;
+	margin: 1%;
+	width: 20%;
+	height: 8vh;
+	border: 1px solid black;
+	border-radius: 7px;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+
+
