@@ -2,9 +2,12 @@ package fr.eni.ecole.projet.encheres.bll;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.encheres.dal.ArticleAVendreDAO;
 
+@Service
 public class EncheresServiceImpl implements EncheresService {
 	
 	private ArticleAVendreDAO articleDAO;

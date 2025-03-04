@@ -38,7 +38,7 @@ public class ArticleAVendre {
 	public ArticleAVendre(long id, String nom, String description, LocalDate dateDebutEncheres,
 			LocalDate dateFinEncheres, int statut, int prixInitial, int prixVente, Adresse adresseRetrait,
 			Categorie categorie, Utilisateur vendeur) {
-		this(nom, description, dateDebutEncheres, dateFinEncheres, statut, prixInitial, prixVente, adresseRetrait, categorie, vendeur)
+		this(nom, description, dateDebutEncheres, dateFinEncheres, statut, prixInitial, prixVente, adresseRetrait, categorie, vendeur);
 		this.id = id;
 	}
 
