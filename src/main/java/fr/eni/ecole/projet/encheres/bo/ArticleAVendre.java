@@ -20,6 +20,7 @@ public class ArticleAVendre implements Serializable {
 	private String description;
 
 	@NotNull
+	@FutureOrPresent
 	private LocalDate dateDebutEncheres;
 
 	@NotNull
