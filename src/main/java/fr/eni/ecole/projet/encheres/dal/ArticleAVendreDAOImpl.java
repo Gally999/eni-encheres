@@ -5,8 +5,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
-
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
@@ -20,7 +22,8 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	private static final String FIND_ALL_ACTIVES = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
 													+ "	FROM Articles_A_Vendre " 
 													+ "	WHERE statut_enchere = 1;";
-
+	private static final String INSERT_ARTICLE = "INSERT INTO Articles_A_Vendre(nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, id_utilisateur, no_categorie, no_adresse_retrait) "
+			+ " VALUES(:nom, :description, :dateDebut, :dateFin, :prixInitial, :idUtilisateur, :idCategorie, :idAdresse);";
 	
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -30,8 +33,25 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
 	@Override
 	public void create(ArticleAVendre article) {
-		// TODO Auto-generated method stub
+		System.out.println("ArticleDAO.create() " + article);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
 		
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("nom", article.getNom());
+		namedParams.addValue("description", article.getDescription());
+		namedParams.addValue("dateDebut", article.getDateDebutEncheres());
+		namedParams.addValue("dateFin", article.getDateFinEncheres());
+		namedParams.addValue("prixInitial", article.getPrixInitial());
+		namedParams.addValue("idUtilisateur", article.getVendeur().getPseudo());
+		namedParams.addValue("idCategorie", article.getCategorie().getId());
+		namedParams.addValue("idAdresse", article.getAdresseRetrait().getId());
+		
+		jdbcTemplate.update(INSERT_ARTICLE, namedParams, keyHolder);
+		
+		if (keyHolder != null && keyHolder.getKey() != null) {
+			// Mise à jour de l'identifiant de l'article généré par la base
+			article.setId(keyHolder.getKey().longValue());
+		}
 	}
 
 	@Override
