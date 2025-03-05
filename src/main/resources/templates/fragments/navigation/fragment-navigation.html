@@ -1,10 +1,17 @@
 
 <nav xmlns:th="http://www.thymeleaf.org" data-th-fragment="frag-nav">
 	<ul>
-		<li><a href="/Accueil" data-th-text="#{index.title}"></a></li>
+		<li><a href="/" data-th-text="#{index.title}"></a></li>
 		
 		<!-- S'inscrire-->
-        <li><a href="/creer" data-th-text="#{index.new}"></a></li>
+        <li data-th-if="${!#authorization.expression('isAuthenticated()')}">
+            <a href="/creer" data-th-text="#{index.new}"></a>
+        </li>
+
+        <!-- Créer une nouvelle vente -->
+        <li data-th-if="${#authorization.expression('isAuthenticated()')}">
+            <a href="/article/creer" data-th-text="#{index.vendre}"></a>
+        </li>
 				
 		 <!-- Gestion de la connexion via Spring Security Dialect-->
          <li data-th-if="${!#authorization.expression('isAuthenticated()')}">
