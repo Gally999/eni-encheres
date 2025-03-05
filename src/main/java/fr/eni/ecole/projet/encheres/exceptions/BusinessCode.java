@@ -21,4 +21,6 @@ public class BusinessCode {
 	public static final String VALIDATION_UTILISATEUR_CODE_POSTAL_PATTERN ="validation.utilisateur.codePostal.pattern";
 	public static final String VALIDATION_UTILISATEUR_TELEPHONE_PATTERN = "validation.utilisateur.telephone.pattern";
 	public static final String VALIDATION_UTILISATEUR_ADRESSE_NULL = "validation.utilisateur.adresse.null";
+	public static final String VALIDATION_UTILISATEUR_CONFIRMATION_PASSWORD_BLANK = "validation.utilisateur.confirmationMotDePasse.blank";
+	public static final String VALIDATION_UTILISATEUR_PASSWORD_CONFIRMATION_MISMATCH = "validation.utilisateur.confirmationMotDePasse.mismatch";
 }

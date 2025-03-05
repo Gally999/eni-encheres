@@ -47,9 +47,8 @@ public class UtilisateurController {
 			
 			// Vérification que les mots de passe correspondent
 	        if (!utilisateur.isMotDePasseValide()) {
-	            bindingResult.rejectValue("confirmationMotDePasse", "motDePasse.confirmation", "Les mots de passe ne correspondent pas.");
+	            bindingResult.rejectValue("confirmationMotDePasse", "motDePasse.confirmation");
 	        }
-			
 			if (bindingResult.hasErrors()) {
 				return "view-utilisateur-creer";
 			} else {

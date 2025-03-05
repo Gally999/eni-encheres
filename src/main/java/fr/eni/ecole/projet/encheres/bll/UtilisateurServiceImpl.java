@@ -94,6 +94,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			isValid &= validerTelephone(utilisateur.getTelephone(), be);
 			isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
 			isValid &= validerAdresse(utilisateur.getAdresse(), be);
+			isValid &= validerMotDePasseConfirmation(utilisateur, be);
 			
 			
 			
@@ -161,6 +162,20 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		return true;
 	}
 	
+	private boolean validerMotDePasseConfirmation(Utilisateur utilisateur, BusinessException be) {
+	    if (utilisateur.getConfirmationMotDePasse() == null || utilisateur.getConfirmationMotDePasse().isBlank()) {
+	        be.add(BusinessCode.VALIDATION_UTILISATEUR_CONFIRMATION_PASSWORD_BLANK);
+	        return false;
+	    }
+
+	    if (!utilisateur.getMotDePasse().equals(utilisateur.getConfirmationMotDePasse())) {
+	        be.add(BusinessCode.VALIDATION_UTILISATEUR_PASSWORD_CONFIRMATION_MISMATCH);
+	        return false;
+	    }
+
+	    return true;
+	}
+
 	
 	private boolean validerAdresse(Adresse adresse, BusinessException be) {
 		
@@ -286,10 +301,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		return 0;
 	}
 	
-	
-
-	
-
-		
+			
 		
 }
