@@ -57,9 +57,9 @@
    			<input type="password" id="mdp" required data-th-field="*{motDePasse}"/>
     		<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('motDePasse')}"></div>
     
-<!--     		<label for="motDePasseConfirmation" data-th-text="#{frag-utilisateur-confirmation}"></label> -->
-<!--    			<input type="password" id="motDePasseConfirmation" required data-th-field="*{motDePasseConfirmation}" /> -->
-<!--    			<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('motDePasseConfirmation')}"></div> -->
+    		<label for="motDePasseConfirmation" th:text="#{frag-utilisateur-confirmation}"></label>
+            <input type="password" id="motDePasseConfirmation" required th:field="*{confirmationMotDePasse}" />
+            <div th:replace="~{fragments/errors/fragment-error :: frag-error('confirmationMotDePasse')}"></div>
 		</li>
 
 

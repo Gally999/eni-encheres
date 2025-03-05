@@ -44,10 +44,17 @@ public class UtilisateurController {
 				@Valid 
 				@ModelAttribute("utilisateur") Utilisateur utilisateur,
 				BindingResult bindingResult) {
+			
+			// Vérification que les mots de passe correspondent
+	        if (!utilisateur.isMotDePasseValide()) {
+	            bindingResult.rejectValue("confirmationMotDePasse", "motDePasse.confirmation", "Les mots de passe ne correspondent pas.");
+	        }
+			
 			if (bindingResult.hasErrors()) {
 				return "view-utilisateur-creer";
 			} else {
 				try {
+					utilisateur.setCredit(10);
 					utilisateurService.add(utilisateur);
 					return "redirect:/utilisateurs";
 				} catch (BusinessException e) {

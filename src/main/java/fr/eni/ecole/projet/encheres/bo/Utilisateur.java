@@ -27,6 +27,8 @@ public class Utilisateur implements Serializable{
 	private int credit;
 	private boolean admin;
 	private Adresse adresse;
+	
+	private String confirmationMotDePasse;
 
 	public Utilisateur() {
 	}
@@ -99,6 +101,14 @@ public class Utilisateur implements Serializable{
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
+	
+	public String getConfirmationMotDePasse() {
+        return confirmationMotDePasse;
+    }
+
+    public void setConfirmationMotDePasse(String confirmationMotDePasse) {
+        this.confirmationMotDePasse = confirmationMotDePasse;
+    }
 
 	public int getCredit() {
 		return credit;
@@ -116,6 +126,12 @@ public class Utilisateur implements Serializable{
 		this.admin = admin;
 	}
 
+	
+	// Méthode pour vérifier que le mot de passe et sa confirmation sont identiques
+    public boolean isMotDePasseValide() {
+        return this.motDePasse != null && this.motDePasse.equals(this.confirmationMotDePasse);
+    }
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
