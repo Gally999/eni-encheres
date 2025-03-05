@@ -32,7 +32,6 @@ public class EncheresServiceImpl implements EncheresService {
   }
 
 	@Override
-	// @Transactional
 	public void ajouterArticleAVendre(ArticleAVendre article) {
 		// Validation des données de la couche présentation
 		BusinessException be = new BusinessException();

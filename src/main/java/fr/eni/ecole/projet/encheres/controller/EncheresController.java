@@ -58,8 +58,8 @@ public class EncheresController {
 			model.addAttribute("article", article);
 			return "view-article-form";
 		}
-		return "view-article-form";
-		// return "redirect:/";
+		// return "view-article-form";
+		return "redirect:/";
 	}
 
 	@PostMapping("/article/creer")
