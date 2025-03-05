@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -31,6 +32,8 @@ public class EncheresSecurityConfig {
 			auth
 					// permettre à tout le monde d'accéder à l'URL racine
 					.requestMatchers("/*").permitAll()
+					.requestMatchers(HttpMethod.GET, "/article/creer").authenticated()
+					.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
 
 					// Permettre à tous les utilisateurs d'afficher correctement les images et la css
 					.requestMatchers("/css/*").permitAll()

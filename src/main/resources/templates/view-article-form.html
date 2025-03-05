@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{layouts/layout :: layout-encheres(
+                                                        titrePage=~{:: title},
+                                                        contenuPage=~{:: main},
+                                                        ressourcesSupp=~{:: #ressources-css}
+                                                        )}">
+<head>
+    <meta charset="UTF-8">
+    <title>ENI Enchères - Nouvelle Vente</title>
+    <th:block id="ressources-css">
+        <link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}">
+        <link rel="stylesheet" data-th-href="@{/css/error.css}">
+    </th:block>
+</head>
+<body>
+    <main>
+        <h1>Nouvelle Vente</h1>
+        <form data-th-action="@{/article/creer}" method="POST" data-th-object="${article}">
+<!--            <div data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>-->
+            <ul class="flex-outer">
+                <li>
+                    <label for="inputNom">Article (*)</label>
+                    <input type="text" id="inputNom" data-th-field="*{nom}" />
+                </li>
+                <li>
+                    <label for="inputPrix">Mise à prix (*)</label>
+                    <input type="number" id="inputPrix" data-th-field="*{prixInitial}" />
+                </li>
+                <li>
+                    <label for="inputCategorie">Catégorie (*)</label>
+                    <select name="" id="inputCategorie" data-th-field="*{categorie}">
+                        <option data-th-each="c : ${categoriesEnSession}" data-th-value="${c.id}" data-th-text="${c.libelle}"></option>
+                    </select>
+                </li>
+                <li>
+                    <label for="inputDateDebut">Début de l'enchère (*)</label>
+                    <input type="date" id="inputDateDebut" data-th-field="*{dateDebutEncheres}" />
+                </li>
+                <li>
+                    <label for="inputDescription">Description (*)</label>
+                    <textarea id="inputDescription" data-th-field="*{description}"></textarea>
+                </li>
+                <li>
+                    <label for="inputDateFin">Fin de l'enchère (*)</label>
+                    <input type="date" id="inputDateFin" data-th-field="*{dateFinEncheres}" />
+                </li>
+                <li>
+                    <label for="inputAdresse">Retrait (*)</label>
+                    <select id="inputAdresse" data-th-field="*{adresseRetrait}">
+                        <option data-th-each="a: ${adressesDisponibles}" data-th-value="${a.id}" data-th-text="${a.rue}"></option>
+                    </select>
+                </li>
+                <li>
+                    <button type="submit">Suivant</button>
+                </li>
+            </ul>
+        </form>
+    </main>
+</body>
+</html>
