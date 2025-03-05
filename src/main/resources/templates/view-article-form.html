@@ -19,7 +19,7 @@
         <h1>Nouvelle Vente</h1>
         <form data-th-action="@{/article/creer}" method="POST" data-th-object="${article}">
 <!--            <div data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>-->
-            <ul>
+            <ul class="flex-outer">
                 <li>
                     <label for="inputNom">Article (*)</label>
                     <input type="text" id="inputNom" data-th-field="*{nom}" />
@@ -51,6 +51,9 @@
                     <select id="inputAdresse" data-th-field="*{adresseRetrait}">
                         <option data-th-each="a: ${adressesDisponibles}" data-th-value="${a.id}" data-th-text="${a.rue}"></option>
                     </select>
+                </li>
+                <li>
+                    <button type="submit">Suivant</button>
                 </li>
             </ul>
         </form>
