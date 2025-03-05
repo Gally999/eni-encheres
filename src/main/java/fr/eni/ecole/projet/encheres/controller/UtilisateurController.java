@@ -28,8 +28,8 @@ public class UtilisateurController {
 		
 		
 		// Création d'un nouvel utilisateur
-		@GetMapping("/inscription")
-		public String creerFUtilisateur(Model model) {
+		@GetMapping("/creer")
+		public String creerUtilisateur(Model model) {
 			Utilisateur utilisateur = new Utilisateur();
 			// Ajout de l'instance dans le modèle
 			model.addAttribute("utilisateur", utilisateur);
@@ -39,7 +39,7 @@ public class UtilisateurController {
 		
 		// Récupération de l'objet utilisateur du formulaire
 		// sauvegarde
-		@PostMapping("/inscription")
+		@PostMapping("/creer")
 		public String creerUtilisateur(
 				@Valid 
 				@ModelAttribute("utilisateur") Utilisateur utilisateur,
@@ -104,14 +104,7 @@ public class UtilisateurController {
 			}
 		}
 
-		
-		
-		
-		
-		
-
-		
-
+	
 	}
 
 	

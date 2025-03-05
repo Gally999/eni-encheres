@@ -1,41 +1,95 @@
 @charset "UTF-8";
 
 form {
-	background-color: #f2f2f2;
+    background-color: #f2f2f2;
+    padding: 20px; 
+    border-radius: 8px; 
+    margin-left: 20px;  
+    margin-right: 20px; 
 }
 
 form h1 {
-	margin: 15px;
+    margin: 15px 0; 
+    font-size: 1.5em; 
+    text-align: center; 
+}
+
+.flex-outer {
+    list-style-type: none;
+    padding: 0;
 }
 
 .flex-outer li {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	margin: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 10px 0; 
+    gap: 15px; 
 }
 
 .flex-outer>li>label {
-	flex: 1 0 120px;
-	max-width: 220px;
+    flex: 1 0 120px;
+    max-width: 220px;
+    margin-bottom: 8px; 
+    font-weight: bold; 
 }
 
 .flex-outer>li>label+* {
-	flex: 1 0 220px;
+    flex: 1 0 220px;
+}
+
+.flex-outer li input,
+.flex-outer li select {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc; 
+    margin-bottom: 15px; 
 }
 
 .flex-outer li button {
-	margin-left: auto;
-	margin-bottom: 5px; padding : 8px 16px;
-	border: none;
-	background: #333;
-	color: #f2f2f2;
-	text-transform: uppercase;
-	letter-spacing: .09em;
-	border-radius: 2px;
-	padding: 8px 16px
+    margin-left: auto;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background: #333;
+    color: #f2f2f2;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.flex-outer>li select {
-	flex: 1 0 220px;
+.flex-outer li button:hover {
+    background: #444; 
 }
+
+.adresse-fields {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+}
+
+.adresse-fields input {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+nav button {
+    padding: 12px 25px;
+    font-size: 1em;
+}
+
