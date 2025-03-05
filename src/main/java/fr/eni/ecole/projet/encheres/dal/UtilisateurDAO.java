@@ -11,6 +11,8 @@ public interface UtilisateurDAO {
 
 	Utilisateur read(String emailUtilisateur);
 
+	Utilisateur readByPseudo(String pseudo);
+
 	void update(Utilisateur utilisateur);
 
 	List<Utilisateur> findAll();

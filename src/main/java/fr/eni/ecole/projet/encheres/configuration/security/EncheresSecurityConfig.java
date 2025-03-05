@@ -31,9 +31,9 @@ public class EncheresSecurityConfig {
 
 			auth
 					// permettre à tout le monde d'accéder à l'URL racine
-					.requestMatchers("/").permitAll()
 					.requestMatchers(HttpMethod.GET, "/article/creer").authenticated()
 					.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
+					.requestMatchers("/*").permitAll()
 
 					// Permettre à tous les utilisateurs d'afficher correctement les images et la css
 					.requestMatchers("/css/*").permitAll()
@@ -46,7 +46,7 @@ public class EncheresSecurityConfig {
 		// Customiser le formulaire de login
 		http.formLogin(form -> {
 			form.loginPage("/login").permitAll();
-			form.defaultSuccessUrl("/");
+			form.defaultSuccessUrl("/session");
 		});
 		
 		// Déconnexion

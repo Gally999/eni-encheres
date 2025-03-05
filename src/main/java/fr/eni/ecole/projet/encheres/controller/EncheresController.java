@@ -6,6 +6,7 @@ import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
+import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({ "categoriesEnSession"})
+@SessionAttributes({ "categoriesEnSession", "userEnSession" })
 public class EncheresController {
 	
 	private final EncheresService encheresService;
@@ -40,34 +41,37 @@ public class EncheresController {
 		return "view-encheres";
 	}
 
-
 	@GetMapping("/article/creer")
-	public String creationArticle(Model model) {
+	public String creationArticle(
+			Model model,
+			@ModelAttribute("userEnSession") Utilisateur userEnSession
+	) {
 		System.out.println("EncheresController - get formulaire article à créer");
-		// TODO vérifier que l'utilisateur•ice est connecté•e pour pouvoir créer un article
-
-		// TODO ajouter l'id du membre en session pour récupérer son adresse
-		List<Adresse> adresses = encheresService.consulterAdressesDisponibles();
-		if (adresses != null && !adresses.isEmpty()) {
-			model.addAttribute("adressesDisponibles", adresses);
+		System.out.println("userEnSession" + userEnSession);
+		if (userEnSession != null && userEnSession.getPseudo() != null) {
+			List<Adresse> adresses = encheresService.consulterAdressesDisponibles(userEnSession.getAdresse().getId());
+			if (adresses != null && !adresses.isEmpty()) {
+				model.addAttribute("adressesDisponibles", adresses);
+			}
+			ArticleAVendre article = new ArticleAVendre();
+			System.out.println("Article = " + article);
+			model.addAttribute("article", article);
+			return "view-article-form";
 		}
-		ArticleAVendre article = new ArticleAVendre();
-		article.setDateDebutEncheres(LocalDate.now());
-		article.setDateFinEncheres(LocalDate.now().plusDays(15));
-		model.addAttribute("article", article);
-		System.out.println("Article avec dates ? = " + article);
-		return "view-article-form";
+		// return "view-article-form";
+		return "redirect:/";
 	}
 
 	@PostMapping("/article/creer")
 	public String ajouterArticle(
 			@Valid @ModelAttribute("article") ArticleAVendre article,
-			BindingResult bindingResult
+			BindingResult bindingResult,
+			@ModelAttribute("userEnSession") Utilisateur userEnSession
 	) {
 		System.out.println("EnchèresController - post formulaire article");
-		// article.getVendeur().setPseudo(membreEnSession.getPseudo());
 		if (!bindingResult.hasErrors()) {
 			try {
+				article.setVendeur(userEnSession);
 				encheresService.ajouterArticleAVendre(article);
 				return "redirect:/";
 			} catch (BusinessException e) {

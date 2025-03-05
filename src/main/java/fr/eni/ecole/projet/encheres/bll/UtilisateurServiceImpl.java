@@ -17,21 +17,26 @@ import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService{
 
-	
 	private UtilisateurDAO utilisateurDAO;
-	
-	
-	
+
 	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO) {
 		this.utilisateurDAO = utilisateurDAO;
-		
 	}
 
 	@Override
 	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
 			int credit, boolean admin, Adresse adresse) {
-		Utilisateur utilisateur = new Utilisateur( pseudo,  nom,  prenom,  email,  telephone,  motDePasse,
-				 credit,  admin,  adresse);
+		Utilisateur utilisateur = new Utilisateur(
+				pseudo,
+				nom,
+				prenom,
+				email,
+				telephone,
+				motDePasse,
+				credit,
+				admin,
+				adresse
+		);
 		utilisateurDAO.create(utilisateur);
 	}
 
@@ -45,11 +50,15 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		
 		// Il nous faut l'utilisateur et les ventes-achats associés ?
 		Utilisateur u = utilisateurDAO.read(emailUtilisateur);
-		
-		
+
 		return u;
 	}
-	
+
+	@Override
+	public Utilisateur findByPseudo(String pseudo) {
+		return utilisateurDAO.readByPseudo(pseudo);
+	}
+
 
 	@Override
 	public void update(Utilisateur utilisateur) {

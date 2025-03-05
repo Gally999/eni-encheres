@@ -32,7 +32,6 @@ public class EncheresServiceImpl implements EncheresService {
   }
 
 	@Override
-	// @Transactional
 	public void ajouterArticleAVendre(ArticleAVendre article) {
 		// Validation des données de la couche présentation
 		BusinessException be = new BusinessException();
@@ -73,8 +72,8 @@ public class EncheresServiceImpl implements EncheresService {
 	}
 
 	@Override
-	public List<Adresse> consulterAdressesDisponibles() {
-		return adresseDAO.findAllAvailable();
+	public List<Adresse> consulterAdressesDisponibles(long id) {
+		return adresseDAO.findAllAvailable(id);
 	}
 
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {

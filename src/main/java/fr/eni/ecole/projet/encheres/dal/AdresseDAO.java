@@ -5,5 +5,5 @@ import fr.eni.ecole.projet.encheres.bo.Adresse;
 import java.util.List;
 
 public interface AdresseDAO {
-  List<Adresse> findAllAvailable();
+  List<Adresse> findAllAvailable(long id);
 }
