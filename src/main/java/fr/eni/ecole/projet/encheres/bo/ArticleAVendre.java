@@ -1,20 +1,44 @@
 package fr.eni.ecole.projet.encheres.bo;
 
+import jakarta.validation.constraints.*;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class ArticleAVendre {
-	
+public class ArticleAVendre implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private long id;
+
+	@NotBlank
+	@Size(min = 2, max = 30)
 	private String nom;
+
+	@NotBlank
+	@Size(min = 4, max = 300)
 	private String description;
+
+	@NotNull
 	private LocalDate dateDebutEncheres;
+
+	@NotNull
+	@Future
 	private LocalDate dateFinEncheres;
+
 	private int statut;
+
+	@Min(1)
 	private int prixInitial;
 	private int prixVente;
+
+	@NotNull
 	private Adresse adresseRetrait;
+
+	@NotNull
 	private Categorie categorie;
+
+	@NotNull
 	private Utilisateur vendeur;
 	
 	public ArticleAVendre() {
