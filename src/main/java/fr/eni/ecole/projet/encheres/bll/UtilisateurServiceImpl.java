@@ -174,7 +174,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			return false;
 		}
 		// Regex to check valid rue
-		String regex1 ="^\\d+\\s[A-ZÀ-ÿ\\s\\-]+$";
+		String regex1 ="^\\d+\\s[A-Za-zÀ-ÿ0-9\\s\\-]+$";
 
 		if (!adresse.getRue().matches(regex1)) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_RUE_PATTERN);
