@@ -31,7 +31,7 @@ public class EncheresSecurityConfig {
 
 			auth
 					// permettre à tout le monde d'accéder à l'URL racine
-					.requestMatchers("/*").permitAll()
+					.requestMatchers("/").permitAll()
 					.requestMatchers(HttpMethod.GET, "/article/creer").authenticated()
 					.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
 

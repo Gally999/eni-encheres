@@ -2,7 +2,9 @@ package fr.eni.ecole.projet.encheres.bll;
 
 import java.util.List;
 
+import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
+import fr.eni.ecole.projet.encheres.bo.Categorie;
 
 public interface EncheresService {
 
@@ -12,4 +14,7 @@ public interface EncheresService {
 	
 	List<ArticleAVendre> consulterEncheresActives();
 
+  List<Categorie> consulterCategories();
+
+	List<Adresse> consulterAdressesDisponibles();
 }
