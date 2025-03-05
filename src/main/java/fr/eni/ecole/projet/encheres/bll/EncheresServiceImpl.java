@@ -73,8 +73,8 @@ public class EncheresServiceImpl implements EncheresService {
 	}
 
 	@Override
-	public List<Adresse> consulterAdressesDisponibles() {
-		return adresseDAO.findAllAvailable();
+	public List<Adresse> consulterAdressesDisponibles(long id) {
+		return adresseDAO.findAllAvailable(id);
 	}
 
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
