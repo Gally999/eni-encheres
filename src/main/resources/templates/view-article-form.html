@@ -22,7 +22,7 @@
             <ul class="flex-outer">
                 <li>
                     <label for="inputNom">Article (*)</label>
-                    <input type="text" id="inputNom" data-th-field="*{nom}" />
+                    <input type="text" id="inputNom" data-th-field="*{nom}" placeholder="Un fauteuil" />
                 </li>
                 <li>
                     <label for="inputPrix">Mise à prix (*)</label>
@@ -31,25 +31,41 @@
                 <li>
                     <label for="inputCategorie">Catégorie (*)</label>
                     <select name="" id="inputCategorie" data-th-field="*{categorie}">
-                        <option data-th-each="c : ${categoriesEnSession}" data-th-value="${c.id}" data-th-text="${c.libelle}"></option>
+                        <option
+                                data-th-each="c : ${categoriesEnSession}"
+                                data-th-value="${c.id}"
+                                data-th-text="${c.libelle}"
+                        ></option>
                     </select>
                 </li>
                 <li>
                     <label for="inputDateDebut">Début de l'enchère (*)</label>
-                    <input type="date" id="inputDateDebut" data-th-field="*{dateDebutEncheres}" />
+                    <input
+                            type="date"
+                            id="inputDateDebut"
+                            data-th-field="*{dateDebutEncheres}"
+                    />
+<!--                            onfocus="(this.type='date')"-->
+<!--                            onblur="(this.type='text')"-->
+<!--                            placeholder="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"-->
+<!--                            data-th-value="${article.dateDebutEncheres}"-->
                 </li>
                 <li>
                     <label for="inputDescription">Description (*)</label>
-                    <textarea id="inputDescription" data-th-field="*{description}"></textarea>
+                    <textarea id="inputDescription" data-th-field="*{description}" placeholder="Un fauteuil rouge"></textarea>
                 </li>
                 <li>
                     <label for="inputDateFin">Fin de l'enchère (*)</label>
-                    <input type="date" id="inputDateFin" data-th-field="*{dateFinEncheres}" />
+                    <input type="date" id="inputDateFin" data-th-field="*{dateFinEncheres}" data-th-value="${article.dateFinEncheres}" />
                 </li>
                 <li>
                     <label for="inputAdresse">Retrait (*)</label>
                     <select id="inputAdresse" data-th-field="*{adresseRetrait}">
-                        <option data-th-each="a: ${adressesDisponibles}" data-th-value="${a.id}" data-th-text="${a.rue}"></option>
+                        <option
+                                data-th-each="a: ${adressesDisponibles}"
+                                data-th-value="${a.id}"
+                                data-th-text="${a.rue + ' ' + a.codePostal + ' ' + a.ville}"
+                        ></option>
                     </select>
                 </li>
                 <li>

@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.eni.ecole.projet.encheres.bo.Adresse;
+import fr.eni.ecole.projet.encheres.bo.Categorie;
+import fr.eni.ecole.projet.encheres.dal.AdresseDAO;
+import fr.eni.ecole.projet.encheres.dal.CategorieDAO;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import org.springframework.dao.DataAccessException;
@@ -18,10 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class EncheresServiceImpl implements EncheresService {
 	
 	private final ArticleAVendreDAO articleDAO;
+	private final CategorieDAO categorieDAO;
+	private final AdresseDAO adresseDAO;
 
-	public EncheresServiceImpl(ArticleAVendreDAO articleDAO) {
+	public EncheresServiceImpl(ArticleAVendreDAO articleDAO, CategorieDAO categorieDAO, AdresseDAO adresseDAO) {
 		this.articleDAO = articleDAO;
-	}
+		this.categorieDAO = categorieDAO;
+    this.adresseDAO = adresseDAO;
+  }
 
 	@Override
 	// @Transactional
@@ -44,8 +52,6 @@ public class EncheresServiceImpl implements EncheresService {
 		}
 	}
 
-
-
 	@Override
 	public List<ArticleAVendre> consulterEncheres() {
 		// TODO Auto-generated method stub
@@ -59,6 +65,16 @@ public class EncheresServiceImpl implements EncheresService {
 			allActive = new ArrayList<>();
 		}
 		return allActive;
+	}
+
+	@Override
+	public List<Categorie> consulterCategories() {
+		return categorieDAO.findAll();
+	}
+
+	@Override
+	public List<Adresse> consulterAdressesDisponibles() {
+		return adresseDAO.findAllAvailable();
 	}
 
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {

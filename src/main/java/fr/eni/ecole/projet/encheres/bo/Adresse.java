@@ -1,8 +1,9 @@
 package fr.eni.ecole.projet.encheres.bo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Adresse {
+public class Adresse implements Serializable {
 	
 	private long id;
 	private String rue;

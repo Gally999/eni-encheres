@@ -1,5 +1,7 @@
 package fr.eni.ecole.projet.encheres.bo;
 
-public class Enchere {
+import java.io.Serializable;
+
+public class Enchere  implements Serializable {
 
 }
