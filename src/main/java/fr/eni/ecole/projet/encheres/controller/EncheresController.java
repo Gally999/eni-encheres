@@ -1,5 +1,6 @@
 package fr.eni.ecole.projet.encheres.controller;
 
+import java.util.Comparator;
 import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
@@ -53,7 +54,6 @@ public class EncheresController {
 			model.addAttribute("article", article);
 			return "view-article-form";
 		}
-		// return "view-article-form";
 		return "redirect:/";
 	}
 
@@ -68,6 +68,8 @@ public class EncheresController {
 		if (!bindingResult.hasErrors()) {
 			try {
 				System.out.println("J'entre dans le try");
+				System.out.println("userEnSession dans le Enchères Controller" + userEnSession);
+				// TODO Pourquoi le userEnSession prend le 'nom' de l'article ?
 				article.setVendeur(userEnSession);
 				System.out.println("article avec vendeur = " + article);
 				encheresService.ajouterArticleAVendre(article);
@@ -88,6 +90,12 @@ public class EncheresController {
 	private void injectUserAddresses(Utilisateur userEnSession, Model model) {
 		List<Adresse> adresses = encheresService.consulterAdressesDisponibles(userEnSession.getAdresse().getId());
 		if (adresses != null && !adresses.isEmpty()) {
+			Comparator<Adresse> comparator = (a1, a2) -> {
+				if (a1.getId() == userEnSession.getAdresse().getId()) return -1;
+				if (a2.getId() == userEnSession.getAdresse().getId()) return 1;
+				return a1.compareTo(a2);
+			};
+			adresses.sort(comparator);
 			model.addAttribute("adressesDisponibles", adresses);
 		}
 	}

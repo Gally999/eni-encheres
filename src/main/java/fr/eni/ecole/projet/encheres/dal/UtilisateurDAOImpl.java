@@ -7,7 +7,6 @@ import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -47,7 +46,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		
 		@Override
 		public List<Utilisateur> findAll() {
-			return namedParameterJdbcTemplate.query(FIND_ALL, new BeanPropertyRowMapper<>(Utilisateur.class));
+			return namedParameterJdbcTemplate.query(FIND_ALL, new UtilisateurRowMapper());
 		}
 		@Override
 		public Utilisateur read(String emailUtilisateur) {
@@ -55,7 +54,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			namedParameters.addValue("email", emailUtilisateur);
 			
 			return namedParameterJdbcTemplate.queryForObject(FIND_BY_EMAIL, namedParameters,
-					new BeanPropertyRowMapper<>(Utilisateur.class));
+					new UtilisateurRowMapper());
 		}
 
 		@Override

@@ -1,6 +1,5 @@
 package fr.eni.ecole.projet.encheres.bll;
 
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.encheres.dal.ArticleAVendreDAO;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EncheresServiceImpl implements EncheresService {
@@ -35,7 +33,7 @@ public class EncheresServiceImpl implements EncheresService {
 	public void ajouterArticleAVendre(ArticleAVendre article) {
 		// Validation des données de la couche présentation
 		BusinessException be = new BusinessException();
-		boolean isValid = true;
+		boolean isValid;
 		isValid = validerDateFin(article.getDateDebutEncheres(), article.getDateFinEncheres(), be);
 
 		if (isValid) {
