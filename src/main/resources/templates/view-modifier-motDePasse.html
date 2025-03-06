@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org" 
+		data-th-replace="~{layouts/layout :: layout-encheres( 
+    	titrePage=~{:: title},
+   		contenuPage=~{:: main},
+    	ressourcesSupp=~{:: #ressources-css})}">
+
+
+<head>
+
+	<!-- Créer comme titre de page -->
+	 <title data-th-text="#{frag-utilisateur-modifierMotDePasse.title}"></title>
+	
+	<!-- Ajout de CSS utilisateur-form.css -->
+	<th:block id="ressources-css">
+		<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}" />
+		<link rel="stylesheet" data-th-href="@{/css/error.css}" />
+	</th:block>
+	
+</head>
+
+<body>
+
+	<main>
+	
+		<!-- Utilisation du fragment mot de passe -->
+		<div data-th-replace="~{fragments/fragment-modif-motDePasse :: 
+		frag-modif--motDePasse-form('ModifMotDePasse', 'Modifier Password')}">
+		</div>
+	
+	</main>
+	
+		
+</body>
+
+</html>

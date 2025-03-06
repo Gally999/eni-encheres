@@ -1,6 +1,6 @@
 package fr.eni.ecole.projet.encheres.bll;
 
-import java.sql.SQLOutput;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.encheres.dal.ArticleAVendreDAO;
-import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class EncheresServiceImpl implements EncheresService {
@@ -82,5 +82,11 @@ public class EncheresServiceImpl implements EncheresService {
 				return false;
 			}
 			return true;
+	}
+
+	@Override
+	public List<Adresse> consulterAdressesDisponibles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

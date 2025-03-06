@@ -26,5 +26,7 @@ public interface UtilisateurService {
 
 		int uniquePseudo(String pseudo);
 
+		long verifierEtAffecterAdresse(Adresse adresse);
+
 		
 	}

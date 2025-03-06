@@ -1,0 +1,39 @@
+<form xmlns:th="http://www.thymeleaf.org"
+	data-th-fragment="frag-modif--motDePasse-form(action, titreForm)"
+	data-th-action="@{${action}}" data-th-object="${utilisateur}"
+	method="post">
+
+	<h1 data-th-text="${titreForm}"></h1>
+	<div
+		data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>
+
+
+	<ul class="flex-outer">
+
+		<li><label for="motDePasseAct" data-th-text="#{frag-utilisateur-motDePasseAct}"></label>
+			<input	type="password" id="mdp" required data-th-field="*{motDePasse}" />
+			<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('motDePasse')}"></div>
+
+			<label for="motDePasseNew" data-th-text="#{frag-utilisateur-motDePasseNew}"></label> 
+			<input type="password" id="mdp" required data-th-field="*{motDePasse}" />
+			<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('motDePasse')}"></div>
+
+			<label for="motDePasseConfirmation"	th:text="#{frag-utilisateur-confirmation}"></label> 
+			<input type="password" id="motDePasseConfirmation" required	th:field="*{confirmationMotDePasse}" />
+			<div th:replace="~{fragments/errors/fragment-error :: frag-error('confirmationMotDePasse')}"></div>
+		</li>
+
+		
+
+
+		<nav>
+			<button type="submit" class="validate-button"
+				data-th-text="#{frag-utilisateur-modifier}"></button>
+			
+			<button type="button" class="cancel-button"
+				onclick="window.location.href='/monProfil'"
+				data-th-text="#{frag-utilisateur-annuler}"></button>
+		</nav>
+		
+	</ul>
+</form>

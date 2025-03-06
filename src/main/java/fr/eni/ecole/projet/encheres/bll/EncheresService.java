@@ -14,7 +14,9 @@ public interface EncheresService {
 	
 	List<ArticleAVendre> consulterEncheresActives();
 
-  List<Categorie> consulterCategories();
+	List<Categorie> consulterCategories();
 
 	List<Adresse> consulterAdressesDisponibles(long id);
+
+	List<Adresse> consulterAdressesDisponibles();
 }

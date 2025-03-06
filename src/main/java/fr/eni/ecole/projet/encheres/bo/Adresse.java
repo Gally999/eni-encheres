@@ -9,6 +9,7 @@ public class Adresse implements Serializable {
 	private String rue;
 	private String codePostal;
 	private String ville;
+	private int noAdresse; 
 	
 	public Adresse() {
 	}
@@ -79,4 +80,13 @@ public class Adresse implements Serializable {
 		return "Adresse [id=" + id + ", rue=" + rue + ", codePostal=" + codePostal + ", ville=" + ville + "]";
 	}
 
+	public void setNoAdresse(int noAdresse) {
+		this.noAdresse = noAdresse;		
+	}
+
+	public int getNoAdresse() {
+		return noAdresse;
+	}
+
+	
 }

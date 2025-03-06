@@ -20,6 +20,9 @@ public interface UtilisateurDAO {
 	int uniqueEmail(String email);
 
 	int uniquePseudo(String pseudo);
+
+	
+	
 }
 
 

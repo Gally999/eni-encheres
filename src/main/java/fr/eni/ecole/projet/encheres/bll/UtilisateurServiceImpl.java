@@ -4,12 +4,14 @@ package fr.eni.ecole.projet.encheres.bll;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.dal.AdresseDAO;
 import fr.eni.ecole.projet.encheres.dal.UtilisateurDAO;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
@@ -17,26 +19,29 @@ import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService{
 
+	@Autowired
 	private UtilisateurDAO utilisateurDAO;
+	@Autowired
+	private AdresseDAO adresseDAO;
 
-	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO) {
-		this.utilisateurDAO = utilisateurDAO;
-	}
+	
+    public UtilisateurServiceImpl() {
+        
+    }
+
+    public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO) {
+        this.utilisateurDAO = utilisateurDAO;
+    }
+
+    public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, AdresseDAO adresseDAO) {
+        this.utilisateurDAO = utilisateurDAO;
+        this.adresseDAO = adresseDAO;
+    }
 
 	@Override
 	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
 			int credit, boolean admin, Adresse adresse) {
-		Utilisateur utilisateur = new Utilisateur(
-				pseudo,
-				nom,
-				prenom,
-				email,
-				telephone,
-				motDePasse,
-				credit,
-				admin,
-				adresse
-		);
+		Utilisateur utilisateur = new Utilisateur(pseudo, nom, prenom, email, telephone, motDePasse, credit, admin, adresse);
 		utilisateurDAO.create(utilisateur);
 	}
 
@@ -85,7 +90,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			throw be;
 		}
 	}
-
 	
 
 	@Override
@@ -104,29 +108,21 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
 			isValid &= validerAdresse(utilisateur.getAdresse(), be);
 			isValid &= validerMotDePasseConfirmation(utilisateur, be);
-			
-			
+						
 			
 			if (isValid) {
+				
+				
+				utilisateur.getAdresse().setId(verifierEtAffecterAdresse(utilisateur.getAdresse()));
+				
 				utilisateurDAO.create(utilisateur);
 				//Attention, il faut aussi compléter l'appel de la méthode pour gérer l'insertion en base des ventes-achats
-				
+					
 				
 			} else {
 				throw be;
 			}
 		
-			//unicité de l'email
-			Utilisateur utilisateurAvecEmailIdentique = utilisateurDAO.read(utilisateur.getEmail());
-			if(utilisateurAvecEmailIdentique == null) {
-				utilisateurDAO.create(utilisateur);
-			}
-			
-			//unicité du pseudo
-			Utilisateur utilisateurAvecPseudoIdentique = utilisateurDAO.read(utilisateur.getPseudo());
-			if(utilisateurAvecPseudoIdentique == null) {
-				utilisateurDAO.create(utilisateur);
-			}
 	}
 		
 	/**
@@ -142,11 +138,15 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		
 	private boolean validerTelephone(String telephone, BusinessException be) {
 		
-		if (telephone != null) {
+		System.out.println("telephone " + telephone);
 			
+		if(telephone == null || telephone.isBlank()) {
+			return true;
+		}else{
 			// Regex to check valid telephone
-			String regex ="^(\\+\\d{1,3}[- ]?)?\\(?\\d{1,4}\\)?[- ]?\\d{1,4}[- ]?\\d{1,4}[- ]?\\d{1,4}$";
-
+			String regex ="^(?:(?:\\+|00)33|0)\\s*[1-9](?:[\\s.-]*\\d{2}){4}$";
+			
+			System.out.println("telephone dans le else");
 			if (!telephone.matches(regex)) {
 				be.add(BusinessCode.VALIDATION_UTILISATEUR_TELEPHONE_PATTERN);
 				return false;
@@ -159,7 +159,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	private boolean validerMotDePasse(String motDePasse, BusinessException be) {
 		if (motDePasse == null || motDePasse.isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_PASSWORD_BLANK);
-		return false;
+			return false;
 		}
 		// Regex to check valid Password
 		String regex ="^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,20}$";
@@ -172,12 +172,12 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	}
 	
 	private boolean validerMotDePasseConfirmation(Utilisateur utilisateur, BusinessException be) {
-	    if (utilisateur.getConfirmationMotDePasse() == null || utilisateur.getConfirmationMotDePasse().isBlank()) {
+	    if (utilisateur.getMotDePasseConfirmation() == null || utilisateur.getMotDePasseConfirmation().isBlank()) {
 	        be.add(BusinessCode.VALIDATION_UTILISATEUR_CONFIRMATION_PASSWORD_BLANK);
 	        return false;
 	    }
 
-	    if (!utilisateur.getMotDePasse().equals(utilisateur.getConfirmationMotDePasse())) {
+	    if (!utilisateur.getMotDePasse().equals(utilisateur.getMotDePasseConfirmation())) {
 	        be.add(BusinessCode.VALIDATION_UTILISATEUR_PASSWORD_CONFIRMATION_MISMATCH);
 	        return false;
 	    }
@@ -225,8 +225,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		return true;
 	}
 	
-	
-	
+		
 	private boolean validerEmail(String email, BusinessException be) {
 		if (email == null || email.isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_EMAIL_BLANK);
@@ -244,12 +243,18 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	
 		
 	private boolean validerUniqueEmail(String email, BusinessException be) {
-		int count = utilisateurDAO.uniqueEmail(email);
-		if (count == 1) {
-			be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL);
-			return false;
-		}
-		return true;
+	    try {
+	        int count = utilisateurDAO.uniqueEmail(email);
+	        if (count == 1) {
+	            be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL);
+	            return false;
+	        }
+	    } catch (DataAccessException e) {
+	        be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL_ERROR);
+	        e.printStackTrace();
+	        return false;
+	    }
+	    return true;
 	}
 
 	
@@ -305,9 +310,27 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	}
 
 	
+
+	
 	@Override
 	public int uniquePseudo(String pseudo) {
 		return 0;
+	}
+
+	@Override
+	public long verifierEtAffecterAdresse(Adresse adresse) {
+		
+		long idAdresse = adresseDAO.readAdresseConnue(adresse);
+		
+		System.out.println( "idAdresse " + idAdresse);
+		
+		if (idAdresse > 0) {
+			return idAdresse;
+		} else {
+			adresseDAO.create(adresse);
+			return adresse.getId();
+		}
+		
 	}
 	
 			

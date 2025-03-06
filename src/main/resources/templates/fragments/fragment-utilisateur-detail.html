@@ -35,7 +35,7 @@
 		
 		<li>
 			<label for="inputTelephone" data-th-text="#{frag-utilisateur-telephone}"></label> 
-			<input type="text" id="inputTelephone" />
+			<input type="text" id="inputTelephone" data-th-field="*{telephone}"/>
 			<div	data-th-replace="~{fragments/errors/fragment-error :: frag-error('telephone')}"></div>
 		</li>
 		
@@ -52,20 +52,34 @@
     		</div>
 		</li>
        			
-		<li>
+		<li data-th-if="${!#authorization.expression('isAuthenticated()')}">
     		<label for="motDePasse" data-th-text="#{frag-utilisateur-motDePasse}"></label> 
    			<input type="password" id="mdp" required data-th-field="*{motDePasse}"/>
     		<div data-th-replace="~{fragments/errors/fragment-error :: frag-error('motDePasse')}"></div>
     
-    		<label for="motDePasseConfirmation" th:text="#{frag-utilisateur-confirmation}"></label>
-            <input type="password" id="motDePasseConfirmation" required th:field="*{confirmationMotDePasse}" />
-            <div th:replace="~{fragments/errors/fragment-error :: frag-error('confirmationMotDePasse')}"></div>
+    		<label for="motDePasseConfirmation" data-th-text="#{frag-utilisateur-confirmation}"></label>
+            <input type="password" id="motDePasseConfirmation" required data-th-field="*{motDePasseConfirmation}" />
+            <div th:replace="~{fragments/errors/fragment-error :: frag-error('motDePasseConfirmation')}"></div>
 		</li>
 
-
-		<nav>
-			<button type="submit" data-th-text="#{frag-utilisateur-créer}"></button>
-			<button type="reset" data-th-text="#{frag-utilisateur-annuler}"></button>
+		<li data-th-if="${#authorization.expression('isAuthenticated()')}">
+    		<label for="monCredit" data-th-text="#{frag-utilisateur-monCredit}"></label> 
+		</li>
+				
+		
+		<nav data-th-if="${#authorization.expression('isAuthenticated()')}">
+    		<!-- si connecté modifier / modifier motDePasse / Supprimer mon compte / Annuler -->
+			<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-modifier}"></button>
+			<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-modifierMotDePasse}"></button>
+    		<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-supprimerCompte}"></button>
+    	    <button type="button" class="cancel-button" onclick="window.location.href='/monProfil'" data-th-text="#{frag-utilisateur-annuler}"></button>
+    	
+    	</nav>	
+    	<nav data-th-if="${!#authorization.expression('isAuthenticated()')}">
+    		<!-- si non connecté valider / Annuler -->
+    		<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-valider}"></button>
+   		    <button type="button" class="cancel-button" onclick="window.location.href='/'" data-th-text="#{frag-utilisateur-annuler}"></button>
+				
 		</nav>
 		</ul>
 </form>

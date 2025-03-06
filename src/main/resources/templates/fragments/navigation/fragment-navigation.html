@@ -17,10 +17,22 @@
          <li data-th-if="${!#authorization.expression('isAuthenticated()')}">
              <a href="/login" data-th-text="#{frag-entete.a.connexion}"></a>
          </li>
+         
+         <!-- Mon Profil -->
+         <li data-th-if="${#authorization.expression('isAuthenticated()')}">
+            <a href="/monProfil" data-th-text="#{frag-utilisateur-monProfil.title}"></a>
+         </li>
                   
          <!--Gestion de la déconnexion via Spring Security Dialect-->
          <li data-th-if="${#authorization.expression('isAuthenticated()')}">
               <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a>
          </li>
+         
+         <!-- Encadré affichant la date -->
+   		 <div id="date-encart" class="date-encart">
+       		 <p>Date du jour : <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span></p>  <!-- Affiche la date -->
+   		 </div>
+
+        
 	</ul>
 </nav>

@@ -1,5 +1,7 @@
 package fr.eni.ecole.projet.encheres.controller;
 
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import fr.eni.ecole.projet.encheres.bll.UtilisateurService;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
@@ -20,7 +21,8 @@ public class UtilisateurController {
 	
 	// Injection de UtilisateurService
 	private UtilisateurService utilisateurService;
-		
+	
+	
 	public UtilisateurController (UtilisateurService utilisateurService) {
 		this.utilisateurService = utilisateurService;
 			
@@ -45,17 +47,23 @@ public class UtilisateurController {
 				@ModelAttribute("utilisateur") Utilisateur utilisateur,
 				BindingResult bindingResult) {
 			
+			       	     	        			
+			// Définir un crédit par défaut 
+	        utilisateur.setCredit(10); 
+			
 			// Vérification que les mots de passe correspondent
-	        if (!utilisateur.isMotDePasseValide()) {
-	            bindingResult.rejectValue("confirmationMotDePasse", "motDePasse.confirmation");
+	        if (utilisateur.getMotDePasse() == null || !utilisateur.getMotDePasse().equals(utilisateur.getMotDePasseConfirmation())) {
+	            bindingResult.rejectValue("motDePasseConfirmation", "validation.utilisateur.motDePasse.confirmation");
 	        }
+
+	           	        
 			if (bindingResult.hasErrors()) {
 				return "view-utilisateur-creer";
 			} else {
 				try {
 					utilisateur.setCredit(10);
 					utilisateurService.add(utilisateur);
-					return "redirect:/utilisateurs";
+					return "redirect:/";
 				} catch (BusinessException e) {
 					//Afficher les messages d’erreur - les injecter dans le contexte de BindingResult
 					e.getClefsExternalisations().forEach(key -> {
@@ -68,7 +76,7 @@ public class UtilisateurController {
 		}
 			
 
-		@GetMapping("/detail")
+		@GetMapping("/monProfil")
 		public String detailUtilisateurParParametre(
 			    @RequestParam(name = "email", required = true) String emailUtilisateur, 
 			    Model model) {
@@ -80,7 +88,7 @@ public class UtilisateurController {
 		}
 
 
-		@PostMapping("/detail")
+		@PostMapping("/monProfil")
 		public String mettreAJourUtilisateur(
 				@Valid
 				@ModelAttribute("utilisateur") Utilisateur u, BindingResult bindinResult) {
@@ -110,7 +118,7 @@ public class UtilisateurController {
 			}
 		}
 
-	
+		 
 	}
 
 	
