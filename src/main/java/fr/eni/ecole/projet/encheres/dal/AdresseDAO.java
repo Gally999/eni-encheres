@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AdresseDAO {
   List<Adresse> findAllAvailable(long id);
+
+  Adresse read(long id);
 }

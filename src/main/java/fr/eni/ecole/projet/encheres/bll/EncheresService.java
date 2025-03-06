@@ -17,4 +17,8 @@ public interface EncheresService {
   List<Categorie> consulterCategories();
 
 	List<Adresse> consulterAdressesDisponibles(long id);
+
+	Adresse consulterAdresseParId(long id);
+
+	Categorie consulterCategorieParId(long id);
 }

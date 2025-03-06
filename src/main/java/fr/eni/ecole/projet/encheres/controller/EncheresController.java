@@ -1,7 +1,5 @@
 package fr.eni.ecole.projet.encheres.controller;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
@@ -9,7 +7,6 @@ import fr.eni.ecole.projet.encheres.bo.Categorie;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import jakarta.validation.Valid;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,10 +46,8 @@ public class EncheresController {
 		System.out.println("EncheresController - get formulaire article à créer");
 		System.out.println("userEnSession" + userEnSession);
 		if (userEnSession != null && userEnSession.getPseudo() != null) {
-			List<Adresse> adresses = encheresService.consulterAdressesDisponibles(userEnSession.getAdresse().getId());
-			if (adresses != null && !adresses.isEmpty()) {
-				model.addAttribute("adressesDisponibles", adresses);
-			}
+			injectUserAddresses(userEnSession, model);
+
 			ArticleAVendre article = new ArticleAVendre();
 			System.out.println("Article = " + article);
 			model.addAttribute("article", article);
@@ -66,12 +61,15 @@ public class EncheresController {
 	public String ajouterArticle(
 			@Valid @ModelAttribute("article") ArticleAVendre article,
 			BindingResult bindingResult,
-			@ModelAttribute("userEnSession") Utilisateur userEnSession
-	) {
+			@ModelAttribute("userEnSession") Utilisateur userEnSession,
+			Model model) {
 		System.out.println("EnchèresController - post formulaire article");
+		System.out.println("errors = " + bindingResult.getAllErrors());
 		if (!bindingResult.hasErrors()) {
 			try {
+				System.out.println("J'entre dans le try");
 				article.setVendeur(userEnSession);
+				System.out.println("article avec vendeur = " + article);
 				encheresService.ajouterArticleAVendre(article);
 				return "redirect:/";
 			} catch (BusinessException e) {
@@ -82,14 +80,24 @@ public class EncheresController {
 				return "view-article-form";
 			}
 		} else {
+			injectUserAddresses(userEnSession, model);
 			return "view-article-form";
+		}
+	}
+
+	private void injectUserAddresses(Utilisateur userEnSession, Model model) {
+		List<Adresse> adresses = encheresService.consulterAdressesDisponibles(userEnSession.getAdresse().getId());
+		if (adresses != null && !adresses.isEmpty()) {
+			model.addAttribute("adressesDisponibles", adresses);
 		}
 	}
 
 	@ModelAttribute("categoriesEnSession")
 	public List<Categorie> chargerCategories() {
 		System.out.println("EncheresController - charger categories");
-		return encheresService.consulterCategories();
+		List<Categorie> categories = encheresService.consulterCategories();
+		System.out.println("categories =" + categories);
+		return categories;
 	}
 	
 }

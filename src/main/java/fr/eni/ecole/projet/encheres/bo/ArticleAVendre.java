@@ -43,6 +43,9 @@ public class ArticleAVendre implements Serializable {
 	private Utilisateur vendeur;
 	
 	public ArticleAVendre() {
+		vendeur = new Utilisateur();
+		categorie = new Categorie();
+		adresseRetrait = new Adresse();
 	}
 
 	public ArticleAVendre(String nom, String description, LocalDate dateDebutEncheres, LocalDate dateFinEncheres,
