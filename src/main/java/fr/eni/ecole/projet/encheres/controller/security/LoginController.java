@@ -30,6 +30,7 @@ public class LoginController {
 			Principal principal
 	) {
 		Utilisateur userACharger = utilisateurService.findByPseudo(principal.getName());
+		System.out.println("userACharger /session = " + userACharger);
 		if (userACharger != null) {
 			userEnSession.setPseudo(userACharger.getPseudo());
 			userEnSession.setNom(userACharger.getNom());
