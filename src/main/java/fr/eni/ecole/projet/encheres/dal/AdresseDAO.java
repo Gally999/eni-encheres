@@ -7,15 +7,10 @@ import java.util.List;
 public interface AdresseDAO {
 
   List<Adresse> findAllAvailable(long id);
-
-
-  List<Adresse> findAllAvailable();
   
-   void create(Adresse adresse);
+  void create(Adresse adresse);
   
-   long readAdresseConnue(Adresse adresse);
-  
-
+  long readAdresseConnue(Adresse adresse);
 
   Adresse read(long id);
 

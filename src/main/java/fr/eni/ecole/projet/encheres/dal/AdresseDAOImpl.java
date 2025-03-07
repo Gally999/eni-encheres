@@ -1,10 +1,8 @@
 package fr.eni.ecole.projet.encheres.dal;
 
-
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
-
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,16 +13,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 @Repository
 public class AdresseDAOImpl implements AdresseDAO {
 
   public static final String FIND_ALL_AVAILABLE = "SELECT no_adresse, rue, code_postal, ville FROM Adresses " +
-      "WHERE adresse_eni = 1 OR no_adresse = :id;";
+      "WHERE adresse_eni = 1 OR no_adresse = :id ORDER BY adresse_eni ASC;";
   public static final String FIND_BY_ID = "SELECT no_adresse, rue, code_postal, ville FROM Adresses WHERE no_adresse = :adresseId;";
-
-
 
   public static final String CREATE_ADRESSE = "INSERT INTO ADRESSES (rue, code_postal, ville, adresse_eni) VALUES (:rue, :codePostal, :ville, 0)";
 
@@ -74,33 +69,22 @@ public class AdresseDAOImpl implements AdresseDAO {
 	  if (keyHolder != null && keyHolder.getKey() != null) {  
 		  adresse.setId(keyHolder.getKey().longValue());
 		}
-		 
-	
   }
   
   //Méthode qui vérifie si l'adresse existe et donne IdAdresse sinon 0 
    @Override
    public long readAdresseConnue(Adresse adresse) {
-	String sqlSelect = "SELECT no_adresse FROM ADRESSES WHERE rue = :rue AND code_postal = :codePostal AND ville = :ville";
+	    String sqlSelect = "SELECT no_adresse FROM ADRESSES WHERE rue = :rue AND code_postal = :codePostal AND ville = :ville";
     
-    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-    namedParameters.addValue("rue", adresse.getRue());
-    namedParameters.addValue("codePostal", adresse.getCodePostal());
-    namedParameters.addValue("ville", adresse.getVille());
-    
-    try{
-    	return jdbcTemplate.queryForObject(sqlSelect, namedParameters, Long.class);
-    
-    } catch (DataAccessException e) {
-    	return 0;
-    }
-  }
-	
-  
+      MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+      namedParameters.addValue("rue", adresse.getRue());
+      namedParameters.addValue("codePostal", adresse.getCodePostal());
+      namedParameters.addValue("ville", adresse.getVille());
 
-   @Override
-   public List<Adresse> findAllAvailable() {
-	   // TODO Auto-generated method stub
-	   return null;
-   }
-	}
+      try {
+        return jdbcTemplate.queryForObject(sqlSelect, namedParameters, Long.class);
+      } catch (DataAccessException e) {
+        return 0;
+      }
+    }
+}

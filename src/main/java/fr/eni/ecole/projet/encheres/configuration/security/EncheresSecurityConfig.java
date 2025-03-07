@@ -51,7 +51,7 @@ public class EncheresSecurityConfig {
 		// Customiser le formulaire de login
 		http.formLogin(form -> {
 			form.loginPage("/login").permitAll();
-			form.defaultSuccessUrl("/session");
+			form.defaultSuccessUrl("/");
 		});
 		
 		// Déconnexion
