@@ -1,8 +1,9 @@
 package fr.eni.ecole.projet.encheres.controller;
 
-import java.util.Comparator;
+import java.security.Principal;
 import java.util.List;
 
+import fr.eni.ecole.projet.encheres.bll.UtilisateurService;
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
@@ -21,14 +22,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({ "categoriesEnSession", "userEnSession" })
+@SessionAttributes({ "categoriesEnSession" })
 public class EncheresController {
 	
 	private final EncheresService encheresService;
+	private final UtilisateurService utilisateurService;
 
-	public EncheresController(EncheresService encheresService) {
+	public EncheresController(EncheresService encheresService, UtilisateurService utilisateurService) {
 		this.encheresService = encheresService;
-	}
+    this.utilisateurService = utilisateurService;
+  }
 
 	@GetMapping("/")
 	public String afficherEncheresActives(Model model) {
@@ -42,13 +45,11 @@ public class EncheresController {
 	@GetMapping("/article/creer")
 	public String creationArticle(
 			Model model,
-			@ModelAttribute("userEnSession") Utilisateur userEnSession
+			Principal principal
 	) {
 		System.out.println("EncheresController - get formulaire article à créer");
-		System.out.println("userEnSession" + userEnSession);
-		if (userEnSession != null && userEnSession.getPseudo() != null) {
-			injectUserAddresses(userEnSession, model);
-
+		if (principal != null && principal.getName() != null) {
+			injectUserAddresses(principal.getName(), model);
 			ArticleAVendre article = new ArticleAVendre();
 			System.out.println("Article = " + article);
 			model.addAttribute("article", article);
@@ -61,20 +62,21 @@ public class EncheresController {
 	public String ajouterArticle(
 			@Valid @ModelAttribute("article") ArticleAVendre article,
 			BindingResult bindingResult,
-			@ModelAttribute("userEnSession") Utilisateur userEnSession,
-			Model model) {
+			Model model,
+			Principal principal
+	) {
 		System.out.println("EnchèresController - post formulaire article");
 		System.out.println("errors = " + bindingResult.getAllErrors());
 		if (!bindingResult.hasErrors()) {
 			try {
-				System.out.println("J'entre dans le try");
-				System.out.println("userEnSession dans le Enchères Controller" + userEnSession);
-				// TODO Pourquoi le userEnSession prend le 'nom' de l'article ?
-				article.setVendeur(userEnSession);
-				System.out.println("article avec vendeur = " + article);
+				Utilisateur user = utilisateurService.findByPseudo(principal.getName());
+				article.setVendeur(user);
+
 				encheresService.ajouterArticleAVendre(article);
 				return "redirect:/";
+				
 			} catch (BusinessException e) {
+				injectUserAddresses(principal.getName(), model);
 				e.getClefsExternalisations().forEach(key -> {
 					ObjectError error = new ObjectError("globalError", key);
 					bindingResult.addError(error);
@@ -82,20 +84,15 @@ public class EncheresController {
 				return "view-article-form";
 			}
 		} else {
-			injectUserAddresses(userEnSession, model);
+			injectUserAddresses(principal.getName(), model);
 			return "view-article-form";
 		}
 	}
 
-	private void injectUserAddresses(Utilisateur userEnSession, Model model) {
-		List<Adresse> adresses = encheresService.consulterAdressesDisponibles(userEnSession.getAdresse().getId());
+	private void injectUserAddresses(String userPseudo, Model model) {
+		Utilisateur user = utilisateurService.findByPseudo(userPseudo);
+		List<Adresse> adresses = encheresService.consulterAdressesDisponibles(user.getAdresse().getId());
 		if (adresses != null && !adresses.isEmpty()) {
-			Comparator<Adresse> comparator = (a1, a2) -> {
-				if (a1.getId() == userEnSession.getAdresse().getId()) return -1;
-				if (a2.getId() == userEnSession.getAdresse().getId()) return 1;
-				return a1.compareTo(a2);
-			};
-			adresses.sort(comparator);
 			model.addAttribute("adressesDisponibles", adresses);
 		}
 	}

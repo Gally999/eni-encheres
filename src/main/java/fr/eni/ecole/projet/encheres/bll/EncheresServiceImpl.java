@@ -1,52 +1,54 @@
 package fr.eni.ecole.projet.encheres.bll;
 
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
-import fr.eni.ecole.projet.encheres.dal.AdresseDAO;
-import fr.eni.ecole.projet.encheres.dal.CategorieDAO;
+import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.dal.*;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
-import fr.eni.ecole.projet.encheres.dal.ArticleAVendreDAO;
-
 
 @Service
 public class EncheresServiceImpl implements EncheresService {
-	
+
 	private final ArticleAVendreDAO articleDAO;
 	private final CategorieDAO categorieDAO;
 	private final AdresseDAO adresseDAO;
+	private final UtilisateurDAO utilisateurDAO;
 
-	public EncheresServiceImpl(ArticleAVendreDAO articleDAO, CategorieDAO categorieDAO, AdresseDAO adresseDAO) {
+	public EncheresServiceImpl(ArticleAVendreDAO articleDAO, CategorieDAO categorieDAO, AdresseDAO adresseDAO, UtilisateurDAOImpl utilisateurDAO) {
 		this.articleDAO = articleDAO;
 		this.categorieDAO = categorieDAO;
-    this.adresseDAO = adresseDAO;
-  }
+		this.adresseDAO = adresseDAO;
+		this.utilisateurDAO = utilisateurDAO;
+	}
 
 	@Override
 	public void ajouterArticleAVendre(ArticleAVendre article) {
 		// Validation des données de la couche présentation
 		BusinessException be = new BusinessException();
-		boolean isValid;
-		isValid = validerDateFin(article.getDateDebutEncheres(), article.getDateFinEncheres(), be);
+		boolean isValid = true;
+		isValid &= validerUserExists(article.getVendeur(), be);
+		isValid &= validerAdresse(article.getAdresseRetrait(), be);
+		isValid &= validerCategorie(article.getCategorie(), be);
+		isValid &= validerDateFin(article.getDateDebutEncheres(), article.getDateFinEncheres(), be);
 
 		if (isValid) {
 			System.out.println("création article = " + article);
-      try {
-        articleDAO.create(article);
-      } catch (DataAccessException e) {
-        be.add(BusinessCode.ERROR_CREATION_ARTICLE);
+			try {
+				articleDAO.create(article);
+			} catch (DataAccessException e) {
+				be.add(BusinessCode.ERROR_CREATION_ARTICLE);
 				throw be;
-      }
-    } else {
+			}
+		} else {
 			throw be;
 		}
 	}
@@ -87,16 +89,73 @@ public class EncheresServiceImpl implements EncheresService {
 	}
 
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
-			if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
-				be.add(BusinessCode.VALIDATION_DATE_FIN_ENCHERES_FUTURE);
-				return false;
-			}
-			return true;
+		if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
+			be.add(BusinessCode.VALIDATION_DATE_FIN_ENCHERES_FUTURE);
+			return false;
+		}
+		return true;
 	}
 
-	@Override
-	public List<Adresse> consulterAdressesDisponibles() {
-		// TODO Auto-generated method stub
-		return null;
+	private boolean validerAdresse(Adresse adresse, BusinessException be) {
+		if (adresse == null) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_ADRESSE_NULL);
+			return false;
+		}
+		if (adresse.getId() <= 0) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_ADRESSE_ID_INCONNU);
+			return false;
+		}
+		try {
+			if (adresseDAO.read(adresse.getId()) == null) {
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_ADRESSE_ID_INCONNU);
+				return false;
+			}
+		} catch (DataAccessException e) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_ADRESSE_ID_INCONNU);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validerCategorie(Categorie categorie, BusinessException be) {
+		if (categorie == null) {
+			be.add(BusinessCode.VALIDATION_ARTICLE_CATEGORIE_NULL);
+			return false;
+		}
+		if (categorie.getId() <= 0) {
+			be.add(BusinessCode.VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU);
+			return false;
+		}
+    try {
+      if (adresseDAO.read(categorie.getId()) == null) {
+        be.add(BusinessCode.VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU);
+        return false;
+      }
+    } catch (DataAccessException e) {
+      be.add(BusinessCode.VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU);
+			return false;
+    }
+    return true;
+	}
+
+	private boolean validerUserExists(Utilisateur user, BusinessException be) {
+		if (user == null) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_NULL);
+			return false;
+		}
+		if (user.getPseudo() == null || user.getPseudo().isEmpty()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_BLANK);
+			return false;
+		}
+    try {
+      if (utilisateurDAO.readByPseudo(user.getPseudo()) == null) {
+        be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+        return false;
+      }
+    } catch (DataAccessException e) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+			return false;
+    }
+    return true;
 	}
 }

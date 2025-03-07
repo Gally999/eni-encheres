@@ -1,5 +1,3 @@
-
-
 package fr.eni.ecole.projet.encheres.bll;
 
 import java.util.List;
@@ -28,5 +26,4 @@ public interface UtilisateurService {
 
 		long verifierEtAffecterAdresse(Adresse adresse);
 
-		
 	}
