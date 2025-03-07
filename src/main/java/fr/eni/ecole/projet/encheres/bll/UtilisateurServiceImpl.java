@@ -101,40 +101,33 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	
 
 	@Override
-	//gestion de la transaction
 	@Transactional
 	public void add(Utilisateur utilisateur) {
-		
-			// Validation des données de la couche présentation
-			BusinessException be = new BusinessException();
-			boolean isValid = true;
-			isValid &= validerUtilisateur(utilisateur, be);
-			isValid &= validerEmail(utilisateur.getEmail(), be);
-			isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
-			isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
-			isValid &= validerTelephone(utilisateur.getTelephone(), be);
-			isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
-			isValid &= validerAdresse(utilisateur.getAdresse(), be);
-			isValid &= validerMotDePasseConfirmation(utilisateur, be);
-						
-			
-			if (isValid) {
-				
-				// Crypter le mot de passe avant de créer l'utilisateur
-		        String motDePasseCrypte = passwordEncoder.encode(utilisateur.getMotDePasse());
-		        utilisateur.setMotDePasse(motDePasseCrypte);  // Remplacer le mot de passe en clair par celui chiffré
-				
-				utilisateur.getAdresse().setId(verifierEtAffecterAdresse(utilisateur.getAdresse()));
-				
-				utilisateurDAO.create(utilisateur);
-				//Attention, il faut aussi compléter l'appel de la méthode pour gérer l'insertion en base des ventes-achats
-					
-				
-			} else {
-				throw be;
-			}
-		
+	    // Validation des données de la couche présentation
+	    BusinessException be = new BusinessException();
+	    boolean isValid = true;
+	    isValid &= validerUtilisateur(utilisateur, be);
+	    isValid &= validerEmail(utilisateur.getEmail(), be);
+	    isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
+	    isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
+	    isValid &= validerTelephone(utilisateur.getTelephone(), be);
+	    isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);  // Validation du mot de passe
+	    isValid &= validerMotDePasseConfirmation(utilisateur, be);  // Validation de la confirmation du mot de passe
+	    isValid &= validerAdresse(utilisateur.getAdresse(), be);
+	    
+	    if (isValid) {
+	        // Crypter le mot de passe avant de créer l'utilisateur
+	        String motDePasseCrypte = passwordEncoder.encode(utilisateur.getMotDePasse());
+	        utilisateur.setMotDePasse(motDePasseCrypte);  // Remplacer le mot de passe en clair par celui chiffré
+	        
+	        utilisateur.getAdresse().setId(verifierEtAffecterAdresse(utilisateur.getAdresse()));
+	        
+	        utilisateurDAO.create(utilisateur);
+	    } else {
+	        throw be;
+	    }
 	}
+
 		
 	/**
 	 * Méthodes de validation des BO
@@ -195,6 +188,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 
 	    return true;
 	}
+
 
 	
 	private boolean validerAdresse(Adresse adresse, BusinessException be) {

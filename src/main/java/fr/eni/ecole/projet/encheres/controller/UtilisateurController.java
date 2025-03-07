@@ -43,37 +43,36 @@ public class UtilisateurController {
 		// sauvegarde
 		@PostMapping("/creer")
 		public String creerUtilisateur(
-				@Valid 
-				@ModelAttribute("utilisateur") Utilisateur utilisateur,
-				BindingResult bindingResult) {
-			
-			       	     	        			
-			// Définir un crédit par défaut 
-	        utilisateur.setCredit(10); 
-			
-			// Vérification que les mots de passe correspondent
-	        if (utilisateur.getMotDePasse() == null || !utilisateur.getMotDePasse().equals(utilisateur.getMotDePasseConfirmation())) {
-	            bindingResult.rejectValue("motDePasseConfirmation", "validation.utilisateur.motDePasse.confirmation");
-	        }
+		        @Valid 
+		        @ModelAttribute("utilisateur") Utilisateur utilisateur,
+		        BindingResult bindingResult) {
 
-	           	        
-			if (bindingResult.hasErrors()) {
-				return "view-utilisateur-creer";
-			} else {
-				try {
-					utilisateur.setCredit(10);
-					utilisateurService.add(utilisateur);
-					return "redirect:/";
-				} catch (BusinessException e) {
-					//Afficher les messages d’erreur - les injecter dans le contexte de BindingResult
-					e.getClefsExternalisations().forEach(key -> {
-						ObjectError error = new ObjectError("globalError", key);
-						bindingResult.addError(error);
-					});
-					return "view-utilisateur-creer";
-				}
-			}
+		    // Définir un crédit par défaut 
+		    utilisateur.setCredit(10); 
+
+		    // Vérification côté serveur que les mots de passe correspondent
+		    if (utilisateur.getMotDePasse() == null || !utilisateur.getMotDePasse().equals(utilisateur.getMotDePasseConfirmation())) {
+		        bindingResult.rejectValue("motDePasseConfirmation", "validation.utilisateur.motDePasse.confirmation");
+		    }
+
+		    if (bindingResult.hasErrors()) {
+		        return "view-utilisateur-creer";
+		    } else {
+		        try {
+		            utilisateur.setCredit(10);
+		            utilisateurService.add(utilisateur);  // Ajoutez l'utilisateur
+		            return "redirect:/";  // Redirection après inscription réussie
+		        } catch (BusinessException e) {
+		            // Ajouter les erreurs au BindingResult pour les afficher dans le formulaire
+		            e.getClefsExternalisations().forEach(key -> {
+		                ObjectError error = new ObjectError("globalError", key);
+		                bindingResult.addError(error);
+		            });
+		            return "view-utilisateur-creer";
+		        }
+		    }
 		}
+
 			
 
 		@GetMapping("/monProfil")
