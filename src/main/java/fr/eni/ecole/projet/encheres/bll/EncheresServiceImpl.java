@@ -76,6 +76,16 @@ public class EncheresServiceImpl implements EncheresService {
 		return adresseDAO.findAllAvailable(id);
 	}
 
+	@Override
+	public Adresse consulterAdresseParId(long id) {
+		return adresseDAO.read(id);
+	}
+
+	@Override
+	public Categorie consulterCategorieParId(long id) {
+		return categorieDAO.read(id);
+	}
+
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
 			if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
 				be.add(BusinessCode.VALIDATION_DATE_FIN_ENCHERES_FUTURE);

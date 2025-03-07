@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,10 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	private UtilisateurDAO utilisateurDAO;
 	@Autowired
 	private AdresseDAO adresseDAO;
+	
+	@Autowired
+    private PasswordEncoder passwordEncoder;  // Injecter PasswordEncoder
+
 
 	
     public UtilisateurServiceImpl() {
@@ -41,10 +46,13 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	@Override
 	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
 			int credit, boolean admin, Adresse adresse) {
-		Utilisateur utilisateur = new Utilisateur(pseudo, nom, prenom, email, telephone, motDePasse, credit, admin, adresse);
-		utilisateurDAO.create(utilisateur);
-	}
-
+		
+		// Crypter le mot de passe avant de créer l'utilisateur
+        String motDePasseCrypte = passwordEncoder.encode(motDePasse);
+        Utilisateur utilisateur = new Utilisateur(pseudo, nom, prenom, email, telephone, motDePasseCrypte, credit, admin, adresse);
+        utilisateurDAO.create(utilisateur);
+    }
+	
 	@Override
 	public List<Utilisateur> getUtilisateurs() {
 		return utilisateurDAO.findAll();
@@ -112,6 +120,9 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			
 			if (isValid) {
 				
+				// Crypter le mot de passe avant de créer l'utilisateur
+		        String motDePasseCrypte = passwordEncoder.encode(utilisateur.getMotDePasse());
+		        utilisateur.setMotDePasse(motDePasseCrypte);  // Remplacer le mot de passe en clair par celui chiffré
 				
 				utilisateur.getAdresse().setId(verifierEtAffecterAdresse(utilisateur.getAdresse()));
 				
@@ -250,7 +261,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	            return false;
 	        }
 	    } catch (DataAccessException e) {
-	        be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL_ERROR);
+	        be.add(BusinessCode.VALIDATION_UTILISATEUR_UNIQUE_EMAIL);
 	        e.printStackTrace();
 	        return false;
 	    }

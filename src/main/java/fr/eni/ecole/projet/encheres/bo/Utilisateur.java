@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Size;
 public class Utilisateur implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
 		
 	@NotBlank
 	@Size(min = 4, max=250)

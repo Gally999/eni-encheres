@@ -18,25 +18,28 @@
     <main>
         <h1>Nouvelle Vente</h1>
         <form data-th-action="@{/article/creer}" method="POST" data-th-object="${article}">
-<!--            <div data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>-->
+            <div data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>
             <ul class="flex-outer">
                 <li>
                     <label for="inputNom">Article (*)</label>
                     <input type="text" id="inputNom" data-th-field="*{nom}" placeholder="Un fauteuil" />
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('nom')}"></div>
                 </li>
                 <li>
                     <label for="inputPrix">Mise à prix (*)</label>
                     <input type="number" id="inputPrix" data-th-field="*{prixInitial}" />
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('prixInitial')}"></div>
                 </li>
                 <li>
                     <label for="inputCategorie">Catégorie (*)</label>
                     <select name="" id="inputCategorie" data-th-field="*{categorie}">
                         <option
-                                data-th-each="c : ${categoriesEnSession}"
-                                data-th-value="${c.id}"
-                                data-th-text="${c.libelle}"
+                                data-th-each="cat : ${categoriesEnSession}"
+                                data-th-value="${cat.id}"
+                                data-th-text="${cat.libelle}"
                         ></option>
                     </select>
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('categorie')}"></div>
                 </li>
                 <li>
                     <label for="inputDateDebut">Début de l'enchère (*)</label>
@@ -45,6 +48,7 @@
                             id="inputDateDebut"
                             data-th-field="*{dateDebutEncheres}"
                     />
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('dateDebutEncheres')}"></div>
 <!--                            onfocus="(this.type='date')"-->
 <!--                            onblur="(this.type='text')"-->
 <!--                            placeholder="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"-->
@@ -53,20 +57,23 @@
                 <li>
                     <label for="inputDescription">Description (*)</label>
                     <textarea id="inputDescription" data-th-field="*{description}" placeholder="Un fauteuil rouge"></textarea>
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('description')}"></div>
                 </li>
                 <li>
                     <label for="inputDateFin">Fin de l'enchère (*)</label>
                     <input type="date" id="inputDateFin" data-th-field="*{dateFinEncheres}" data-th-value="${article.dateFinEncheres}" />
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('dateFinEncheres')}"></div>
                 </li>
                 <li>
                     <label for="inputAdresse">Retrait (*)</label>
                     <select id="inputAdresse" data-th-field="*{adresseRetrait}">
                         <option
-                                data-th-each="a: ${adressesDisponibles}"
-                                data-th-value="${a.id}"
-                                data-th-text="${a.rue + ' ' + a.codePostal + ' ' + a.ville}"
+                                data-th-each="adresse : ${adressesDisponibles}"
+                                data-th-value="${adresse.id}"
+                                data-th-text="${adresse.rue + ' ' + adresse.codePostal + ' ' + adresse.ville}"
                         ></option>
                     </select>
+                    <div data-th-replace="~{fragments/errors/fragment-error :: frag-error('adresseRetrait')}"></div>
                 </li>
                 <li>
                     <button type="submit">Suivant</button>
