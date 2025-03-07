@@ -9,8 +9,6 @@ import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -53,32 +51,21 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		
 		@Override
 		public List<Utilisateur> findAll() {
-		    return namedParameterJdbcTemplate.query(FIND_ALL, new RowMapper<Utilisateur>() {
-		        @Override
-		        public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
-		            Utilisateur utilisateur = new Utilisateur();
-		            utilisateur.setPseudo(rs.getString("pseudo"));
-		            utilisateur.setNom(rs.getString("nom"));
-		            utilisateur.setPrenom(rs.getString("prenom"));
-		            utilisateur.setEmail(rs.getString("email"));
-		            utilisateur.setTelephone(rs.getString("telephone"));
-		            return utilisateur;
-		        }
-		    });
+
+			return namedParameterJdbcTemplate.query(FIND_ALL, new UtilisateurRowMapper());
+
 		}
 
 		@Override
 		public Utilisateur read(String emailUtilisateur) {
-		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		    namedParameters.addValue("email", emailUtilisateur);
+
 		    
-		    try {
-		        return namedParameterJdbcTemplate.queryForObject(FIND_BY_EMAIL, namedParameters,
-		                new BeanPropertyRowMapper<>(Utilisateur.class));
-		    } catch (EmptyResultDataAccessException e) {
-		        // Ccas où aucun utilisateur n'est trouvé 
-		        return null;  
-		    }
+			MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+			namedParameters.addValue("email", emailUtilisateur);
+			
+			return namedParameterJdbcTemplate.queryForObject(FIND_BY_EMAIL, namedParameters,
+					new UtilisateurRowMapper());
+
 		}
 
 

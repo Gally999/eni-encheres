@@ -32,9 +32,9 @@ public class BusinessCode {
 	public static final String VALIDATION_UTILISATEUR_VILLE_LENGTH ="validation.utilisateur.ville.length";
 	
 	public static final String VALIDATION_UTILISATEUR_ADRESSE_NULL = "validation.utilisateur.adresse.null";
-	
-	
-	public static final String VALIDATION_DATE_FIN_ENCHERES_FUTURE = "validation.utilisateur.dateFinEncheres.future";
+
+	public static final String VALIDATION_DATE_FIN_ENCHERES_FUTURE = "validation.utilisateur.date.fin.future";
+
 	public static final String ERROR_CREATION_ARTICLE = "error.creation.article";
 
 }

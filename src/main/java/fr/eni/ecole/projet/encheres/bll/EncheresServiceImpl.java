@@ -35,7 +35,7 @@ public class EncheresServiceImpl implements EncheresService {
 	public void ajouterArticleAVendre(ArticleAVendre article) {
 		// Validation des données de la couche présentation
 		BusinessException be = new BusinessException();
-		boolean isValid = true;
+		boolean isValid;
 		isValid = validerDateFin(article.getDateDebutEncheres(), article.getDateFinEncheres(), be);
 
 		if (isValid) {

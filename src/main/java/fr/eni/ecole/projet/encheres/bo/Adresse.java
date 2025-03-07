@@ -3,7 +3,7 @@ package fr.eni.ecole.projet.encheres.bo;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Adresse implements Serializable {
+public class Adresse implements Serializable, Comparable<Adresse> {
 
 	private static final long serialVersionUID = 1L;
 	private long id;
@@ -81,6 +81,7 @@ public class Adresse implements Serializable {
 		return "Adresse [id=" + id + ", rue=" + rue + ", codePostal=" + codePostal + ", ville=" + ville + "]";
 	}
 
+
 	public void setNoAdresse(int noAdresse) {
 		this.noAdresse = noAdresse;		
 	}
@@ -89,5 +90,9 @@ public class Adresse implements Serializable {
 		return noAdresse;
 	}
 
-	
+
+  public int compareTo(Adresse a2) {
+    return Long.compare(this.getId(), a2.getId());
+  }
+
 }

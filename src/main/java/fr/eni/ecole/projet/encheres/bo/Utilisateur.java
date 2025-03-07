@@ -4,22 +4,28 @@ package fr.eni.ecole.projet.encheres.bo;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class Utilisateur implements Serializable{
+public class Utilisateur implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 		
 	@NotBlank
-	@Size(min = 4, max=250)
-	private String nom;
+	@Size(min = 4, max = 40)
+	private String lastName;
 	
 	@NotBlank
-	@Size(min = 4, max=250)
+	@Size(min = 4, max = 50)
 	private String prenom;
-	
+
+	@NotBlank
+	@Size(min = 4, max = 30)
 	private String pseudo;
+
+	@Email
+	@NotBlank
 	private String email;
 	private String telephone;
 	private String motDePasse;
@@ -36,9 +42,9 @@ public class Utilisateur implements Serializable{
 	}
 
 	public Utilisateur(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
-			int credit, boolean admin, Adresse adresse) {
+										 int credit, boolean admin, Adresse adresse) {
 		this.pseudo = pseudo;
-		this.nom = nom;
+		this.lastName = nom;
 		this.prenom = prenom;
 		this.email = email;
 		this.telephone = telephone;
@@ -65,11 +71,11 @@ public class Utilisateur implements Serializable{
 	}
 
 	public String getNom() {
-		return nom;
+		return lastName;
 	}
 
 	public void setNom(String nom) {
-		this.nom = nom;
+		this.lastName = nom;
 	}
 
 	public String getPrenom() {
@@ -142,8 +148,8 @@ public class Utilisateur implements Serializable{
 		StringBuilder builder = new StringBuilder();
 		builder.append("Utilisateur [pseudo=");
 		builder.append(pseudo);
-		builder.append(", nom=");
-		builder.append(nom);
+		builder.append(", lastName=");
+		builder.append(lastName);
 		builder.append(", prenom=");
 		builder.append(prenom);
 		builder.append(", email=");
@@ -162,7 +168,7 @@ public class Utilisateur implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, nom, prenom, pseudo);
+		return Objects.hash(email, lastName, prenom, pseudo);
 	}
 
 	@Override
@@ -174,7 +180,7 @@ public class Utilisateur implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Utilisateur other = (Utilisateur) obj;
-		return Objects.equals(email, other.email) && Objects.equals(nom, other.nom)
+		return Objects.equals(email, other.email) && Objects.equals(lastName, other.lastName)
 				&& Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo);
 	}
 
