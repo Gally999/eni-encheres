@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.dal.AdresseDAO;
@@ -26,12 +27,11 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	private AdresseDAO adresseDAO;
 	
 	@Autowired
-    private PasswordEncoder passwordEncoder;  // Injecter PasswordEncoder
-
+    private PasswordEncoder passwordEncoder;
+	
 
 	
     public UtilisateurServiceImpl() {
-        
     }
 
     public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO) {
@@ -43,36 +43,36 @@ public class UtilisateurServiceImpl implements UtilisateurService{
         this.adresseDAO = adresseDAO;
     }
 
-	@Override
-	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
-			int credit, boolean admin, Adresse adresse) {
-		
-		// Crypter le mot de passe avant de créer l'utilisateur
-        String motDePasseCrypte = passwordEncoder.encode(motDePasse);
-        Utilisateur utilisateur = new Utilisateur(pseudo, nom, prenom, email, telephone, motDePasseCrypte, credit, admin, adresse);
-        utilisateurDAO.create(utilisateur);
-    }
-	
-	@Override
+		@Override
 	public List<Utilisateur> getUtilisateurs() {
 		return utilisateurDAO.findAll();
 	}
 
-	@Override
-	public Utilisateur findByEmail(String emailUtilisateur) {
+	
 		
-		// Il nous faut l'utilisateur et les ventes-achats associés ?
-		Utilisateur u = utilisateurDAO.read(emailUtilisateur);
-
-		return u;
-	}
-
+		
+		
+	//PAGE MODIFIER MON PROFIL 
 	@Override
-	public Utilisateur findByPseudo(String pseudo) {
-		return utilisateurDAO.readByPseudo(pseudo);
-	}
+	// Méthode pour récupérer l'adresse complète de l'utilisateur connecté
+    public Adresse getAdresseDeLUtilisateurConnecte(String pseudo) {
+        // Récupérer le no_adresse de l'utilisateur via son pseudo
+        int noAdresse = utilisateurDAO.getNoAdresseByPseudo(pseudo);
 
+     // Ensuite, récupérer l'adresse avec ce no_adresse
+        Adresse adresse = utilisateurDAO.getAdresseByNoAdresse(noAdresse);
+        System.out.println("Adresse récupérée avec no_adresse " + noAdresse + " : " + adresse);  // Log de l'adresse
 
+        return adresse;
+    }
+
+    
+	
+	
+ 
+	
+
+	
 	@Override
 	public void update(Utilisateur utilisateur) {
 		// Validation des données de la couche présentation
@@ -99,7 +99,47 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 	}
 	
+	
+	public int getCreditDeLUtilisateurConnecte(String pseudo) {
+	    Utilisateur utilisateur = findByPseudo(pseudo);
+	    
+	    if (utilisateur != null) {
+	        return utilisateur.getCredit();
+	    }
+	    return 0;
+	}
+	
+	
+	
+	
+	//PAGE MON PROFIL
+	@Override
+	public Utilisateur findByPseudo(String pseudo) {
+		return utilisateurDAO.readByPseudo(pseudo);
+	}
+	
+	public String getTelephoneDeLUtilisateurConnecte(String pseudo) {
+	    Utilisateur utilisateur = findByPseudo(pseudo);
+	    
+	    if (utilisateur != null) {
+	        return utilisateur.getTelephone();
+	    }
+	    return null;
+	}
 
+	
+	
+	//PAGE S'INSCRIRE:
+	@Override
+	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
+			int credit, boolean admin, Adresse adresse) {
+		
+		// Crypter le mot de passe avant de créer l'utilisateur
+        String motDePasseCrypte = passwordEncoder.encode(motDePasse);
+        Utilisateur utilisateur = new Utilisateur(pseudo, nom, prenom, email, telephone, motDePasseCrypte, credit, admin, adresse);
+        utilisateurDAO.create(utilisateur);
+    }	
+	
 	@Override
 	@Transactional
 	public void add(Utilisateur utilisateur) {
@@ -112,7 +152,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	    isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
 	    isValid &= validerTelephone(utilisateur.getTelephone(), be);
 	    isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);  // Validation du mot de passe
-	    isValid &= validerMotDePasseConfirmation(utilisateur, be);  // Validation de la confirmation du mot de passe
+	    //isValid &= validerMotDePasseConfirmation(utilisateur, be);  // Validation de la confirmation du mot de passe
 	    isValid &= validerAdresse(utilisateur.getAdresse(), be);
 	    
 	    if (isValid) {
@@ -188,8 +228,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 
 	    return true;
 	}
-
-
 	
 	private boolean validerAdresse(Adresse adresse, BusinessException be) {
 		
@@ -313,9 +351,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 		return true;
 	}
-
-	
-
 	
 	@Override
 	public int uniquePseudo(String pseudo) {

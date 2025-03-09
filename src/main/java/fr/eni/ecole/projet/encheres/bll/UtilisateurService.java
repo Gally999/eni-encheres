@@ -14,8 +14,6 @@ public interface UtilisateurService {
 
 		void add(Utilisateur utilisateur);
 		
-		Utilisateur findByEmail(String emailUtilisateur);
-
 		Utilisateur findByPseudo(String pseudo);
 
 		void update(Utilisateur utilisateur);
@@ -25,5 +23,12 @@ public interface UtilisateurService {
 		int uniquePseudo(String pseudo);
 
 		long verifierEtAffecterAdresse(Adresse adresse);
+
+		String getTelephoneDeLUtilisateurConnecte(String pseudo);
+
+		int getCreditDeLUtilisateurConnecte(String pseudo);
+
+		Adresse getAdresseDeLUtilisateurConnecte(String pseudo);
+
 
 	}

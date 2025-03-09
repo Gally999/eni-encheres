@@ -43,17 +43,7 @@ public class AdresseDAOImpl implements AdresseDAO {
     return jdbcTemplate.queryForObject(FIND_BY_ID, namedParam, new AdresseRowMapper());
   }
 
-  static class AdresseRowMapper implements RowMapper<Adresse> {
-    @Override
-    public Adresse mapRow(ResultSet rs, int rowNum) throws SQLException {
-      Adresse a = new Adresse();
-      a.setId(rs.getLong("no_adresse"));
-      a.setRue(rs.getString("rue"));
-      a.setCodePostal(rs.getString("code_postal"));
-      a.setVille(rs.getString("ville"));
-      return a;
-    }
-  }
+  
 
   @Override
   public void create(Adresse adresse) {
@@ -81,10 +71,30 @@ public class AdresseDAOImpl implements AdresseDAO {
       namedParameters.addValue("codePostal", adresse.getCodePostal());
       namedParameters.addValue("ville", adresse.getVille());
 
+
       try {
         return jdbcTemplate.queryForObject(sqlSelect, namedParameters, Long.class);
       } catch (DataAccessException e) {
         return 0;
       }
-    }
-}
+   }
+
+
+   @Override
+   public List<Adresse> findAllAvailable() {
+	   // TODO Auto-generated method stub
+	   return null;
+   }
+   
+   static class AdresseRowMapper implements RowMapper<Adresse> {
+	    @Override
+	    public Adresse mapRow(ResultSet rs, int rowNum) throws SQLException {
+	      Adresse a = new Adresse();
+	      a.setId(rs.getLong("no_adresse"));
+	      a.setRue(rs.getString("rue"));
+	      a.setCodePostal(rs.getString("code_postal"));
+	      a.setVille(rs.getString("ville"));
+	      return a;
+	    }
+	 }
+	}

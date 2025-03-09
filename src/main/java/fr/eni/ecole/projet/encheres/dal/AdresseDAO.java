@@ -14,5 +14,7 @@ public interface AdresseDAO {
 
   Adresse read(long id);
 
+  List<Adresse> findAllAvailable();
+
 }
 

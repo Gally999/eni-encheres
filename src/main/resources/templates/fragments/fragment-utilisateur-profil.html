@@ -1,0 +1,44 @@
+<form xmlns:th="http://www.thymeleaf.org" 
+      data-th-fragment="frag-utilisateur-form(action, titreForm)" 
+      data-th-action="@{${action}}"
+      data-th-object="${utilisateur}">
+
+    <h1 data-th-text="${utilisateur.pseudo}"></h1>
+    <div data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>
+
+    <ul class="flex-outer">
+        
+
+        <li>
+            <label for="inputPrenom" data-th-text="#{frag-utilisateur-prenom}"></label> 
+            <span data-th-text="${utilisateur.prenom}"></span>
+            <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('prenom')}"></div>
+        </li>
+
+        <li>
+            <label for="inputNom" data-th-text="#{frag-utilisateur-nom}"></label> 
+            <span data-th-text="${utilisateur.nom}"></span>
+            <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('nom')}"></div>
+        </li>
+
+        <li>
+            <label for="inputEmail" data-th-text="#{frag-utilisateur-email}"></label> 
+            <span data-th-text="${utilisateur.email}"></span>
+            <th:block data-th-if="${#strings.contains(action,'creer')}">
+                <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('email')}"></div>
+            </th:block>
+        </li>
+
+        <li>
+            <label for="inputTelephone" data-th-text="#{frag-utilisateur-telephone}"></label> 
+            <span data-th-text="${utilisateur.telephone}"></span>
+            <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('telephone')}"></div>
+        </li>
+
+       <!--  Direction Mon Profi Modifier -->
+        <nav>
+         <button type="button" class="cancel-button" onclick="window.location.href='/monProfil/modifier';"  data-th-text="#{frag-utilisateur-modifier}"></button>
+        </nav> 
+
+    </ul>
+</form>

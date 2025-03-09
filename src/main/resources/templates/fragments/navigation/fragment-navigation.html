@@ -28,9 +28,11 @@
               <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a>
          </li>
          
-         <!-- Encadré affichant la date -->
+         <!-- Encadré affichant la date / participant si connecté-->
    		 <div id="date-encart" class="date-encart">
-       		 <p>Date du jour : <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span></p>  <!-- Affiche la date -->
+    		<p data-th-text="#{frag-nav.dateDuJour} + ${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></p>
+		    		
+<!--          	<p data-th-if="${#authorization.expression('isAuthenticated()')}" data-th-text="#{frag-nav.participant}  + ${utilisateur.pseudo}"></p>  -->
    		 </div>
 
         
