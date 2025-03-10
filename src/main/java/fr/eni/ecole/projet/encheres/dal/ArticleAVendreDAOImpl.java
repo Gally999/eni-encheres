@@ -23,8 +23,11 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 													+ "	FROM Articles_A_Vendre " 
 													+ "	WHERE statut_enchere = 1;";
 	private static final String INSERT_ARTICLE = "INSERT INTO Articles_A_Vendre(nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, id_utilisateur, no_categorie, no_adresse_retrait) "
-			+ " VALUES(:nom, :description, :dateDebut, :dateFin, :prixInitial, :idUtilisateur, :idCategorie, :idAdresse);";
-	
+													+ " VALUES(:nom, :description, :dateDebut, :dateFin, :prixInitial, :idUtilisateur, :idCategorie, :idAdresse);";
+	private static final String FIND_BY_CAT_AND_SEARCH_TERM = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
+													+ "	FROM Articles_A_Vendre "
+													+ "	WHERE statut_enchere = 1 AND no_categorie IN (:categorieIds) AND nom_article LIKE :search;";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public ArticleAVendreDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -63,6 +66,15 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	@Override
 	public List<ArticleAVendre> findAllActive() {
 		return jdbcTemplate.query(FIND_ALL_ACTIVES, new ArticleAVendreRowMapper());
+	}
+
+	@Override
+	public List<ArticleAVendre> findByCatAndSearchTerm(List<Long> categorieIds, String search) {
+		System.out.println("ArticleDAO.findByCatAndSearchTerm() " + categorieIds + " " + search);
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("categorieIds", categorieIds);
+		namedParams.addValue("search", "%" + search + "%");
+		return jdbcTemplate.query(FIND_BY_CAT_AND_SEARCH_TERM, namedParams, new ArticleAVendreRowMapper());
 	}
 	
 	static class ArticleAVendreRowMapper implements RowMapper<ArticleAVendre> {

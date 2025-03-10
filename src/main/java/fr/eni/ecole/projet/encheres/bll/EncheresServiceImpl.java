@@ -60,12 +60,26 @@ public class EncheresServiceImpl implements EncheresService {
 	}
 
 	@Override
-	public List<ArticleAVendre> consulterEncheresActives() {
-		List<ArticleAVendre> allActive = articleDAO.findAllActive();
-		if (allActive == null) {
-			allActive = new ArrayList<>();
+	public List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm) {
+		List<ArticleAVendre> articles;
+		if (categorieId == null && (searchTerm == null || searchTerm.isEmpty())) {
+			// Si pas de catégorie ni de mot recherché, on tombe dans le cas par défaut des enchères actives
+			articles = articleDAO.findAllActive();
+		} else {
+			if (categorieId == null) {
+				// Si pas de catégorie sélectionnée alors on va chercher toutes les catégories disponibles
+				List<Long> allIds = categorieDAO.findAll().stream().map(Categorie::getId).toList();
+				articles = articleDAO.findByCatAndSearchTerm(allIds, searchTerm);
+			} else {
+				// Si une catégorie a été sélectionnée alors on la transforme en liste
+				articles = articleDAO.findByCatAndSearchTerm(List.of(categorieId), searchTerm);
+			}
 		}
-		return allActive;
+		if (articles == null) {
+			// Si aucun article ne correspond à la recherche, on renvoie une liste vide
+			articles = new ArrayList<>();
+		}
+		return articles;
 	}
 
 	@Override
