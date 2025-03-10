@@ -27,14 +27,10 @@
          <li data-th-if="${#authorization.expression('isAuthenticated()')}">
               <a href="/logout" data-th-text="#{frag-entete.a.deconnexion}"></a>
          </li>
-         
-         <!-- Encadré affichant la date / participant si connecté-->
-   		 <div id="date-encart" class="date-encart">
-    		<p data-th-text="#{frag-nav.dateDuJour} + ${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></p>
-		    		
-<!--          	<p data-th-if="${#authorization.expression('isAuthenticated()')}" data-th-text="#{frag-nav.participant}  + ${utilisateur.pseudo}"></p>  -->
-   		 </div>
-
-        
 	</ul>
+    <!-- Encadré affichant la date / participant si connecté-->
+    <div id="date-encart" class="date-encart">
+        <p data-th-text="#{frag-nav.dateDuJour} + ${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></p>
+        <p data-th-if="${#authorization.expression('isAuthenticated()')}" data-th-text="#{frag-nav.participant} + ${#authentication.name}"></p>
+    </div>
 </nav>
