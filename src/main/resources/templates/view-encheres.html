@@ -11,12 +11,38 @@
 <!-- Ajout de CSS general.css -->
 <th:block id="ressources-css">
 	<link rel="stylesheet" data-th-href="@{/css/general.css}">
+	<link rel="stylesheet" data-th-href="@{/css/filter-form.css}">
 </th:block>
+
 
 </head>
 <body>
 	<main>
 		<h1 data-th-text="#{view-encheres.h1}"></h1>
+		<form 	class="filter-form"
+				data-th-action="@{/}" method="get">
+			<div class="filter-selectors">
+				<h2>Filtres :</h2>
+				<label hidden for="keyword"></label>
+				<input type="text" name="keyword" id="keyword" size="50" data-th-value="${keyword}" placeholder="Le nom de l'article contient"/>
+				<div class="filter-cat">
+					<label for="catSelect">Catégorie :</label>
+					<select name="categorieId" id="catSelect">
+						<option data-th-value="null">Toutes les catégories</option>
+						<option
+								data-th-each="c : ${categoriesEnSession}"
+								data-th-text="${c.libelle}"
+								data-th-value="${c.id}"
+								data-th-selected="${#bools.isTrue(categorieId == c.id)}"
+						></option>
+					</select>
+				</div>
+			</div>
+			<div class="filter-buttons">
+				<button type="submit">Rechercher</button>
+				<button><a href="/">Annuler</a></button>
+			</div>
+		</form>
 		<th:block data-th-if="${!#lists.isEmpty(encheresActives)}">
 			<ul class="article-ul">
 				<li class="article-cards" data-th-each="article : ${encheresActives}">

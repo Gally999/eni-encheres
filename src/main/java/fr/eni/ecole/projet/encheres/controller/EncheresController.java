@@ -13,13 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import fr.eni.ecole.projet.encheres.bll.EncheresService;
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
 @SessionAttributes({ "categoriesEnSession" })
@@ -34,11 +31,17 @@ public class EncheresController {
   }
 
 	@GetMapping("/")
-	public String afficherEncheresActives(Model model) {
+	public String afficherEncheresActives(
+			@RequestParam(name = "categorieId", required = false) Long categorieId,
+			@RequestParam(value = "keyword", required = false) String keyword,
+			Model model
+	) {
 		// Récupérer les enchères actives de la BLL
-		List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives();
+		List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives(categorieId, keyword);
 		// Ajout des enchères actives dans le model
 		model.addAttribute("encheresActives", encheresActives);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("categorieId", categorieId);
 		return "view-encheres";
 	}
 

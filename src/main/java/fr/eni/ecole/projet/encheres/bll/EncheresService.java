@@ -12,9 +12,9 @@ public interface EncheresService {
 	
 	List<ArticleAVendre> consulterEncheres();
 	
-	List<ArticleAVendre> consulterEncheresActives();
+	List<ArticleAVendre> consulterEncheresActives(Long categoriesId, String searchTerm);
 
-	List<Categorie> consulterCategories();
+  List<Categorie> consulterCategories();
 
 	List<Adresse> consulterAdressesDisponibles(long id);
 

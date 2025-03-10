@@ -12,4 +12,5 @@ public interface ArticleAVendreDAO {
 	
 	List<ArticleAVendre> findAllActive();
 
+  List<ArticleAVendre> findByCatAndSearchTerm(List<Long> categorieIds, String search);
 }
