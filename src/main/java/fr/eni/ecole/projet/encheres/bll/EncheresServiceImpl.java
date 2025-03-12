@@ -144,6 +144,11 @@ public class EncheresServiceImpl implements EncheresService {
 		return categorieDAO.read(id);
 	}
 
+	@Override
+	public ArticleAVendre consulterArticle(long id) {
+		return articleDAO.read(id);
+	}
+
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
 		if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
 			be.add(BusinessCode.VALIDATION_DATE_FIN_ENCHERES_FUTURE);
