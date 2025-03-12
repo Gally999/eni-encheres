@@ -7,6 +7,9 @@ import fr.eni.ecole.projet.encheres.bll.UtilisateurService;
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.enums.AchatFilter;
+import fr.eni.ecole.projet.encheres.enums.FilterMode;
+import fr.eni.ecole.projet.encheres.enums.VenteFilter;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -34,14 +37,39 @@ public class EncheresController {
 	public String afficherEncheresActives(
 			@RequestParam(name = "categorieId", required = false) Long categorieId,
 			@RequestParam(value = "keyword", required = false) String keyword,
-			Model model
+			@RequestParam(value = "achatsOuVentes", required = false) FilterMode achatsOuVentes, // 0 ou 1
+			@RequestParam(value = "achats", required = false) AchatFilter achats,
+			@RequestParam(value = "ventes", required = false) VenteFilter ventes,
+			Model model,
+			Principal principal
 	) {
-		// Récupérer les enchères actives de la BLL
-		List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives(categorieId, keyword);
+		System.out.println("EncheresController");
+		if (achatsOuVentes == null) {
+			achatsOuVentes = FilterMode.ACHATS;
+		}
+		model.addAttribute("achatsOuVentes", achatsOuVentes.getValue());
+		if (achats == null) {
+			achats = AchatFilter.OUVERTES;
+		}
+		model.addAttribute("achats", achats.getValue());
+		if (ventes == null) {
+			ventes = VenteFilter.EN_COURS;
+		}
+		model.addAttribute("ventes", ventes.getValue());
+		if (principal == null || principal.getName() == null) {
+			// Récupérer les enchères actives de la BLL en mode déconnecté
+			List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives(categorieId, keyword);
+			model.addAttribute("encheresActives", encheresActives);
+		} else {
+			System.out.println("connexion par défaut");
+			// Récupérer les enchères actives de la BLL en mode connecté
+			List<ArticleAVendre> encheresFiltrees = encheresService.consulterEncheresActives(categorieId, keyword, achatsOuVentes, achats, ventes);
+			model.addAttribute("encheresActives", encheresFiltrees);
+		}
 		// Ajout des enchères actives dans le model
-		model.addAttribute("encheresActives", encheresActives);
-		model.addAttribute("keyword", keyword);
 		model.addAttribute("categorieId", categorieId);
+		model.addAttribute("keyword", keyword);
+
 		return "view-encheres";
 	}
 
@@ -54,7 +82,6 @@ public class EncheresController {
 		if (principal != null && principal.getName() != null) {
 			injectUserAddresses(principal.getName(), model);
 			ArticleAVendre article = new ArticleAVendre();
-			System.out.println("Article = " + article);
 			model.addAttribute("article", article);
 			return "view-article-form";
 		}
@@ -68,8 +95,6 @@ public class EncheresController {
 			Model model,
 			Principal principal
 	) {
-		System.out.println("EnchèresController - post formulaire article");
-		System.out.println("errors = " + bindingResult.getAllErrors());
 		if (!bindingResult.hasErrors()) {
 			try {
 				Utilisateur user = utilisateurService.findByPseudo(principal.getName());

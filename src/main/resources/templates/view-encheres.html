@@ -3,7 +3,7 @@
 	data-th-replace="~{layouts/layout :: layout-encheres( 
 					titrePage=~{:: title},
 					contenuPage=~{:: main},
-					ressourcesSupp=~{:: #ressources-css})}">
+					ressourcesSupp=~{:: #ressources-css})}" lang="fr">
 
 <head>
 <!-- Films comme titre de page -->
@@ -12,36 +12,78 @@
 <th:block id="ressources-css">
 	<link rel="stylesheet" data-th-href="@{/css/general.css}">
 	<link rel="stylesheet" data-th-href="@{/css/filter-form.css}">
+	<script type="text/javascript" data-th-src="@{/js/actions.js}" defer></script>
 </th:block>
-
-
 </head>
 <body>
 	<main>
 		<h1 data-th-text="#{view-encheres.h1}"></h1>
 		<form 	class="filter-form"
 				data-th-action="@{/}" method="get">
-			<div class="filter-selectors">
-				<h2>Filtres :</h2>
-				<label hidden for="keyword"></label>
-				<input type="text" name="keyword" id="keyword" size="50" data-th-value="${keyword}" placeholder="Le nom de l'article contient"/>
-				<div class="filter-cat">
-					<label for="catSelect">Catégorie :</label>
-					<select name="categorieId" id="catSelect">
-						<option data-th-value="null">Toutes les catégories</option>
-						<option
-								data-th-each="c : ${categoriesEnSession}"
-								data-th-text="${c.libelle}"
-								data-th-value="${c.id}"
-								data-th-selected="${#bools.isTrue(categorieId == c.id)}"
-						></option>
-					</select>
+			<section class="filter-section">
+				<div class="general-filters">
+					<div class="filter-selectors">
+						<h2>Filtres :</h2>
+						<label hidden for="keyword"></label>
+						<input type="text" name="keyword" id="keyword" size="50" data-th-value="${keyword}"
+							   placeholder="Le nom de l'article contient"/>
+						<div class="filter-cat">
+							<label for="catSelect">Catégorie :</label>
+							<select name="categorieId" id="catSelect">
+								<option data-th-value="null">Toutes les catégories</option>
+								<option
+										data-th-each="c : ${categoriesEnSession}"
+										data-th-text="${c.libelle}"
+										data-th-value="${c.id}"
+										data-th-selected="${#bools.isTrue(categorieId == c.id)}"
+								></option>
+							</select>
+						</div>
+					</div>
+					<div class="filter-buttons">
+						<button type="submit">Rechercher</button>
+						<button><a href="/">Annuler</a></button>
+					</div>
 				</div>
-			</div>
-			<div class="filter-buttons">
-				<button type="submit">Rechercher</button>
-				<button><a href="/">Annuler</a></button>
-			</div>
+				<div class="personal-filters" data-th-if="${#authorization.expression('isAuthenticated()')}">
+					<div class="personal-filters-section">
+						<div class="personal-filters-section-label">
+							<input
+									type="radio"
+									name="achatsOuVentes"
+									id="achats"
+									data-th-checked="${#bools.isTrue(achatsOuVentes == 0)}"
+									value="0"
+									onchange="disableSelected(1)"
+							>
+							<label for="achats">Mes Achats</label>
+						</div>
+						<select name="achats" data-th-disabled="${#bools.isTrue(achatsOuVentes == 1)}">
+							<option value="0" data-th-selected="${#bools.isTrue(achats == 0)}">Enchères ouvertes</option>
+							<option value="1" data-th-selected="${#bools.isTrue(achats == 1)}">Mes enchères en cours</option>
+							<option value="2" data-th-selected="${#bools.isTrue(achats == 2)}">Mes enchères remportées</option>
+						</select>
+					</div>
+					<div class="personal-filters-section">
+						<div class="personal-filters-section-label">
+							<input
+									type="radio"
+									name="achatsOuVentes"
+									id="ventes"
+									value="1"
+									data-th-checked="${#bools.isTrue(achatsOuVentes == 1)}"
+									onchange="disableSelected(0)"
+							>
+							<label for="ventes">Mes Ventes</label>
+						</div>
+						<select name="ventes" data-th-disabled="${#bools.isTrue(achatsOuVentes == 0)}">
+							<option value="1" data-th-selected="${#bools.isTrue(ventes == 1)}">Mes ventes en cours</option>
+							<option value="0" data-th-selected="${#bools.isTrue(ventes == 0)}">Mes ventes non débutées</option>
+							<option value="2" data-th-selected="${#bools.isTrue(ventes == 2)}">Mes ventes terminées</option>
+						</select>
+					</div>
+				</div>
+			</section>
 		</form>
 		<th:block data-th-if="${!#lists.isEmpty(encheresActives)}">
 			<ul class="article-ul">
@@ -59,5 +101,11 @@
 			<h2 data-th-text="#{view-encheres.empty}"></h2>
 		</th:block>
 	</main>
+<!--	<script type="text/javascript" src="/js/actions.js"></script>-->
+<!--	<script th:inline="javascript">-->
+<!--		function showAlert() {-->
+<!--			alert("The button was clicked!");-->
+<!--		}-->
+<!--	</script>-->
 </body>
 </html>

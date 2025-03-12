@@ -40,11 +40,6 @@ public interface UtilisateurDAO {
 
 	void updateMotDePasse(Utilisateur utilisateur);
 
-	
-	
-
-	
-	
 }
 
 
