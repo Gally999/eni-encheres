@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-encheres(
+					titrePage=~{:: title},
+					contenuPage=~{:: main},
+					ressourcesSupp=~{:: #ressources-css})}">
+<head>
+    <title data-th-text="#{view-article-detail.title}"></title>
+    <th:block id="ressources-css">
+        <link rel="stylesheet" data-th-href="@{/css/general.css}">
+    </th:block>
+</head>
+<body>
+<main class="article-details-main">
+    <h1 data-th-text="#{view-article-detail.title}">Détail d'une vente</h1>
+    <section class="article-details-section">
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.name}"></p>
+            <p data-th-text="${article.nom}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.prix}"></p>
+            <p>
+                <span data-th-text="${article.prixInitial}"></span>
+                <span data-th-text="#{view-article-detail.points}"></span>
+            </p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.categorie}"></p>
+            <p>
+                <span data-th-text="${categorie.libelle}"></span>
+            </p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.offre}"></p>
+            <p>
+                <span data-th-text="${article.prixVente}"></span>
+                <span data-th-text="#{view-article-detail.points}"></span>
+            </p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.description}"></p>
+            <p data-th-text="${article.description}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.fin.date}"></p>
+            <p data-th-text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></p>
+        </div>
+    </section>
+    <hr>
+    <section class="seller-details-section">
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.adresse}"></p>
+            <p data-th-text="${adresse.rue + ' ' + adresse.codePostal + ' ' + adresse.ville}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.vendeur}"></p>
+            <p data-th-text="${article.vendeur.pseudo}"></p>
+        </div>
+        <div data-th-if="${#authentication.name == article.vendeur.pseudo}">
+            <button><a href="/" data-th-text="#{view-article-detail.button.retour}"></a></button>
+        </div>
+        <div data-th-unless="${#authentication.name == article.vendeur.pseudo}">
+            <label for="inputBet" data-th-text="#{view-article-detail.enchere}"></label>
+            <input type="number" id="inputBet" data-th-min="${article.prixVente + 1}" data-th-placeholder="${article.prixVente + 1}" />
+        </div>
+            <button data-th-text="#{view-article-detail.button.encherir}" disabled></button>
+    </section>
+
+</main>
+</body>
+</html>

@@ -32,18 +32,19 @@ public class EncheresSecurityConfig {
 		http.authorizeHttpRequests(auth -> {
 
 			auth
-					// permettre à tout le monde d'accéder à l'URL racine
-					.requestMatchers(HttpMethod.GET, "/article/creer").authenticated()
-					.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
-					.requestMatchers("/*").permitAll()
+				// permettre à tout le monde d'accéder à l'URL racine
+				.requestMatchers(HttpMethod.GET, "/article/creer").authenticated()
+				.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
+				.requestMatchers(HttpMethod.GET, "/article/detail").authenticated()
+				.requestMatchers("/*").permitAll()
 
-					// Permettre à tous les utilisateurs d'afficher correctement les images et la css
-					.requestMatchers("/js/*").permitAll()
-					.requestMatchers("/css/*").permitAll()
-					.requestMatchers("/images/*").permitAll()
+				// Permettre à tous les utilisateurs d'afficher correctement les images, la css et le js
+				.requestMatchers("/js/*").permitAll()
+				.requestMatchers("/css/*").permitAll()
+				.requestMatchers("/images/*").permitAll()
 
-					// Toutes autres url et méthodes HTTP ne sont pas permises
-					.anyRequest().denyAll();
+				// Toutes autres url et méthodes HTTP ne sont pas permises
+				.anyRequest().denyAll();
 		});
 
 		// Customiser le formulaire de login

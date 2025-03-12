@@ -93,7 +93,7 @@ I18N*/
 	padding: 1%;
 	margin: 1%;
 	width: 20%;
-	height: 10vh;
+	height: auto;
 	border: 1px solid black;
 	border-radius: 7px;
 	list-style: none;
@@ -102,12 +102,89 @@ I18N*/
 	justify-content: space-around;
 }
 
+.article-cards a {
+	text-decoration: none;
+	color: black;
+	cursor: pointer;
+}
 
+.article-cards a:hover {
+	text-decoration: underline;
+	color: black;
+	cursor: pointer;
+}
 
 #current-date {
     font-size: 25px; 
     color: black;  /* Texte en noir */
     font-weight: bold;  /* Texte en gras */
 }
+
+.article-details-main {
+	width: 60%;
+	margin: 30px auto;
+	font-size: 20px;
+}
+
+.article-details-main h1 {
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.article-details-section {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	margin-bottom: 40px;
+}
+
+.article-detail-div {
+	width: 50%;
+	display: flex;
+	margin-bottom: 20px;
+}
+
+.article-detail-div p {
+	margin: 0 10px;
+}
+
+.seller-details-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 40px;
+}
+
+hr {
+	height: 2px;
+	background-color: black;
+	/*transform: rotate(-1deg);*/
+}
+
+.seller-details-section div {
+	width: 80%;
+	display: flex;
+	margin: 10px auto;
+}
+
+.article-details-main button {
+	width: 150px;
+	margin: auto;
+	padding: 10px 20px;
+	border: none;
+	background: #333;
+	color: #f2f2f2;
+	text-transform: uppercase;
+	letter-spacing: .09em;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.article-details-main button a {
+	text-decoration: none;
+	color: #f2f2f2;
+}
+
+
 
 

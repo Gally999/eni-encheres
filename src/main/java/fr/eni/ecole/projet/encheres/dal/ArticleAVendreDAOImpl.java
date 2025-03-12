@@ -19,7 +19,7 @@ import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 
 @Repository
 public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
-	
+	private static final String FIND_BY_ID = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait FROM Articles_A_Vendre WHERE no_article = :id;";
 	private static final String FIND_ALL_ACTIVES = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
 													+ "	FROM Articles_A_Vendre " 
 													+ "	WHERE statut_enchere = 1;";
@@ -41,6 +41,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 													+	" ON a.no_article = e.no_article "
 													+	" WHERE statut_enchere IN (1) AND e.id_utilisateur = :utilisateurId AND no_categorie IN (:categorieIds) AND nom_article LIKE :search "
 													+	" GROUP BY a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.statut_enchere, a.prix_initial, prix_vente, a.id_utilisateur, a.no_categorie, a.no_adresse_retrait, e.id_utilisateur;";
+
 	private static final String FIND_VENTES_EN_COURS = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
 													+ "FROM ARTICLES_A_VENDRE WHERE id_utilisateur = :utilisateurId AND statut_enchere IN (:status) AND no_categorie IN (:categorieIds) AND nom_article LIKE :search;";
 
@@ -75,8 +76,9 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
 	@Override
 	public ArticleAVendre read(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		MapSqlParameterSource namedParam = new MapSqlParameterSource();
+		namedParam.addValue("id", id);
+		return jdbcTemplate.queryForObject(FIND_BY_ID, namedParam, new ArticleAVendreRowMapper());
 	}
 
 	@Override

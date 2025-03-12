@@ -26,10 +26,10 @@
 						<h2 data-th-text="#{view-encheres.filtres}">Filtres :</h2>
 						<label hidden for="keyword"></label>
 						<input type="text" name="keyword" id="keyword" size="50" data-th-value="${keyword}"
-							   data-th-placeholder="#{view-encheres.filtre.search.placeholder}"/>
+							   data-th-placeholder="#{view-encheres.filtre.search.placeholder}" oninput="submit()" />
 						<div class="filter-cat">
 							<label for="catSelect" data-th-text="#{view-encheres.filtre.categorie}"></label>
-							<select name="categorieId" id="catSelect">
+							<select name="categorieId" id="catSelect" onchange="submit()">
 								<option data-th-value="null" data-th-text="#{view-encheres.filtre.categorie.toutes}"></option>
 								<option
 										data-th-each="c : ${categoriesEnSession}"
@@ -58,7 +58,7 @@
 							>
 							<label for="achats" data-th-text="#{view-encheres.filtres.mode.achats}"></label>
 						</div>
-						<select name="achats" data-th-disabled="${#bools.isTrue(achatsOuVentes == 1)}">
+						<select name="achats" data-th-disabled="${#bools.isTrue(achatsOuVentes == 1)}" onchange="submit()">
 							<option value="0" data-th-selected="${#bools.isTrue(achats == 0)}" data-th-text="#{view-encheres.filtres.achats.ouvertes}"></option>
 							<option value="1" data-th-selected="${#bools.isTrue(achats == 1)}" data-th-text="#{view-encheres.filtres.achats.en-cours}"></option>
 							<option value="2" data-th-selected="${#bools.isTrue(achats == 2)}" data-th-text="#{view-encheres.filtres.achats.remportees}"></option>
@@ -76,7 +76,7 @@
 							>
 							<label for="ventes" data-th-text="#{view-encheres.filtres.mode.ventes}"></label>
 						</div>
-						<select name="ventes" data-th-disabled="${#bools.isTrue(achatsOuVentes == 0)}">
+						<select name="ventes" data-th-disabled="${#bools.isTrue(achatsOuVentes == 0)}" onchange="submit()">
 							<option value="1" data-th-selected="${#bools.isTrue(ventes == 1)}" data-th-text="#{view-encheres.filtres.ventes.en-cours}"></option>
 							<option value="0" data-th-selected="${#bools.isTrue(ventes == 0)}" data-th-text="#{view-encheres.filtres.ventes.non-debutees}"></option>
 							<option value="2" data-th-selected="${#bools.isTrue(ventes == 2)}" data-th-text="#{view-encheres.filtres.ventes.terminees}"></option>
@@ -88,12 +88,28 @@
 		<th:block data-th-if="${!#lists.isEmpty(encheresActives)}">
 			<ul class="article-ul">
 				<li class="article-cards" data-th-each="article : ${encheresActives}">
-					<h3 data-th-text="${article.nom}"></h3>
-					<p>Prix : 
+					<th:block data-th-if="${article.statut != 0 && #authorization.expression('isAuthenticated()')}">
+						<a data-th-href="@{/article/detail(id=${article.id})}">
+							<h3 data-th-text="${article.nom}"></h3>
+						</a>
+					</th:block>
+					<th:block data-th-unless="${article.statut != 0 && #authorization.expression('isAuthenticated()')}">
+						<h3 data-th-text="${article.nom}"></h3>
+					</th:block>
+
+					<p>
+						<span data-th-text="#{view-article.prix.title}"></span>
 						<span data-th-text="${article.prixVente} ? ${article.prixVente} : ${article.prixInitial}"></span>
-					 point(s)</p>
-					<p>Fin de l'enchère : <span data-th-text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span></p>
-					<p>Vendeur : <span data-th-text="${article.vendeur.pseudo}"></span></p>
+						<span data-th-text="#{view-article.prix.points}"></span>
+					</p>
+					<p>
+						<span data-th-text="#{view-article.fin.enchere}"></span>
+						<span data-th-text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+					</p>
+					<p>
+						<span data-th-text="#{view-article.vendeur}"></span>
+						<span data-th-text="${article.vendeur.pseudo}"></span>
+					</p>
 				</li>
 			</ul>
 		</th:block>
