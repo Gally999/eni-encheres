@@ -8,10 +8,7 @@ import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.dal.*;
-import fr.eni.ecole.projet.encheres.enums.AchatFilter;
-import fr.eni.ecole.projet.encheres.enums.FilterMode;
-import fr.eni.ecole.projet.encheres.enums.StatutEnchere;
-import fr.eni.ecole.projet.encheres.enums.VenteFilter;
+import fr.eni.ecole.projet.encheres.enums.*;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import org.springframework.dao.DataAccessException;
@@ -85,7 +82,7 @@ public class EncheresServiceImpl implements EncheresService {
 	}
 
 	@Override
-	public List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm, FilterMode filterMode, AchatFilter achatFilter, VenteFilter venteFilter) {
+	public List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm, AchatsOuVentesFilter achatsOuVentesFilter) {
 		Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
 		// On vérifie qu'on a bien un•e utilisateur•ice connecté•e
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -94,27 +91,25 @@ public class EncheresServiceImpl implements EncheresService {
 
 			// On récupère toutes les catégories ou on les formate en liste
 			List<Long> categoriesToRetrieve = getCategories(categorieId);
-			System.out.println("achat ou vente dans la bll " + achatFilter + ' ' + venteFilter);
+			System.out.println("achat ou vente dans la bll " + achatsOuVentesFilter);
 			// Dans le cas où les achats sont sélectionnés
-			if (filterMode == FilterMode.ACHATS) {
+			if (achatsOuVentesFilter instanceof AchatFilter) {
 				// récupérer les articles sur lesquels l'utilisateur a enchéri ou gagné
-				return switch (achatFilter) {
+				return switch ((AchatFilter) achatsOuVentesFilter) {
 					case REMPORTEES -> articleDAO.findEncheresRemportees(currentUserName, categoriesToRetrieve, searchTerm);
 					case EN_COURS -> articleDAO.findEncheresEnCours(currentUserName, categoriesToRetrieve, searchTerm);
 					case OUVERTES -> consulterEncheresActives(categorieId, searchTerm);
 				};
 			} else {
 				// récupérer les articles vendus par l'utilisateur : en cours, non débutées ou terminées
-				return switch (venteFilter) {
+				return switch ((VenteFilter) achatsOuVentesFilter) {
 					case NON_DEBUTEES -> articleDAO.findArticlesEnVente(currentUserName, categoriesToRetrieve, searchTerm,List.of(StatutEnchere.PAS_COMMENCEE));
 					case EN_COURS -> articleDAO.findArticlesEnVente(currentUserName, categoriesToRetrieve, searchTerm, List.of(StatutEnchere.EN_COURS));
 					case TERMINEES -> articleDAO.findArticlesEnVente(currentUserName, categoriesToRetrieve, searchTerm, List.of(StatutEnchere.CLOTUREE, StatutEnchere.LIVREE));
 				};
 			}
 		}
-		BusinessException be = new BusinessException();
-		be.add(BusinessCode.BLL_UTILISATEURS_UPDATE_ERREUR);
-		throw be;
+		return List.of();
 	}
 
 	private List<Long> getCategories(Long categorieId) {

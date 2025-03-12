@@ -1,6 +1,6 @@
 package fr.eni.ecole.projet.encheres.enums;
 
-public enum VenteFilter {
+public enum VenteFilter implements AchatsOuVentesFilter {
   NON_DEBUTEES(0), EN_COURS(1), TERMINEES(2);
 
   private final int value;
@@ -11,7 +11,6 @@ public enum VenteFilter {
 
   public static VenteFilter getVenteFilter(int value) {
     return switch (value) {
-      case 0 -> VenteFilter.NON_DEBUTEES;
       case 1 -> VenteFilter.EN_COURS;
       case 2 -> VenteFilter.TERMINEES;
       default -> VenteFilter.NON_DEBUTEES;

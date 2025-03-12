@@ -1,7 +1,7 @@
 package fr.eni.ecole.projet.encheres.exceptions;
 
 public class BusinessCode {
-	//Clefs de validation des BO
+	// Clefs de validation des BO
 	public static final String VALIDATION_UTILISATEUR_NULL = "validation.utilisateur.null";
 	public static final String VALIDATION_UTILISATEUR_DB_NULL = "validation.utilisateur.db.null";
 	public static final String BLL_UTILISATEURS_UPDATE_ERREUR = "miseAjour.utilisateur.erreur";
