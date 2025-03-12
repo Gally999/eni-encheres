@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import fr.eni.ecole.projet.encheres.enums.StatutEnchere;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,6 +28,21 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	private static final String FIND_BY_CAT_AND_SEARCH_TERM = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
 													+ "	FROM Articles_A_Vendre "
 													+ "	WHERE statut_enchere = 1 AND no_categorie IN (:categorieIds) AND nom_article LIKE :search;";
+	private static final String FIND_ENCHERES_REMPORTEES = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.statut_enchere, a.prix_initial, MAX(e.montant_enchere) as prix_vente, a.id_utilisateur, a.no_categorie, a.no_adresse_retrait "
+													+ " FROM Articles_A_Vendre a "
+													+	" INNER JOIN Encheres e "
+													+	" ON a.no_article = e.no_article "
+													+	" WHERE statut_enchere IN (2, 3) AND e.id_utilisateur = :utilisateurId AND no_categorie IN (:categorieIds) AND nom_article LIKE :search "
+													+	" GROUP BY a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.statut_enchere, a.prix_initial, prix_vente, a.id_utilisateur, a.no_categorie, a.no_adresse_retrait, e.id_utilisateur;";
+
+	private static final String FIND_ENCHERES_EN_COURS = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.statut_enchere, a.prix_initial, a.prix_vente, a.id_utilisateur, a.no_categorie, a.no_adresse_retrait "
+													+ " FROM Articles_A_Vendre a "
+													+	" INNER JOIN Encheres e "
+													+	" ON a.no_article = e.no_article "
+													+	" WHERE statut_enchere IN (1) AND e.id_utilisateur = :utilisateurId AND no_categorie IN (:categorieIds) AND nom_article LIKE :search "
+													+	" GROUP BY a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.statut_enchere, a.prix_initial, prix_vente, a.id_utilisateur, a.no_categorie, a.no_adresse_retrait, e.id_utilisateur;";
+	private static final String FIND_VENTES_EN_COURS = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
+													+ "FROM ARTICLES_A_VENDRE WHERE id_utilisateur = :utilisateurId AND statut_enchere IN (:status) AND no_categorie IN (:categorieIds) AND nom_article LIKE :search;";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -76,7 +92,36 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 		namedParams.addValue("search", "%" + search + "%");
 		return jdbcTemplate.query(FIND_BY_CAT_AND_SEARCH_TERM, namedParams, new ArticleAVendreRowMapper());
 	}
-	
+
+	@Override
+	public List<ArticleAVendre> findEncheresRemportees(String utilisateurId, List<Long> categorieIds, String search) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("utilisateurId", utilisateurId);
+		namedParams.addValue("categorieIds", categorieIds);
+		namedParams.addValue("search", "%" + search + "%");
+		return jdbcTemplate.query(FIND_ENCHERES_REMPORTEES, namedParams, new ArticleAVendreRowMapper());
+	}
+
+	@Override
+	public List<ArticleAVendre> findEncheresEnCours(String utilisateurId, List<Long> categorieIds, String search) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("utilisateurId", utilisateurId);
+		namedParams.addValue("categorieIds", categorieIds);
+		namedParams.addValue("search", "%" + search + "%");
+		return jdbcTemplate.query(FIND_ENCHERES_EN_COURS, namedParams, new ArticleAVendreRowMapper());
+	}
+
+	@Override
+	public List<ArticleAVendre> findArticlesEnVente(String utilisateurId, List<Long> categorieIds, String search, List<StatutEnchere> status) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("utilisateurId", utilisateurId);
+		namedParams.addValue("categorieIds", categorieIds);
+		namedParams.addValue("search", "%" + search + "%");
+		List<Integer> statusValues = status.stream().map(StatutEnchere::getValue).toList();
+		namedParams.addValue("status", statusValues);
+		return jdbcTemplate.query(FIND_VENTES_EN_COURS, namedParams, new ArticleAVendreRowMapper());
+	}
+
 	static class ArticleAVendreRowMapper implements RowMapper<ArticleAVendre> {
 		@Override
 		public ArticleAVendre mapRow(ResultSet rs, int rowNum) throws SQLException {

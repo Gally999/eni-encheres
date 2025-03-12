@@ -1,16 +1,12 @@
-
-
 package fr.eni.ecole.projet.encheres.bll;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
@@ -22,65 +18,47 @@ import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService{
 
-	@Autowired
-	private UtilisateurDAO utilisateurDAO;
-	@Autowired
-	private AdresseDAO adresseDAO;
-	
-	@Autowired
+		private final UtilisateurDAO utilisateurDAO;
+		private final AdresseDAO adresseDAO;
     private PasswordEncoder passwordEncoder;
-	public UtilisateurServiceImpl utilisateurRepository;
-	
 
-	
-    public UtilisateurServiceImpl() {
-    }
-
-    public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO) {
-        this.utilisateurDAO = utilisateurDAO;
-    }
-
-    public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, AdresseDAO adresseDAO) {
+    public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, AdresseDAO adresseDAO, PasswordEncoder passwordEncoder) {
         this.utilisateurDAO = utilisateurDAO;
         this.adresseDAO = adresseDAO;
+      this.passwordEncoder = passwordEncoder;
     }
 
 		@Override
-	public List<Utilisateur> getUtilisateurs() {
+		public List<Utilisateur> getUtilisateurs() {
 		return utilisateurDAO.findAll();
 	}
 
-	
-		
-	// MODIFIER MOT DE PASSE	
-
+	// MODIFIER MOT DE PASSE
 		@Override
 		public void mettreAjourMotDePasse(Utilisateur utilisateur) throws BusinessException {
 			// Vérifier si cette méthode est appelée
 		    System.out.println("La méthode mettreAjourMotDePasse est appelée.");
-		    
+
 		    BusinessException be = new BusinessException();
 		    boolean isValid = true;
 		    System.out.println(utilisateur);
 
-		    
 		    // Validation des données de l'utilisateur
 		    System.out.println("Validation des informations de l'utilisateur...");
 	        isValid &= validerMotDePasse(utilisateur.getMotDePasseSaisi(), be);
 	        System.out.println("isValid: " + isValid);
 	        isValid &= validerMotDePasse(utilisateur.getMotDePasseConfirmation(), be);
 	        System.out.println("isValid: " + isValid);
-		    
-		    
+
 		    if (isValid) {
-		    
+
 		    try {
 		    	// Vérification que le mot de passe saisi est bien identique à celui stocké dans la base
 	            if (!checkMotDePasseSaisi(utilisateur.getPseudo(), utilisateur.getMotDePasseSaisi())) {
 	                be.add(BusinessCode.BLL_UTILISATEURS_MOT_DE_PASSE_INCORRECT);
 	                throw be;
 	            }
-		        
+
 		    	// Crypter le nouveau mot de passe
 		    	System.out.println("Cryptage du nouveau mot de passe...");
 		        String motDePasseCrypte = passwordEncoder.encode(utilisateur.getMotDePasse());
@@ -90,7 +68,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	            System.out.println("Mise à jour du mot de passe dans la base de données...");
 	            utilisateurDAO.updateMotDePasse(utilisateur);  // Appel à la méthode updateMotDePasse pour mettre à jour la base
 
-		        	        
+
 		    } catch (DataAccessException e) {
 	            System.out.println("Erreur lors de la mise à jour du mot de passe de l'utilisateur : " + e.getMessage());
 	            be.add(BusinessCode.BLL_UTILISATEURS_UPDATE_ERREUR);
@@ -101,33 +79,31 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		    	throw be;
 		    }
 		}
-		
+
 		@Override
 		public boolean checkMotDePasseSaisi(String pseudo, String motDePasseSaisi){
 
 			System.out.println("La méthode checkMotDePasseSais est appelée.");
-			
+
 		    // Récupérer l'utilisateur depuis la base de données en utilisant le pseudo
-		    Utilisateur utilisateur = FindByPseudo(pseudo);  
-		    
+		    Utilisateur utilisateur = FindByPseudo(pseudo);
+
 		    if (utilisateur == null) {
 		        return false;
 		    }
-		    
+
 		    // Vérifier que le mot de passe saisi correspond au mot de passe stocké
-		    String motDePasseStocke = utilisateur.getMotDePasse(); 
-		    
+		    String motDePasseStocke = utilisateur.getMotDePasse();
+
 		 // Comparer le mot de passe saisi avec le mot de passe crypté stocké
 		    return passwordEncoder.matches(motDePasseSaisi, motDePasseStocke);
 		}
-		
-	
+
+
 		private Utilisateur FindByPseudo(String pseudo) {
 			return utilisateurDAO.ReadByPseudo(pseudo);
 		}
 
-
-		
 //	// SUPPRIMER MON PROFIL
 //	@Override
 //	public boolean supprimerUtilisateur(String pseudo) {
@@ -167,23 +143,18 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 //		    }
 //		}
 //
-//		
-		
-		
-	
+//
 
-	
-	//PAGE MODIFIER MON PROFIL 
+	//PAGE MODIFIER MON PROFIL
 	@Override
 	public void mettreAjourUtilisateur(Utilisateur utilisateur) {
 		    // Vérifier si cette méthode est appelée
 		    System.out.println("La méthode update est appelée.");
-		    
+
 		    BusinessException be = new BusinessException();
 		    boolean isValid = true;
 		    System.out.println(utilisateur);
 
-		    
 		    // Validation des données de l'utilisateur
 		    System.out.println("Validation des informations de l'utilisateur...");
 		    isValid &= validerUtilisateur(utilisateur, be);
@@ -196,20 +167,16 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 
 		    isValid &= validerAdresse(utilisateur.getAdresse(), be);
 		    System.out.println("isValid:"+isValid);
-		    
-		    
-		    
+
 		    if (isValid) {
 		        System.out.println("Les informations de l'utilisateur sont valides.");
 		        try {
 		            System.out.println("Mise à jour de l'utilisateur avec pseudo : " + utilisateur.getPseudo());
-		            
-		            
+
 		            utilisateur.getAdresse().setNoAdresse((int) verifierEtAffecterAdresse(utilisateur.getAdresse()));
 		            utilisateurDAO.update(utilisateur);
 		            System.out.println("no_adresse de l'utilisateur  " + utilisateur.getAdresse().getNoAdresse());
 
-		            
 		            System.out.println("Mise à jour réussie.");
 		        } catch (DataAccessException e) {
 		            System.out.println("Erreur lors de la mise à jour de l'utilisateur : " + e.getMessage());
@@ -230,11 +197,11 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 
      // Ensuite, récupérer l'adresse avec ce no_adresse
         Adresse adresse = utilisateurDAO.getAdresseByNoAdresse(noAdresse);
-        System.out.println("Adresse récupérée avec no_adresse " + noAdresse + " : " + adresse); 
+        System.out.println("Adresse récupérée avec no_adresse " + noAdresse + " : " + adresse);
 
         return adresse;
     }
-	
+
 	@Override
 	public int getCreditDeLUtilisateurConnecte(String pseudo) {
 	    Utilisateur utilisateur = findByPseudo(pseudo);
@@ -244,10 +211,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	    }
 	    return 0;
 	}
-	
-	
-	
-	
+
 	//PAGE MON PROFIL
 	@Override
 	public Utilisateur findByPseudo(String pseudo) {
@@ -263,19 +227,17 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	    return null;
 	}
 
-	
-	
 	//S'INSCRIRE:
 	@Override
 	public void add(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
 			int credit, boolean admin, Adresse adresse) {
-		
+
 		// Crypter le mot de passe avant de créer l'utilisateur
         String motDePasseCrypte = passwordEncoder.encode(motDePasse);
         Utilisateur utilisateur = new Utilisateur(pseudo, nom, prenom, email, telephone, motDePasseCrypte, credit, admin, adresse);
         utilisateurDAO.create(utilisateur);
-    }	
-	
+    }
+
 	@Override
 	@Transactional
 	public void add(Utilisateur utilisateur) {
@@ -287,7 +249,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	    isValid &= validerUniqueEmail(utilisateur.getEmail(), be);
 	    isValid &= validerUniquePseudo(utilisateur.getPseudo(), be);
 	    isValid &= validerTelephone(utilisateur.getTelephone(), be);
-	    isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);  
+	    isValid &= validerMotDePasse(utilisateur.getMotDePasse(), be);
 	    //isValid &= validerMotDePasseConfirmation(utilisateur, be);  // Validation de la confirmation du mot de passe
 	    isValid &= validerAdresse(utilisateur.getAdresse(), be);
 	    
@@ -304,8 +266,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	    }
 	}
 
-	
-    
 	/**
 	 * Méthodes de validation des BO
 	 */
@@ -321,9 +281,9 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		
 		System.out.println("telephone " + telephone);
 			
-		if(telephone == null || telephone.isBlank()) {
+		if (telephone == null || telephone.isBlank()) {
 			return true;
-		}else{
+		} else {
 			// Regex to check valid telephone
 			String regex ="^(?:(?:\\+|00)33|0)\\s*[1-9](?:[\\s.-]*\\d{2}){4}$";
 			
@@ -335,8 +295,7 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 		return true;
 	}
-	
-	
+
 	private boolean validerMotDePasse(String motDePasse, BusinessException be) {
 		if (motDePasse == null || motDePasse.isBlank()) {
 			be.add(BusinessCode.VALIDATION_UTILISATEUR_PASSWORD_BLANK);
@@ -404,7 +363,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 		return true;
 	}
-	
 		
 	private boolean validerEmail(String email, BusinessException be) {
 		if (email == null || email.isBlank()) {
@@ -420,7 +378,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 		return true;
 	}
-	
 		
 	private boolean validerUniqueEmail(String email, BusinessException be) {
 	    try {
@@ -436,7 +393,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	    }
 	    return true;
 	}
-
 	
 	private boolean validerEmailExiste(String emailUtilisateur, BusinessException be) {
 		// L'email doit exister - s'il n'existe pas il y aura levée de l'exception
@@ -462,7 +418,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	public int uniqueEmail(String email) {
 		return 0;
 	}
-	
 
 	private boolean validerUniquePseudo(String pseudo, BusinessException be) {
 		int count = utilisateurDAO.uniquePseudo(pseudo);
@@ -472,7 +427,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		}
 		return true;
 	}
-
 	
 	private boolean validerPseudoExiste(String pseudoUtilisateur, BusinessException be) {
 		
@@ -498,19 +452,15 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	public long verifierEtAffecterAdresse(Adresse adresse) {
 		
 		int idAdresse = (int) adresseDAO.readAdresseConnue(adresse);
-		
 		System.out.println( "idAdresse " + idAdresse);
-		
+
 		if (idAdresse > 0) {
 			return idAdresse;
 		} else {
 			adresseDAO.create(adresse);
 			return adresse.getId();
 		}
-		
 	}
-	
-	
 
 	@Override
 	public boolean supprimerUtilisateur(String pseudo) {
@@ -518,9 +468,4 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		return false;
 	}
 
-	
-
-	
-
-	
 }

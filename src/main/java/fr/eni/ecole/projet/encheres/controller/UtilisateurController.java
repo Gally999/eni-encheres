@@ -1,10 +1,7 @@
 package fr.eni.ecole.projet.encheres.controller;
 
-
-
 import java.security.Principal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,66 +10,55 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import fr.eni.ecole.projet.encheres.bll.UtilisateurService;
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.validation.Valid;
 
 @Controller
-
 public class UtilisateurController {
 	
-	
-	private UtilisateurService utilisateurService;
-	
-	
+	private final UtilisateurService utilisateurService;
+
 	public UtilisateurController (UtilisateurService utilisateurService) {
 		this.utilisateurService = utilisateurService;
 	}
-		
-	
+
 	// MODIFIER MOT DE PASSE
 	@GetMapping("/modifier-motDePasse")
 	public String modifierMotDePasse(Principal principal, Model model) {
-	    
+
 		// Récupérer l'utilisateur connecté à partir du principal
-		String pseudo = principal.getName();  
+		String pseudo = principal.getName();
 	    Utilisateur utilisateur = utilisateurService.findByPseudo(pseudo);
-	    
+
 	    System.out.println("Pseudo : " + utilisateur.getPseudo());
     	if (utilisateur != null) {
-	            model.addAttribute("utilisateur", utilisateur);  
-	            return "view-modifier-motDePasse"; 
+	            model.addAttribute("utilisateur", utilisateur);
+	            return "view-modifier-motDePasse";
 	     } else {
 	            System.out.println("Aucune adresse trouvée.");
-	            return "view-modifier-motDePasse"; 
+	            return "view-modifier-motDePasse";
 	     }
 	}
-	
-	
+
 	@PostMapping("/modifier-motDePasse")
 	public String modifierMotDePasse(
-	        @Validated 
+	        @Validated
 	        @ModelAttribute("utilisateur") Utilisateur utilisateur,
 	        BindingResult bindingResult, Principal principal) {
-	    
-	   
+
 	    System.out.println("Entrée dans la méthode modifierMotDePasse");
-		
+
 	    // Récupérer le pseudo à partir du principal
 	    String pseudo = principal.getName();
-	    
 
 	    System.out.println("Mot de passe saisi : " + utilisateur.getMotDePasseSaisi());
 	    System.out.println("Mot de passe new : " + utilisateur.getMotDePasseNew());
 	    System.out.println("Mot de passe confirmation : " + utilisateur.getMotDePasseConfirmation());
 	    System.out.println("Pseudo : " + utilisateur.getPseudo());
-	    
-	    
+
 	     // Vérification que le nouveau mot de passe et la confirmation sont identiques
 	    if (utilisateur.getMotDePasseSaisi() == null || !utilisateur.getMotDePasseConfirmation().equals(utilisateur.getMotDePasseNew())) {
 	        System.out.println("Erreur: Les mots de passe ne correspondent pas");
@@ -84,20 +70,20 @@ public class UtilisateurController {
 //	     // Affiche les erreurs de validation dans la console pour déboguer
 //	        bindingResult.getAllErrors().forEach(error -> System.out.println("Erreur : " + error.getDefaultMessage()));
 //	        return "view-modifier-motDePasse";
-//	        
+//
 //	    } else {
 	        try {
-	            	        	
+
 	            System.out.println("Entrée dans le try");
-	            
+
 	            // Mise à jour du mot de passe de l'utilisateur
 	            utilisateurService.mettreAjourMotDePasse(utilisateur);
-	            
-	            System.out.println("Le mot de passe de l'utilisateur mis à jour avec succès.");	            
-	            
-	            
+
+	            System.out.println("Le mot de passe de l'utilisateur mis à jour avec succès.");
+
+
 	            return "view-modifier-motDePasse";
-	            
+
 	        } catch (BusinessException e) {
 	            // Gestion des erreurs de business logic
 	            e.getClefsExternalisations().forEach(key -> {
@@ -110,7 +96,7 @@ public class UtilisateurController {
 	//}
 
 
-//    
+//
 //	// SUPPRIMER MON PROFIL
 //    @PostMapping("/supprimer-compte")
 //	public String supprimerCompte(Principal principal, RedirectAttributes redirectAttributes) {
@@ -134,13 +120,13 @@ public class UtilisateurController {
 //	}
 
 	//PAGE MODIFIER MON PROFIL
-  	@PostMapping("/monProfil/detail")
+  @PostMapping("/monProfil/detail")
 	public String modifierProfil(
-	        @Valid 
-	        @ModelAttribute("utilisateur") 
+	        @Valid
+	        @ModelAttribute("utilisateur")
 	        Utilisateur utilisateur,
 	        BindingResult bindingResult) {
-	    
+
 	    System.out.println("Entrée dans la méthode modifierProfil");
 
 	    // Vérification des erreurs de validation
@@ -152,16 +138,16 @@ public class UtilisateurController {
 	        	// On ne modifie pas le pseudo, on le réaffecte à l'ancien pseudo
 	            String pseudoActuel = utilisateur.getPseudo();
 	            utilisateur.setPseudo(pseudoActuel);
-	            
+
 	            // On ne modifie pas le credit, on le réaffecte à l'ancien pseudo
 	            int creditActuel = utilisateur.getCredit();
 	            utilisateur.setCredit(creditActuel);
-	        	
+
 	            System.out.println(utilisateur);
-	            
+
 	            // Mise à jour de l'utilisateur
 	            utilisateurService.mettreAjourUtilisateur(utilisateur);
-	            
+
 	            System.out.println("Utilisateur et adresse mis à jour avec succès.");
 	            return "view-mon-profil-detail";
 	        } catch (BusinessException e) {
@@ -174,9 +160,7 @@ public class UtilisateurController {
 	        }
 	    }
 	}
-  	
-  	
-	 
+
 	@GetMapping("/monProfil/detail")
 	public String afficherProfil(Principal principal, Model model) {
 	    String pseudo = principal.getName();  
@@ -190,10 +174,10 @@ public class UtilisateurController {
 	    if (adresse != null) {
 	    	System.out.println("Adresse : " + adresse);
 	    	System.out.println("Rue: " + adresse.getRue());
-	        System.out.println("Code Postal: " + adresse.getCodePostal());
-	        System.out.println("Ville: " + adresse.getVille());
+        System.out.println("Code Postal: " + adresse.getCodePostal());
+        System.out.println("Ville: " + adresse.getVille());
 	    } else {
-	        System.out.println("Aucune adresse trouvée.");
+        System.out.println("Aucune adresse trouvée.");
 	    }
 
 	    // Passer l'objet adresse au modèle
@@ -202,11 +186,9 @@ public class UtilisateurController {
 	    model.addAttribute("credit", credit);
 	    System.out.println("Adresse dans le modèle : " + model.getAttribute("adresse"));
 
-	    return "view-mon-profil-detail"; 
+	    return "view-mon-profil-detail";
 	}
 
-		
-	
 	//PAGE MON PROFIL:
 	@GetMapping("/monProfil")
 	public String detailUtilisateur(Principal principal, Model model) {
@@ -221,21 +203,17 @@ public class UtilisateurController {
 	    } else {
 	        System.out.println("Utilisateur non trouvé !");
 	    }
-	    
-	    
+
 	    String telephone = utilisateurService.getTelephoneDeLUtilisateurConnecte(pseudo);
 	    System.out.println("Téléphone récupéré : " + telephone);
-	    
-	    
+
 	    model.addAttribute("utilisateur", utilisateur);
 	    model.addAttribute("telephone", telephone);
 	    
 	    return "view-mon-profil"; 
 	}
 
-
-
-	//PAGE S'INSCRIRE:		
+		//PAGE S'INSCRIRE:
 		// Création d'un nouvel utilisateur
 		@GetMapping("/creer")
 		public String creerUtilisateur(Model model) {
@@ -244,8 +222,7 @@ public class UtilisateurController {
 			model.addAttribute("utilisateur", utilisateur);
 			return "view-utilisateur-creer";
 		}
-		
-		
+
 		// Récupération de l'objet utilisateur du formulaire
 		// sauvegarde
 		@PostMapping("/creer")
@@ -267,8 +244,8 @@ public class UtilisateurController {
 		    } else {
 		        try {
 		            utilisateur.setCredit(10);
-		            utilisateurService.add(utilisateur);  
-		            return "redirect:/";  
+		            utilisateurService.add(utilisateur);
+		            return "redirect:/";
 		        } catch (BusinessException e) {
 		            // Ajouter les erreurs au BindingResult pour les afficher dans le formulaire
 		            e.getClefsExternalisations().forEach(key -> {
@@ -279,10 +256,4 @@ public class UtilisateurController {
 		        }
 		    }
 		}
-	
 	}
-
-	
-	
-	
-	

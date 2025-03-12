@@ -8,9 +8,16 @@ import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 import fr.eni.ecole.projet.encheres.dal.*;
+import fr.eni.ecole.projet.encheres.enums.AchatFilter;
+import fr.eni.ecole.projet.encheres.enums.FilterMode;
+import fr.eni.ecole.projet.encheres.enums.StatutEnchere;
+import fr.eni.ecole.projet.encheres.enums.VenteFilter;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
@@ -66,20 +73,60 @@ public class EncheresServiceImpl implements EncheresService {
 			// Si pas de catégorie ni de mot recherché, on tombe dans le cas par défaut des enchères actives
 			articles = articleDAO.findAllActive();
 		} else {
-			if (categorieId == null) {
-				// Si pas de catégorie sélectionnée alors on va chercher toutes les catégories disponibles
-				List<Long> allIds = categorieDAO.findAll().stream().map(Categorie::getId).toList();
-				articles = articleDAO.findByCatAndSearchTerm(allIds, searchTerm);
-			} else {
-				// Si une catégorie a été sélectionnée alors on la transforme en liste
-				articles = articleDAO.findByCatAndSearchTerm(List.of(categorieId), searchTerm);
-			}
+			// On récupère toutes les catégories ou on les formatte en liste
+			List<Long> categoriesToRetrieve = getCategories(categorieId);
+			articles = articleDAO.findByCatAndSearchTerm(categoriesToRetrieve, searchTerm);
 		}
 		if (articles == null) {
 			// Si aucun article ne correspond à la recherche, on renvoie une liste vide
 			articles = new ArrayList<>();
 		}
 		return articles;
+	}
+
+	@Override
+	public List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm, FilterMode filterMode, AchatFilter achatFilter, VenteFilter venteFilter) {
+		Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+		// On vérifie qu'on a bien un•e utilisateur•ice connecté•e
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			System.out.println("authentication = " + authentication.getName());
+			String currentUserName = authentication.getName();
+
+			// On récupère toutes les catégories ou on les formate en liste
+			List<Long> categoriesToRetrieve = getCategories(categorieId);
+			System.out.println("achat ou vente dans la bll " + achatFilter + ' ' + venteFilter);
+			// Dans le cas où les achats sont sélectionnés
+			if (filterMode == FilterMode.ACHATS) {
+				// récupérer les articles sur lesquels l'utilisateur a enchéri ou gagné
+				return switch (achatFilter) {
+					case REMPORTEES -> articleDAO.findEncheresRemportees(currentUserName, categoriesToRetrieve, searchTerm);
+					case EN_COURS -> articleDAO.findEncheresEnCours(currentUserName, categoriesToRetrieve, searchTerm);
+					case OUVERTES -> consulterEncheresActives(categorieId, searchTerm);
+				};
+			} else {
+				// récupérer les articles vendus par l'utilisateur : en cours, non débutées ou terminées
+				return switch (venteFilter) {
+					case NON_DEBUTEES -> articleDAO.findArticlesEnVente(currentUserName, categoriesToRetrieve, searchTerm,List.of(StatutEnchere.PAS_COMMENCEE));
+					case EN_COURS -> articleDAO.findArticlesEnVente(currentUserName, categoriesToRetrieve, searchTerm, List.of(StatutEnchere.EN_COURS));
+					case TERMINEES -> articleDAO.findArticlesEnVente(currentUserName, categoriesToRetrieve, searchTerm, List.of(StatutEnchere.CLOTUREE, StatutEnchere.LIVREE));
+				};
+			}
+		}
+		BusinessException be = new BusinessException();
+		be.add(BusinessCode.BLL_UTILISATEURS_UPDATE_ERREUR);
+		throw be;
+	}
+
+	private List<Long> getCategories(Long categorieId) {
+		List<Long> categoriesToRetrieve;
+		if (categorieId == null) {
+			// Si pas de catégorie sélectionnée alors on va chercher toutes les catégories disponibles
+			categoriesToRetrieve = categorieDAO.findAll().stream().map(Categorie::getId).toList();
+		} else {
+			// Si une catégorie a été sélectionnée alors on la transforme en liste
+			categoriesToRetrieve = List.of(categorieId);
+		}
+		return categoriesToRetrieve;
 	}
 
 	@Override
