@@ -23,14 +23,14 @@
 			<section class="filter-section">
 				<div class="general-filters">
 					<div class="filter-selectors">
-						<h2>Filtres :</h2>
+						<h2 data-th-text="#{view-encheres.filtres}">Filtres :</h2>
 						<label hidden for="keyword"></label>
 						<input type="text" name="keyword" id="keyword" size="50" data-th-value="${keyword}"
-							   placeholder="Le nom de l'article contient"/>
+							   data-th-placeholder="#{view-encheres.filtre.search.placeholder}"/>
 						<div class="filter-cat">
-							<label for="catSelect">Catégorie :</label>
+							<label for="catSelect" data-th-text="#{view-encheres.filtre.categorie}"></label>
 							<select name="categorieId" id="catSelect">
-								<option data-th-value="null">Toutes les catégories</option>
+								<option data-th-value="null" data-th-text="#{view-encheres.filtre.categorie.toutes}"></option>
 								<option
 										data-th-each="c : ${categoriesEnSession}"
 										data-th-text="${c.libelle}"
@@ -41,8 +41,8 @@
 						</div>
 					</div>
 					<div class="filter-buttons">
-						<button type="submit">Rechercher</button>
-						<button><a href="/">Annuler</a></button>
+						<button type="submit" data-th-text="#{view-encheres.filtres.button.rechercher}"></button>
+						<button><a href="/" data-th-text="#{view-encheres.filtres.button.annuler}"></a></button>
 					</div>
 				</div>
 				<div class="personal-filters" data-th-if="${#authorization.expression('isAuthenticated()')}">
@@ -56,12 +56,12 @@
 									value="0"
 									onchange="disableSelected(1)"
 							>
-							<label for="achats">Mes Achats</label>
+							<label for="achats" data-th-text="#{view-encheres.filtres.mode.achats}"></label>
 						</div>
 						<select name="achats" data-th-disabled="${#bools.isTrue(achatsOuVentes == 1)}">
-							<option value="0" data-th-selected="${#bools.isTrue(achats == 0)}">Enchères ouvertes</option>
-							<option value="1" data-th-selected="${#bools.isTrue(achats == 1)}">Mes enchères en cours</option>
-							<option value="2" data-th-selected="${#bools.isTrue(achats == 2)}">Mes enchères remportées</option>
+							<option value="0" data-th-selected="${#bools.isTrue(achats == 0)}" data-th-text="#{view-encheres.filtres.achats.ouvertes}"></option>
+							<option value="1" data-th-selected="${#bools.isTrue(achats == 1)}" data-th-text="#{view-encheres.filtres.achats.en-cours}"></option>
+							<option value="2" data-th-selected="${#bools.isTrue(achats == 2)}" data-th-text="#{view-encheres.filtres.achats.remportees}"></option>
 						</select>
 					</div>
 					<div class="personal-filters-section">
@@ -74,12 +74,12 @@
 									data-th-checked="${#bools.isTrue(achatsOuVentes == 1)}"
 									onchange="disableSelected(0)"
 							>
-							<label for="ventes">Mes Ventes</label>
+							<label for="ventes" data-th-text="#{view-encheres.filtres.mode.ventes}"></label>
 						</div>
 						<select name="ventes" data-th-disabled="${#bools.isTrue(achatsOuVentes == 0)}">
-							<option value="1" data-th-selected="${#bools.isTrue(ventes == 1)}">Mes ventes en cours</option>
-							<option value="0" data-th-selected="${#bools.isTrue(ventes == 0)}">Mes ventes non débutées</option>
-							<option value="2" data-th-selected="${#bools.isTrue(ventes == 2)}">Mes ventes terminées</option>
+							<option value="1" data-th-selected="${#bools.isTrue(ventes == 1)}" data-th-text="#{view-encheres.filtres.ventes.en-cours}"></option>
+							<option value="0" data-th-selected="${#bools.isTrue(ventes == 0)}" data-th-text="#{view-encheres.filtres.ventes.non-debutees}"></option>
+							<option value="2" data-th-selected="${#bools.isTrue(ventes == 2)}" data-th-text="#{view-encheres.filtres.ventes.terminees}"></option>
 						</select>
 					</div>
 				</div>
@@ -101,11 +101,5 @@
 			<h2 data-th-text="#{view-encheres.empty}"></h2>
 		</th:block>
 	</main>
-<!--	<script type="text/javascript" src="/js/actions.js"></script>-->
-<!--	<script th:inline="javascript">-->
-<!--		function showAlert() {-->
-<!--			alert("The button was clicked!");-->
-<!--		}-->
-<!--	</script>-->
 </body>
 </html>
