@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class Utilisateur implements Serializable {
@@ -14,7 +15,7 @@ public class Utilisateur implements Serializable {
 		
 	@NotBlank
 	@Size(min = 4, max = 40)
-	private String lastName;
+	private String nom;
 	
 	@NotBlank
 	@Size(min = 4, max = 50)
@@ -34,17 +35,26 @@ public class Utilisateur implements Serializable {
 	
 	private Adresse adresse;
 		
-	private String motDePasseConfirmation;
+	@NotNull(message = "Le mot de passe actuel ne peut pas être nul")
+    private String motDePasseSaisi;
 
+    @NotNull(message = "Le nouveau mot de passe ne peut pas être nul")
+    @Size(min = 6, message = "Le nouveau mot de passe doit contenir au moins 6 caractères")
+    private String motDePasseNew;
 
+    @NotNull(message = "La confirmation du mot de passe ne peut pas être nulle")
+    private String motDePasseConfirmation;
+
+	
 	
 	public Utilisateur() {
 	}
-
+	
+	
 	public Utilisateur(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse,
 										 int credit, boolean admin, Adresse adresse) {
 		this.pseudo = pseudo;
-		this.lastName = nom;
+		this.nom = nom;
 		this.prenom = prenom;
 		this.email = email;
 		this.telephone = telephone;
@@ -54,102 +64,149 @@ public class Utilisateur implements Serializable {
 		this.adresse = adresse;
 	}
 
-	public Adresse getAdresse() {
-		return adresse;
-	}
+	
 
-	public void setAdresse(Adresse adresse) {
-		this.adresse = adresse;
-	}
-
-	public String getPseudo() {
-		return pseudo;
-	}
-
-	public void setPseudo(String pseudo) {
+	public Utilisateur(@NotBlank @Size(min = 4, max = 40) String nom, @NotBlank @Size(min = 4, max = 50) String prenom,
+			@NotBlank @Size(min = 4, max = 30) String pseudo, String motDePasse, String motDePasseConfirmation,
+			String motDePasseSaisi, String motDePasseNew) {
+		super();
+		this.nom = nom;
+		this.prenom = prenom;
 		this.pseudo = pseudo;
+		this.motDePasse = motDePasse;
+		this.motDePasseConfirmation = motDePasseConfirmation;
+		this.motDePasseSaisi = motDePasseSaisi;
+		this.motDePasseNew = motDePasseNew;
 	}
+
 
 	public String getNom() {
-		return lastName;
+		return nom;
 	}
 
+
 	public void setNom(String nom) {
-		this.lastName = nom;
+		this.nom = nom;
 	}
+
 
 	public String getPrenom() {
 		return prenom;
 	}
 
+
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
+
+
+	public String getPseudo() {
+		return pseudo;
+	}
+
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
+
 
 	public String getEmail() {
 		return email;
 	}
 
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 
 	public String getTelephone() {
 		return telephone;
 	}
 
+
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
+
 
 	public String getMotDePasse() {
 		return motDePasse;
 	}
 
+
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
-		
-	public String getMotDePasseConfirmation() {
-        return motDePasseConfirmation;
-    }
 
-    public void setMotDePasseConfirmation(String motDePasseConfirmation) {
-        this.motDePasseConfirmation = motDePasseConfirmation;
-    }
 
 	public int getCredit() {
 		return credit;
 	}
 
+
 	public void setCredit(int credit) {
 		this.credit = credit;
 	}
+
 
 	public boolean isAdmin() {
 		return admin;
 	}
 
+
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
-	
-	
 
-		
-	// Méthode pour vérifier que le mot de passe et sa confirmation sont identiques
-    public boolean isMotDePasseValide() {
-        return this.motDePasse != null && this.motDePasse.equals(this.motDePasseConfirmation);
-    }
-	
-    
+
+	public Adresse getAdresse() {
+		return adresse;
+	}
+
+
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
+	}
+
+
+	public String getMotDePasseConfirmation() {
+		return motDePasseConfirmation;
+	}
+
+
+	public void setMotDePasseConfirmation(String motDePasseConfirmation) {
+		this.motDePasseConfirmation = motDePasseConfirmation;
+	}
+
+
+	public String getMotDePasseSaisi() {
+		return motDePasseSaisi;
+	}
+
+
+	public void setMotDePasseSaisi(String motDePasseSaisi) {
+		this.motDePasseSaisi = motDePasseSaisi;
+	}
+
+
+	public String getMotDePasseNew() {
+		return motDePasseNew;
+	}
+
+
+	public void setMotDePasseNew(String motDePasseNew) {
+		this.motDePasseNew = motDePasseNew;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Utilisateur [pseudo=");
 		builder.append(pseudo);
 		builder.append(", lastName=");
-		builder.append(lastName);
+		builder.append(nom);
 		builder.append(", prenom=");
 		builder.append(prenom);
 		builder.append(", email=");
@@ -168,7 +225,7 @@ public class Utilisateur implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, lastName, prenom, pseudo);
+		return Objects.hash(email, nom, prenom, pseudo);
 	}
 
 	@Override
@@ -180,8 +237,19 @@ public class Utilisateur implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Utilisateur other = (Utilisateur) obj;
-		return Objects.equals(email, other.email) && Objects.equals(lastName, other.lastName)
+		return Objects.equals(email, other.email) && Objects.equals(nom, other.nom)
 				&& Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo);
 	}
+
+//	// Méthode pour vérifier que le mot de passe et sa confirmation sont identiques
+//    public boolean isMotDePasseValide() {
+//        return this.motDePasse != null && this.motDePasse.equals(this.motDePasseConfirmation);
+//    }
+//    
+    
+	
+
+
+	
 
 }

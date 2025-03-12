@@ -46,9 +46,9 @@
    			 <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('adresse')}"></div>
 
     		<div class="adresse-fields">
-       			<input type="text" id="inputRue" name="rue" data-th-field="${adresse.rue}"/> 
-       			<input type="text" id="inputCodePostal" name="codePostale" data-th-field="${adresse.codePostal}" />
-       			<input type="text" id="inputVille" name="ville" data-th-field="${adresse.ville}"/>
+       			<input type="text" id="inputRue" name="rue" data-th-field="*{adresse.rue}"/> 
+       			<input type="text" id="inputCodePostal" name="codePostale" data-th-field="*{adresse.codePostal}" />
+       			<input type="text" id="inputVille" name="ville" data-th-field="*{adresse.ville}"/>
    			</div>
 		</li>
 
@@ -64,17 +64,17 @@
 
 		
         <nav data-th-if="${#authorization.expression('isAuthenticated()')}">
-            <button type="submit"  onclick="window.location.href='/monProfil/detail'"
+       		 <form action="/monProfil/detail" method="get">
+           		 <button type="submit"  onclick="window.location.href='/monProfil/detail'"
             											data-th-text="#{frag-utilisateur-modifier}"></button>
+            </form>
             
-            <button type="button" onclick="window.location.href='/monProfil/modifier/modifMotDePasse'"
+            <button type="button" onclick="window.location.href='/modifier-motDePasse'"
         												 data-th-text="#{frag-utilisateur-modifierMotDePasse}"></button>
 
 			<form action="/supprimer-compte" method="POST" 
 									onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
-    			<div>
-        			<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-supprimerCompte}"></button>
-   		 		</div>
+    			<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-supprimerCompte}"></button>
 			</form>
 		
 

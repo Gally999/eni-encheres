@@ -34,6 +34,7 @@ public class BusinessCode {
 	public static final String VALIDATION_UTILISATEUR_ADRESSE_NULL = "validation.utilisateur.adresse.null";
 	public static final String VALIDATION_UTILISATEUR_ADRESSE_ID_INCONNU = "validation.utilisateur.adresse.id_inconnu";
 
+	public static final String VALIDATION_EMAIL = "Validation.email";
 	public static final String VALIDATION_DATE_FIN_ENCHERES_FUTURE = "validation.utilisateur.date.fin.future";
 
 	public static final String ERROR_CREATION_ARTICLE = "error.creation.article";
@@ -41,4 +42,5 @@ public class BusinessCode {
 
 	public static final String VALIDATION_ARTICLE_CATEGORIE_NULL = "validation.article.categorie.null";
 	public static final String VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU = "validation.article.categorie.id.inconnu";
+	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_INCORRECT = "validation.chgt.motDePasse.incorrect";
 }
