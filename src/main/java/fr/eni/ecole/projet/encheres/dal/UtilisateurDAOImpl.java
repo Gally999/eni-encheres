@@ -15,7 +15,6 @@ import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 @Repository
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 
-
 		private final String FIND_ADRESSE_BY_NO_ADRESSE = "SELECT rue, code_postal, ville FROM ADRESSES WHERE no_adresse = :noAdresse";
 		private final String FIND_CREDIT_BY_PSEUDO = "SELECT credit FROM UTILISATEURS WHERE pseudo = :pseudo";
 		private final String FIND_NO_ADRESSE_BY_PSEUDO = "SELECT no_adresse FROM UTILISATEURS WHERE pseudo = :pseudo";
@@ -37,13 +36,16 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 		private final String INSERT = "INSERT INTO UTILISATEURS(pseudo, nom, prenom, email, telephone, mot_de_passe, credit, no_adresse) VALUES (:pseudo, :nom, :prenom, :email, :telephone, :motDePasse, :credit, :noAdresse)";
 
+		public static final String DEBITER_ACQUEREUR = "UPDATE Utilisateurs SET credit = (SELECT credit FROM UTILISATEURS WHERE pseudo = :pseudo) - :montant WHERE pseudo = :pseudo;";
+		public static final String RECREDITER_UTILISATEUR = "UPDATE Utilisateurs SET credit = (SELECT credit FROM UTILISATEURS WHERE pseudo = :pseudo) + :montant WHERE pseudo = :pseudo;";
 
+		private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+  public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+  }
 
-		@Autowired
-		private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-		// MODIFIER MOT DE PASSE
+  // MODIFIER MOT DE PASSE
 		@Override
 		public Utilisateur ReadByPseudo(String pseudo) {
 			System.out.println("La méthode ReadByPseudo est appelée.");
@@ -73,7 +75,23 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			System.out.println("Exécution de la requête : UPDATE UTILISATEURS SELECT mot_de_passe WHERE pseudo = ?");
 		}
 
-		// SUPPRIMER MON PROFIL
+	@Override
+	public void debiter(int montant, String pseudo) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("montant", montant);
+		namedParams.addValue("pseudo", pseudo);
+		namedParameterJdbcTemplate.update(DEBITER_ACQUEREUR, namedParams);
+	}
+
+	@Override
+	public void recrediterPrecedentEncherisseur(int montant, String pseudo) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("montant", montant);
+		namedParams.addValue("pseudo", pseudo);
+		namedParameterJdbcTemplate.update(RECREDITER_UTILISATEUR, namedParams);
+	}
+
+	// SUPPRIMER MON PROFIL
 //		// Récupérer le no_adresse à partir du pseudo
 //		// Compter les utilisateurs ayant le même no_adresse
 //		public int countUsersByNoAdresse(int noAdresse) {
