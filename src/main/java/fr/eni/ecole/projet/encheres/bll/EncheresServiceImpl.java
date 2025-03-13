@@ -188,6 +188,21 @@ public class EncheresServiceImpl implements EncheresService {
 		}
 	}
 
+	@Override
+	public void supprimerArticle(long id) {
+		BusinessException be = new BusinessException();
+		if (id > 0) {
+      try {
+        articleDAO.delete(id);
+      } catch (DataAccessException e) {
+				be.add(BusinessCode.ERROR_DELETE_ARTICLE);
+				throw be;
+      }
+    } else {
+			throw be;
+		}
+	}
+
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
 		if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
 			be.add(BusinessCode.VALIDATION_DATE_FIN_ENCHERES_FUTURE);

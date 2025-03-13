@@ -9,7 +9,6 @@ public class StringToVenteFilterConverter implements Converter<String, VenteFilt
   @Override
   public VenteFilter convert(String value) {
     int id = Integer.parseInt(value);
-    System.out.println("id from VenteFilter: " + id);
     return VenteFilter.getVenteFilter(id);
   }
 }

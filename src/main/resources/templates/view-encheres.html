@@ -88,12 +88,12 @@
 		<th:block data-th-if="${!#lists.isEmpty(encheresActives)}">
 			<ul class="article-ul">
 				<li class="article-cards" data-th-each="article : ${encheresActives}">
-					<th:block data-th-if="${article.statut != 0 && #authorization.expression('isAuthenticated()')}">
+					<th:block data-th-if="${#authorization.expression('isAuthenticated()')}">
 						<a data-th-href="@{/article/detail(id=${article.id})}">
 							<h3 data-th-text="${article.nom}"></h3>
 						</a>
 					</th:block>
-					<th:block data-th-unless="${article.statut != 0 && #authorization.expression('isAuthenticated()')}">
+					<th:block data-th-unless="${#authorization.expression('isAuthenticated()')}">
 						<h3 data-th-text="${article.nom}"></h3>
 					</th:block>
 

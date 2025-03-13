@@ -37,6 +37,7 @@ public class EncheresSecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
 				.requestMatchers(HttpMethod.GET, "/article/detail").authenticated()
 				.requestMatchers(HttpMethod.POST, "/article/encherir").authenticated()
+				.requestMatchers(HttpMethod.DELETE, "/article/supprimer/*").authenticated()
 				.requestMatchers("/*").permitAll()
 
 				// Permettre à tous les utilisateurs d'afficher correctement les images, la css et le js

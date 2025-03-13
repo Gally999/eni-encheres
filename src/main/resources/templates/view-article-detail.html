@@ -64,8 +64,16 @@
             <p data-th-text="#{view-article-detail.vendeur}"></p>
             <p data-th-text="${article.vendeur.pseudo}"></p>
         </div>
-        <div data-th-if="${#authentication.name == article.vendeur.pseudo}">
-            <button><a href="/" data-th-text="#{view-article-detail.button.retour}"></a></button>
+        <div>
+            <div data-th-if="${#authentication.name == article.vendeur.pseudo}">
+                <button><a href="/" data-th-text="#{view-article-detail.button.retour}"></a></button>
+            </div>
+            <form th:action="@{'/article/supprimer/{id}'(id=${article.id})}" th:method="DELETE"
+                    data-th-if="${#authentication.name == article.vendeur.pseudo && article.dateDebutEncheres.isAfter(#temporals.createToday())}"
+            >
+                <button type="submit">Supprimer
+                </button>
+            </form>
         </div>
         <div data-th-if="${meilleureEnchere.acquereur != null && #authentication.name == meilleureEnchere.acquereur.pseudo}">
             <p>Félicitations, à ce jour, vous êtes le•a meilleur•e enchérisseur•euse</p>
