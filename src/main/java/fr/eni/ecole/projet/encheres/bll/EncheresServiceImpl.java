@@ -4,20 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.eni.ecole.projet.encheres.bo.Adresse;
-import fr.eni.ecole.projet.encheres.bo.Categorie;
-import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.bo.*;
 import fr.eni.ecole.projet.encheres.dal.*;
 import fr.eni.ecole.projet.encheres.enums.*;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessCode;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 
 @Service
 public class EncheresServiceImpl implements EncheresService {
@@ -26,13 +23,15 @@ public class EncheresServiceImpl implements EncheresService {
 	private final CategorieDAO categorieDAO;
 	private final AdresseDAO adresseDAO;
 	private final UtilisateurDAO utilisateurDAO;
+	private final EnchereDAO enchereDAO;
 
-	public EncheresServiceImpl(ArticleAVendreDAO articleDAO, CategorieDAO categorieDAO, AdresseDAO adresseDAO, UtilisateurDAOImpl utilisateurDAO) {
+	public EncheresServiceImpl(ArticleAVendreDAO articleDAO, CategorieDAO categorieDAO, AdresseDAO adresseDAO, UtilisateurDAOImpl utilisateurDAO, EnchereDAO enchereDAO) {
 		this.articleDAO = articleDAO;
 		this.categorieDAO = categorieDAO;
 		this.adresseDAO = adresseDAO;
 		this.utilisateurDAO = utilisateurDAO;
-	}
+    this.enchereDAO = enchereDAO;
+  }
 
 	@Override
 	public void ajouterArticleAVendre(ArticleAVendre article) {
@@ -148,6 +147,17 @@ public class EncheresServiceImpl implements EncheresService {
 	public ArticleAVendre consulterArticle(long id) {
 		return articleDAO.read(id);
 	}
+
+	@Override
+	public Enchere consulterMeilleureEnchere(long id) {
+		Enchere meilleureEnchere;
+    try {
+      meilleureEnchere = enchereDAO.findMeilleureEncherePourArticle(id);
+    } catch (EmptyResultDataAccessException e) {
+     meilleureEnchere = new Enchere();
+    }
+		return meilleureEnchere;
+  }
 
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
 		if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
