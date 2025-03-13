@@ -7,4 +7,5 @@ import java.util.List;
 public interface EnchereDAO {
   List<Enchere> findByArticleId(long id);
   Enchere findMeilleureEncherePourArticle(long id);
+  void addEnchere(int montantEnchere, long idArticle, String pseudo);
 }

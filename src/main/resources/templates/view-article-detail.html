@@ -67,13 +67,29 @@
         <div data-th-if="${#authentication.name == article.vendeur.pseudo}">
             <button><a href="/" data-th-text="#{view-article-detail.button.retour}"></a></button>
         </div>
-        <div data-th-unless="${#authentication.name == article.vendeur.pseudo}">
-            <label for="inputBet" data-th-text="#{view-article-detail.enchere}"></label>
-            <input type="number" id="inputBet" data-th-min="${article.prixVente + 1}" data-th-placeholder="${article.prixVente + 1}" />
-            <button data-th-text="#{view-article-detail.button.encherir}" disabled></button>
+        <div data-th-if="${meilleureEnchere.acquereur != null && #authentication.name == meilleureEnchere.acquereur.pseudo}">
+            <p>Félicitations, à ce jour, vous êtes le•a meilleur•e enchérisseur•euse</p>
         </div>
+        <form
+                data-th-action="@{'/article/encherir?idArticle=' + ${article.id}}" method="POST"
+        >
+            <div
+                data-th-if="${#authentication.name != article.vendeur.pseudo && ((meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo != #authentication.name) || meilleureEnchere.montant <= 0)}">
+                <label for="inputBet" data-th-text="#{view-article-detail.enchere}"></label>
+                <input
+                        type="number"
+                        name="montantEnchere"
+                        id="inputBet"
+                        data-th-min="${article.prixVente + 1}"
+                        data-th-placeholder="${meilleureEnchere.montant > 0 ? (meilleureEnchere.montant + 1) : (article.prixInitial + 1)}"
+                        data-th-value="${meilleureEnchere.montant > 0 ? (meilleureEnchere.montant + 1) : (article.prixInitial + 1)}"
+                        data-th-disabled="${article.prixVente + 1 >= credit || article.vendeur.pseudo == #authentication.name || (meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo == #authentication.name)}"
+                />
+                <button type="submit" data-th-text="#{view-article-detail.button.encherir}" data-th-disabled="${article.prixVente + 1 >= credit || article.vendeur.pseudo == #authentication.name || (meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo == #authentication.name)}"></button>
+            </div>
+            <div data-th-if="${article.prixVente + 1 >= credit && #authentication.name != article.vendeur.pseudo && ((meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo != #authentication.name) || meilleureEnchere.montant <= 0)}" data-th-text="#{view-article-detail.credit.epuise}"></div>
+        </form>
     </section>
-
 </main>
 </body>
 </html>

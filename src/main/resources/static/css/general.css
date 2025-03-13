@@ -169,6 +169,10 @@ hr {
 	align-items: center;
 }
 
+.seller-details-section form {
+	width: 100%;
+}
+
 .article-details-main button {
 	width: 150px;
 	margin: 10px 15px;

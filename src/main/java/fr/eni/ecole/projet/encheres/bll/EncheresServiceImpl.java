@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EncheresServiceImpl implements EncheresService {
@@ -44,7 +45,6 @@ public class EncheresServiceImpl implements EncheresService {
 		isValid &= validerDateFin(article.getDateDebutEncheres(), article.getDateFinEncheres(), be);
 
 		if (isValid) {
-			System.out.println("création article = " + article);
 			try {
 				articleDAO.create(article);
 			} catch (DataAccessException e) {
@@ -85,12 +85,10 @@ public class EncheresServiceImpl implements EncheresService {
 		Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
 		// On vérifie qu'on a bien un•e utilisateur•ice connecté•e
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			System.out.println("authentication = " + authentication.getName());
 			String currentUserName = authentication.getName();
 
 			// On récupère toutes les catégories ou on les formate en liste
 			List<Long> categoriesToRetrieve = getCategories(categorieId);
-			System.out.println("achat ou vente dans la bll " + achatsOuVentesFilter);
 			// Dans le cas où les achats sont sélectionnés
 			if (achatsOuVentesFilter instanceof AchatFilter) {
 				// récupérer les articles sur lesquels l'utilisateur a enchéri ou gagné
@@ -158,6 +156,37 @@ public class EncheresServiceImpl implements EncheresService {
     }
 		return meilleureEnchere;
   }
+
+	@Override
+	@Transactional
+	public void encherirSurArticle(int montantEnchere, long idArticle, String pseudo) {
+		// Validation des données de la couche présentation
+		BusinessException be = new BusinessException();
+		boolean isValid = true;
+		isValid &= validerUserExists(pseudo, be);
+		isValid &= validerEncherisseur(pseudo, idArticle, be);
+		isValid &= validerArticleExists(idArticle, be);
+		isValid &= validerCreditSuffisant(pseudo, montantEnchere, be);
+
+		// Si tout est valide :
+		if (isValid) {
+			try {
+				Enchere enchere = consulterMeilleureEnchere(idArticle);
+				// On ajoute l'enchère dans la base de données, table Encheres
+				enchereDAO.addEnchere(montantEnchere, idArticle, pseudo);
+				// On retire le crédit de l'aquéreur
+				utilisateurDAO.debiter(montantEnchere, pseudo);
+				// On recrédite l'ancien acquéreur
+				if (enchere != null && enchere.getMontant() > 0) {
+					utilisateurDAO.recrediterPrecedentEncherisseur(enchere.getMontant(), enchere.getAcquereur().getPseudo());
+				}
+			} catch (DataAccessException e) {
+				be.add(BusinessCode.ERROR_AJOUT_ENCHERE);
+			}
+		} else {
+			be.add(BusinessCode.ERROR_AJOUT_ENCHERE);
+		}
+	}
 
 	private boolean validerDateFin(LocalDate dateDebutEncheres, LocalDate dateFinEncheres, BusinessException be) {
 		if (!dateFinEncheres.isAfter(dateDebutEncheres)) {
@@ -229,4 +258,83 @@ public class EncheresServiceImpl implements EncheresService {
     }
     return true;
 	}
+
+	private boolean validerUserExists(String pseudo, BusinessException be) {
+		if (pseudo == null || pseudo.isEmpty()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_BLANK);
+			return false;
+		}
+		try {
+			if (utilisateurDAO.readByPseudo(pseudo) == null) {
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+				return false;
+			}
+		} catch (DataAccessException e) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validerArticleExists(long idArticle, BusinessException be) {
+		if (idArticle <= 0) {
+			be.add(BusinessCode.VALIDATION_ARTICLE_NULL);
+			return false;
+		}
+		try {
+			if (articleDAO.read(idArticle) == null) {
+				be.add(BusinessCode.VALIDATION_ARTICLE_NULL);
+				return false;
+			}
+		} catch (DataAccessException e) {
+			be.add(BusinessCode.VALIDATION_ARTICLE_NULL);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validerCreditSuffisant(String pseudo, int montantEnchere, BusinessException be) {
+		if (pseudo == null || pseudo.isEmpty()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_BLANK);
+			return false;
+		}
+		try {
+			Utilisateur user = utilisateurDAO.readByPseudo(pseudo);
+			if (user == null) {
+				be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+				return false;
+			} else {
+				return user.getCredit() >= montantEnchere;
+			}
+		} catch (DataAccessException e) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_DB_NULL);
+			return false;
+		}
+	}
+
+	private boolean validerEncherisseur(String pseudo, long idArticle, BusinessException be) {
+		if (pseudo == null || pseudo.isEmpty()) {
+			be.add(BusinessCode.VALIDATION_UTILISATEUR_PSEUDO_BLANK);
+			return false;
+		}
+		if (idArticle <= 0) {
+			be.add(BusinessCode.VALIDATION_ARTICLE_NULL);
+		}
+		try {
+			Enchere enchere = enchereDAO.findMeilleureEncherePourArticle(idArticle);
+			ArticleAVendre articleAVendre = articleDAO.read(idArticle);
+			if (enchere == null || articleAVendre == null) {
+				return false;
+			} else {
+				// On vérifie que l'encherisseur n'est pas l'enchérisseur précédent ET que l'enchérisseur n'est pas le vendeur
+				return !enchere.getAcquereur().getPseudo().equals(pseudo)
+						&& !articleAVendre.getVendeur().getPseudo().equals(pseudo);
+			}
+		} catch (EmptyResultDataAccessException e) {
+			return true;
+		} catch (DataAccessException e) {
+			return false;
+		}
+	}
+
 }

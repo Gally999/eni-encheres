@@ -35,6 +35,15 @@ public class EnchereDAOImpl implements EnchereDAO {
     return jdbcTemplate.queryForObject(FIND_BEST_FOR_ID, namedParam, new EnchereRowMapper());
   }
 
+  @Override
+  public void addEnchere(int montant, long idArticle, String pseudo) {
+    MapSqlParameterSource namedParams = new MapSqlParameterSource();
+    namedParams.addValue("idArticle", idArticle);
+    namedParams.addValue("montant", montant);
+    namedParams.addValue("pseudo", pseudo);
+    jdbcTemplate.update("INSERT INTO Encheres(id_utilisateur, no_article, montant_enchere, date_enchere) VALUES (:pseudo, :idArticle, :montant, CURRENT_TIMESTAMP)", namedParams);
+  }
+
   static class EnchereRowMapper implements RowMapper<Enchere> {
     @Override
     public Enchere mapRow(ResultSet rs, int rowNum) throws SQLException {

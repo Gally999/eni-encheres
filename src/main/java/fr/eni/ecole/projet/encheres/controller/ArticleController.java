@@ -74,6 +74,7 @@ public class ArticleController {
   @GetMapping("/detail")
   public String afficherDetailArticle(
       @RequestParam(name = "id", required = true) long id,
+      Principal principal,
       Model model
   ) {
     if (id > 0) {
@@ -97,6 +98,8 @@ public class ArticleController {
           Enchere enchere = encheresService.consulterMeilleureEnchere(article.getId());
           model.addAttribute("meilleureEnchere", enchere);
         }
+        Utilisateur user = utilisateurService.findByPseudo(principal.getName());
+        model.addAttribute("credit", user.getCredit());
         return "view-article-detail";
       } else {
         System.out.println("Article inconnu");
@@ -105,6 +108,28 @@ public class ArticleController {
       System.out.println("Identifiant inconnu");
     }
     return "view-encheres";
+  }
+
+  @PostMapping("/encherir")
+  public String encherirArticle(
+      @RequestParam(name = "montantEnchere") Integer montantEnchere,
+      @RequestParam(name = "idArticle") long idArticle,
+      Principal principal
+  ) {
+    if (principal != null && principal.getName() != null) {
+      try {
+        encheresService.encherirSurArticle(montantEnchere, idArticle, principal.getName());
+        return "redirect:/article/detail?id=" + idArticle;
+      } catch (BusinessException e) {
+        e.getClefsExternalisations().forEach(key -> {
+          ObjectError error = new ObjectError("globalError", key);
+          // bindingResult.addError(error);
+        });
+        return "redirect:/";
+      }
+    } else {
+      return "redirect:/";
+    }
   }
 
   private void injectUserAddresses(String userPseudo, Model model) {
