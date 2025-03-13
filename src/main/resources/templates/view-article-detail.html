@@ -54,7 +54,11 @@
     <section class="seller-details-section">
         <div class="article-detail-div">
             <p data-th-text="#{view-article-detail.adresse}"></p>
-            <p data-th-text="${adresse.rue + ' ' + adresse.codePostal + ' ' + adresse.ville}"></p>
+            <p data-th-text="${adresse.rue}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p></p>
+            <p data-th-text="${adresse.codePostal + ' ' + adresse.ville}"></p>
         </div>
         <div class="article-detail-div">
             <p data-th-text="#{view-article-detail.vendeur}"></p>
@@ -66,8 +70,8 @@
         <div data-th-unless="${#authentication.name == article.vendeur.pseudo}">
             <label for="inputBet" data-th-text="#{view-article-detail.enchere}"></label>
             <input type="number" id="inputBet" data-th-min="${article.prixVente + 1}" data-th-placeholder="${article.prixVente + 1}" />
-        </div>
             <button data-th-text="#{view-article-detail.button.encherir}" disabled></button>
+        </div>
     </section>
 
 </main>
