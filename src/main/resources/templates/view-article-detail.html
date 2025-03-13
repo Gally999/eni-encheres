@@ -35,8 +35,10 @@
         <div class="article-detail-div">
             <p data-th-text="#{view-article-detail.offre}"></p>
             <p>
-                <span data-th-text="${article.prixVente}"></span>
+                <span data-th-text="${meilleureEnchere.montant > article.prixInitial ? meilleureEnchere.montant : article.prixInitial}"></span>
                 <span data-th-text="#{view-article-detail.points}"></span>
+                <span data-th-if="${meilleureEnchere.montant > article.prixInitial}" data-th-text="#{view-article-detail.par}"></span>
+                <span data-th-if="${meilleureEnchere.montant > article.prixInitial}" data-th-text="${meilleureEnchere.acquereur.pseudo}"></span>
             </p>
         </div>
         <div class="article-detail-div">

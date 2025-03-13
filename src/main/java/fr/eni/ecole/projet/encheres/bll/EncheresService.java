@@ -5,6 +5,7 @@ import java.util.List;
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
+import fr.eni.ecole.projet.encheres.bo.Enchere;
 import fr.eni.ecole.projet.encheres.enums.AchatsOuVentesFilter;
 
 public interface EncheresService {
@@ -26,4 +27,6 @@ public interface EncheresService {
 	Categorie consulterCategorieParId(long id);
 
 	ArticleAVendre consulterArticle(long id);
+
+	Enchere consulterMeilleureEnchere(long id);
 }

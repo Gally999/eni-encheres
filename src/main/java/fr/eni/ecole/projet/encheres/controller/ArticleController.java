@@ -2,10 +2,7 @@ package fr.eni.ecole.projet.encheres.controller;
 
 import fr.eni.ecole.projet.encheres.bll.EncheresService;
 import fr.eni.ecole.projet.encheres.bll.UtilisateurService;
-import fr.eni.ecole.projet.encheres.bo.Adresse;
-import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
-import fr.eni.ecole.projet.encheres.bo.Categorie;
-import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.bo.*;
 import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -95,6 +92,10 @@ public class ArticleController {
           if (adresse != null) {
             model.addAttribute("adresse", adresse);
           }
+        }
+        if (article.getId() > 0) {
+          Enchere enchere = encheresService.consulterMeilleureEnchere(article.getId());
+          model.addAttribute("meilleureEnchere", enchere);
         }
         return "view-article-detail";
       } else {
