@@ -8,6 +8,7 @@ import fr.eni.ecole.projet.encheres.enums.StatutEnchere;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -44,6 +45,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
 	private static final String FIND_VENTES_EN_COURS = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait "
 													+ "FROM ARTICLES_A_VENDRE WHERE id_utilisateur = :utilisateurId AND statut_enchere IN (:status) AND no_categorie IN (:categorieIds) AND nom_article LIKE :search;";
+	public static final String DELETE_BY_ID = "DELETE FROM ARTICLES_A_VENDRE WHERE no_article = :id AND statut_enchere = 0";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -122,6 +124,12 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 		List<Integer> statusValues = status.stream().map(StatutEnchere::getValue).toList();
 		namedParams.addValue("status", statusValues);
 		return jdbcTemplate.query(FIND_VENTES_EN_COURS, namedParams, new ArticleAVendreRowMapper());
+	}
+
+	@Override
+	public void delete(long id) {
+		SqlParameterSource namedParams = new MapSqlParameterSource("id", id);
+		jdbcTemplate.update(DELETE_BY_ID, namedParams);
 	}
 
 	static class ArticleAVendreRowMapper implements RowMapper<ArticleAVendre> {

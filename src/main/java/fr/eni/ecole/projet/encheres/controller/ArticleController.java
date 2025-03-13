@@ -132,6 +132,22 @@ public class ArticleController {
     }
   }
 
+  @DeleteMapping("/supprimer/{id}")
+  public String supprimerArticle(
+      @PathVariable(name = "id") Long id,
+      Principal principal
+  ) {
+    if (principal != null && principal.getName() != null) {
+      try {
+        encheresService.supprimerArticle(id);
+        return "redirect:/";
+      } catch (BusinessException e) {
+        return "redirect:/";
+      }
+    }
+    return "redirect:/";
+  }
+
   private void injectUserAddresses(String userPseudo, Model model) {
     Utilisateur user = utilisateurService.findByPseudo(userPseudo);
     List<Adresse> adresses = encheresService.consulterAdressesDisponibles(user.getAdresse().getId());

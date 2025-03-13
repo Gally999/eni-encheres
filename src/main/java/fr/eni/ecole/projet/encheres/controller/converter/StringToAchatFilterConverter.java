@@ -9,7 +9,6 @@ public class StringToAchatFilterConverter implements Converter<String, AchatFilt
   @Override
   public AchatFilter convert(String value) {
     int id = Integer.parseInt(value);
-    System.out.println("id from AchatFilter = " + id);
     return AchatFilter.getAchatFilter(id);
   }
 }

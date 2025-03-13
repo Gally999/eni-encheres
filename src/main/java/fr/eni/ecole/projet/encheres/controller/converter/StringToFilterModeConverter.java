@@ -9,7 +9,6 @@ public class StringToFilterModeConverter implements Converter<String, FilterMode
   @Override
   public FilterMode convert(String value) {
     int id = Integer.parseInt(value);
-    System.out.println("id from FilterMode = " + id);
     return FilterMode.getFilterMode(id);
   }
 }

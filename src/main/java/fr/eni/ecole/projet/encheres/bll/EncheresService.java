@@ -31,4 +31,6 @@ public interface EncheresService {
 	Enchere consulterMeilleureEnchere(long id);
 
 	void encherirSurArticle(int montantEnchere, long idArticle, String name);
+
+	void supprimerArticle(long id);
 }

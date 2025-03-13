@@ -34,7 +34,6 @@ public class EncheresController {
 			Model model,
 			Principal principal
 	) {
-		System.out.println("EncheresController");
 		model.addAttribute("achatsOuVentes", achatsOuVentes.getValue());
 		model.addAttribute("achats", achats.getValue());
 		model.addAttribute("ventes", ventes.getValue());
@@ -44,7 +43,6 @@ public class EncheresController {
 			List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives(categorieId, keyword);
 			model.addAttribute("encheresActives", encheresActives);
 		} else {
-			System.out.println("connexion par défaut");
 			// Récupérer les enchères actives de la BLL en mode connecté
 			List<ArticleAVendre> encheresFiltrees = encheresService.consulterEncheresActives(categorieId, keyword, achatsOuVentes.getValue() == 0 ? achats : ventes);
 			model.addAttribute("encheresActives", encheresFiltrees);
