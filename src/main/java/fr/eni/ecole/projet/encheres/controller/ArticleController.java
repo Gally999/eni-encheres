@@ -140,7 +140,7 @@ public class ArticleController {
     if (principal != null && principal.getName() != null) {
       try {
         encheresService.supprimerArticle(id);
-        return "redirect:/";
+        return "redirect:/?keyword=&categorieId=&achatsOuVentes=1&ventes=0";
       } catch (BusinessException e) {
         return "redirect:/";
       }

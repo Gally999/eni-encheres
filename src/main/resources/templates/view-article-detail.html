@@ -68,7 +68,7 @@
             <div data-th-if="${#authentication.name == article.vendeur.pseudo}">
                 <button><a href="/" data-th-text="#{view-article-detail.button.retour}"></a></button>
             </div>
-            <form th:action="@{'/article/supprimer/{id}'(id=${article.id})}" th:method="DELETE"
+            <form action="#" th:action="@{'/article/supprimer/{id}'(id=${article.id})}" th:method="DELETE"
                     data-th-if="${#authentication.name == article.vendeur.pseudo && article.dateDebutEncheres.isAfter(#temporals.createToday())}"
             >
                 <button type="submit">Supprimer
