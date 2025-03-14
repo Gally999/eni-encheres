@@ -53,4 +53,5 @@ public class BusinessCode {
 	public static final String VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU = "validation.article.categorie.id.inconnu";
 	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_INCORRECT = "validation.chgt.motDePasse.incorrect";
 	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_CONFIRMATION_INCORRECT = "validation.confirmation.incorrecte";
+	public static final String VALIDATION_UTILISATEUR_EMAIL_LENGTH = "Validation.email.taille";
 }

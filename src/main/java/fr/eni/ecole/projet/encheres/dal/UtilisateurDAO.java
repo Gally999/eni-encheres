@@ -36,15 +36,15 @@ public interface UtilisateurDAO {
 
 	int countUsersByNoAdresse(int noAdresse);
 
-	Utilisateur ReadByPseudo(String pseudo);
-
 	void updateMotDePasse(Utilisateur utilisateur);
 
 	void deleteEnchereByPseudoe(String pseudo);
 
 	void deleteArticleByPseudo(String pseudo);
 
-	
+	Utilisateur readByPseudoMDP(String pseudo);
+
+
 }
 
 

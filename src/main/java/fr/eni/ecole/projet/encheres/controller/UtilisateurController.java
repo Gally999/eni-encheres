@@ -72,7 +72,8 @@ public class UtilisateurController {
 	    String pseudo = principal.getName();
 	    System.out.println("Pseudo de l'utilisateur connecté : " + pseudo);
 
-	    Utilisateur utilisateur = utilisateurService.findByPseudo(pseudo);
+	    Utilisateur utilisateur = utilisateurService.findByPseudoMDP(pseudo);
+	    System.out.println("Récupération de la méthode findByPseudoMDP  avec pseudo : " + pseudo);
 	    
 	    if (utilisateur == null) {
 	        System.out.println("Utilisateur non trouvé");
@@ -250,65 +251,60 @@ public class UtilisateurController {
 
 	@PostMapping("/creer")
 	public String creerUtilisateur(
-			@RequestParam("motDePasse") String motDePasse,  
-			@RequestParam("motDePasseConfirmation") String motDePasseConfirmation,  
-			@ModelAttribute("utilisateur") Utilisateur utilisateur,  
-			BindingResult bindingResult, 
-			Model model) {
+	        @RequestParam("motDePasse") String motDePasse,  
+	        @RequestParam("motDePasseConfirmation") String motDePasseConfirmation,  
+	        @ModelAttribute("utilisateur") Utilisateur utilisateur,  
+	        BindingResult bindingResult, 
+	        Model model) {
 
-		// Affichage des valeurs reçues dans le formulaire
-		System.out.println("Mot de passe saisi : " + motDePasse);
-		System.out.println("Mot de passe de confirmation : " + motDePasseConfirmation);
+	    System.out.println("Mot de passe saisi : " + motDePasse);
+	    System.out.println("Mot de passe de confirmation : " + motDePasseConfirmation);
 
-		// Vérification que les mots de passe correspondent
-		if (motDePasse == null || !motDePasse.equals(motDePasseConfirmation)) {
-			System.out.println("Erreur : les mots de passe ne correspondent pas.");
-			bindingResult.rejectValue("motDePasseConfirmation", "validation.utilisateur.motDePasse.confirmation");
-		} else {
-			System.out.println("Les mots de passe correspondent.");
-		}
+	    if (motDePasse == null || !motDePasse.equals(motDePasseConfirmation)) {
+	        System.out.println("Erreur : les mots de passe ne correspondent pas.");
+	        bindingResult.rejectValue("motDePasseConfirmation", "validation.utilisateur.motDePasse.confirmation");
+	    } else {
+	        System.out.println("Les mots de passe correspondent.");
+	    }
 
-		// Si des erreurs de validation existent
-		if (bindingResult.hasErrors()) {
-			System.out.println("Des erreurs de validation ont été détectées.");
-			bindingResult.getAllErrors().forEach(error -> {
-				System.out.println("Erreur : " + error.getDefaultMessage());
-			});
-			return "view-utilisateur-creer"; // Retourner à la page de création de l'utilisateur
-		} else {
-			System.out.println("Aucune erreur de validation. Création de l'utilisateur.");
+	    if (bindingResult.hasErrors()) {
+	        System.out.println("Des erreurs de validation ont été détectées.");
+	        bindingResult.getAllErrors().forEach(error -> {
+	            System.out.println("Erreur : " + error.getDefaultMessage());
+	        });
+	        return "view-utilisateur-creer";
+	    } else {
+	        System.out.println("Aucune erreur de validation. Création de l'utilisateur.");
 
-			// Si aucun problème, on affecte le mot de passe à l'utilisateur
-			utilisateur.setMotDePasse(motDePasse);  
-			utilisateur.setCredit(10);  // Crédit par défaut
+	        utilisateur.setMotDePasse(motDePasse);  
+	        utilisateur.setCredit(10);
 
-			try {
-				System.out.println("Tentative d'ajouter l'utilisateur dans la base de données.");
-				utilisateurService.add(utilisateur);  // Sauvegarde dans la base de données via le service
+	        try {
+	            System.out.println("Tentative d'ajouter l'utilisateur dans la base de données.");
+	            utilisateurService.add(utilisateur);
 
-				//Ajout du message de succès uniquement en cas de création réussie
-				model.addAttribute("popupMessage", "Votre compte est créé avec succès, félicitations !");
-				model.addAttribute("popupType", "success"); 
+	            model.addAttribute("popupMessage", "Votre compte est créé avec succès, félicitations !");
+	            model.addAttribute("popupType", "success");
 
-				System.out.println("Utilisateur ajouté avec succès.");
-				return "redirect:/";
-				// Rediriger vers la page d'accueil après la création
-			} catch (BusinessException e) {
-				System.out.println("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
-				// Ajouter des erreurs globales si une exception se produit
-				e.getClefsExternalisations().forEach(key -> {
-					ObjectError error = new ObjectError("globalError", key);
-					bindingResult.addError(error);
-					System.out.println("Erreur globale : " + key);
-				});
-				return "view-utilisateur-creer";  
-			}
-		}
+	            System.out.println("Utilisateur ajouté avec succès.");
+	            return "redirect:/";
+	        } catch (BusinessException e) {
+	            System.out.println("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
+	            if (e.getClefsExternalisations() != null) {
+	                e.getClefsExternalisations().forEach(error -> {
+	                    System.out.println("Erreur d'externalisation : " + error);
+	                });
+	            }
+
+	            if (e.getClefsExternalisations() != null) {
+	                e.getClefsExternalisations().forEach(key -> {
+	                    ObjectError error = new ObjectError("globalError", key);
+	                    bindingResult.addError(error);
+	                    System.out.println("Erreur globale : " + key);
+	                });
+	            }
+	            return "view-utilisateur-creer";
+	        }
+	    }
 	}
-
-
 }
-
-
-
-

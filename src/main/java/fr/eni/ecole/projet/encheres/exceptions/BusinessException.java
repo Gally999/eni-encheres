@@ -19,6 +19,9 @@ public class BusinessException extends RuntimeException {
     }
     
     public List<String> getClefsExternalisations() {
+        if (this.clefsExternalisations == null) {
+            return new ArrayList<>(); // Retourner une liste vide si la liste est null
+        }
         return clefsExternalisations;
     }
     
@@ -41,4 +44,7 @@ public class BusinessException extends RuntimeException {
         // Return true if no errors are added, otherwise false
         return clefsExternalisations == null || clefsExternalisations.isEmpty();
     }
+    
+    
+    
 }

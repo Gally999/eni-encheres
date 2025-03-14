@@ -26,7 +26,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		private final String FIND_BY_PSEUDO = "SELECT pseudo, nom, prenom, email, telephone, credit, administrateur, no_adresse FROM UTILISATEURS WHERE pseudo = :pseudo";
 		private final String FIND_BY_EMAIL = "SELECT pseudo, email, nom, prenom, credit, administrateur FROM UTILISATEURS WHERE EMAIL = :email";
 		private final String FIND_ALL = "SELECT pseudo, nom, prenom, email FROM UTILISATEURS";
-		private final String FIND_BY_PSEUDO_MDP= "SELECT pseudo, nom, prenom, email, telephone, credit, administrateur, no_adresse FROM UTILISATEURS WHERE pseudo = :pseudo";
+		private final String FIND_BY_PSEUDO_MDP = "SELECT pseudo, nom, prenom, email, telephone, mot_de_passe, credit, administrateur, no_adresse FROM UTILISATEURS WHERE pseudo = :pseudo";
+				
 		
 		private final String COUNT_USERS_BY_NO_ADRESSE = "SELECT COUNT(*) FROM UTILISATEURS WHERE no_adresse = :noAdresse";
 		private final String COUNT_EMAIL = "SELECT count(email) FROM UTILISATEURS WHERE email = :email";
@@ -44,36 +45,40 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		
 		
 		
-		
 		@Autowired
 		private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 		
-		// MODIFIER MOT DE PASSE
-		@Override
-		public Utilisateur ReadByPseudo(String pseudo) {
-			System.out.println("La méthode ReadByPseudo est appelée.");
-			MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-			namedParameters.addValue("pseudo", pseudo);
-			return namedParameterJdbcTemplate.queryForObject(FIND_BY_PSEUDO_MDP,namedParameters,
-					new UtilisateurRowMapper()
-					);
+		public Utilisateur readByPseudoMDP(String pseudo) {
+		    System.out.println("Exécution de la requête pour pseudo : " + pseudo);
+		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		    namedParameters.addValue("pseudo", pseudo);
+
+		    try {
+		        Utilisateur utilisateur = namedParameterJdbcTemplate.queryForObject(FIND_BY_PSEUDO_MDP, namedParameters, new UtilisateurRowMapper());
+		        System.out.println("Utilisateur trouvé : " + utilisateur);
+		        return utilisateur;
+		    } catch (Exception e) {
+		        System.out.println("Erreur lors de l'exécution de la requête : " + e.getMessage());
+		        throw e;
+		    }
 		}
+
+
 		
 		@Override
 		public void updateMotDePasse(Utilisateur utilisateur) {
 			System.out.println("La méthode mettreAjourMotDePasse est appelée.");
 		    System.out.println("Pseudo : " + utilisateur.getPseudo());
-
-			MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-			
-			namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
-						
+		    
+		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		    namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
+		    namedParameters.addValue("pseudo", utilisateur.getPseudo());
+		 
 		    System.out.println("Paramètres : " + namedParameters);
 		    System.out.println("Requête : " + UPDATE_USER_MDP);
-		    System.out.println("Paramètres : " + namedParameters);
-			
-			namedParameterJdbcTemplate.update(UPDATE_USER_MDP, namedParameters);
-			
+		 
+		    namedParameterJdbcTemplate.update(UPDATE_USER_MDP, namedParameters);
+						
 			System.out.println("Exécution de la requête : UPDATE UTILISATEURS SELECT mot_de_passe WHERE pseudo = ?");
 		}
 		
@@ -257,48 +262,30 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		}
 
 
-	static class UtilisateurRowMapper implements RowMapper<Utilisateur> {
-		@Override
-		public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
-			
-			Utilisateur u = new Utilisateur();
-			u.setPseudo(rs.getString("pseudo"));
-			u.setNom(rs.getString("nom"));
-			u.setPrenom(rs.getString("prenom"));
-			u.setEmail(rs.getString("email"));
-			u.setTelephone(rs.getString("telephone"));
-			u.setCredit(rs.getInt("credit"));
-			u.setAdmin(rs.getBoolean("administrateur"));
+		static class UtilisateurRowMapper implements RowMapper<Utilisateur> {
+		    @Override
+		    public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
+		        
+		        Utilisateur u = new Utilisateur();
+		        u.setPseudo(rs.getString("pseudo"));
+		        u.setNom(rs.getString("nom"));
+		        u.setPrenom(rs.getString("prenom"));
+		        u.setEmail(rs.getString("email"));
+		        u.setTelephone(rs.getString("telephone"));
+		        u.setCredit(rs.getInt("credit"));
+		        u.setAdmin(rs.getBoolean("administrateur"));
+		       // u.setMotDePasse(rs.getString("mot_de_passe")); 
 
-			// Association Adresse
-			Adresse a = new Adresse();
-			a.setId(rs.getInt("no_adresse"));
-			u.setAdresse(a);
-			
-			System.out.println("utilisateur :  " + u);
+		        // Association Adresse
+		        Adresse a = new Adresse();
+		        a.setId(rs.getInt("no_adresse"));
+		        u.setAdresse(a);
+		        
+		        System.out.println("utilisateur :  " + u);
 
-			return u;
+		        return u;
+		    }
 		}
-	}
-
-
-	
-
-
-	
-	
-
-
-	
-
-	
-
-	
-
-
-	
-
-	
 
 
 }
