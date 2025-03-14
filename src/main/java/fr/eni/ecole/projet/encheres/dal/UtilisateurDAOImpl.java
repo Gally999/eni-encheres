@@ -18,7 +18,6 @@ import fr.eni.ecole.projet.encheres.bo.Utilisateur;
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 		
 
-
 		private final String FIND_ADRESSE_BY_NO_ADRESSE = "SELECT rue, code_postal, ville FROM ADRESSES WHERE no_adresse = :noAdresse";
 		private final String FIND_CREDIT_BY_PSEUDO = "SELECT credit FROM UTILISATEURS WHERE pseudo = :pseudo";
 		private final String FIND_NO_ADRESSE_BY_PSEUDO = "SELECT no_adresse FROM UTILISATEURS WHERE pseudo = :pseudo";
@@ -42,12 +41,19 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		private final String UPDATE_USER_MDP = "UPDATE UTILISATEURS SET mot_de_passe = :motDePasse WHERE pseudo = :pseudo";
 		
 		private final String INSERT = "INSERT INTO UTILISATEURS(pseudo, nom, prenom, email, telephone, mot_de_passe, credit, no_adresse) VALUES (:pseudo, :nom, :prenom, :email, :telephone, :motDePasse, :credit, :noAdresse)";
-		
-		
-		
-		@Autowired
+
+		public static final String DEBITER_ACQUEREUR = "UPDATE Utilisateurs SET credit = (SELECT credit FROM UTILISATEURS WHERE pseudo = :pseudo) - :montant WHERE pseudo = :pseudo;";
+		public static final String RECREDITER_UTILISATEUR = "UPDATE Utilisateurs SET credit = (SELECT credit FROM UTILISATEURS WHERE pseudo = :pseudo) + :montant WHERE pseudo = :pseudo;";
+
 		private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 		
+		public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		    this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		  }
+		
+		
+
+  // MODIFIER MOT DE PASSE
 		public Utilisateur readByPseudoMDP(String pseudo) {
 		    System.out.println("Exécution de la requête pour pseudo : " + pseudo);
 		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
@@ -63,7 +69,14 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		    }
 		}
 
-
+		@Override
+		public Utilisateur readByPseudo(String pseudo) {
+			MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+			namedParameters.addValue("pseudo", pseudo);
+			return namedParameterJdbcTemplate.queryForObject(FIND_BY_PSEUDO,namedParameters,
+					new UtilisateurRowMapper()
+			);
+		}
 		
 		@Override
 		public void updateMotDePasse(Utilisateur utilisateur) {
@@ -81,6 +94,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 						
 			System.out.println("Exécution de la requête : UPDATE UTILISATEURS SELECT mot_de_passe WHERE pseudo = ?");
 		}
+
 		
 		
 		
@@ -97,6 +111,54 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		    
 		    return count;
 		}
+
+
+	@Override
+	public void debiter(int montant, String pseudo) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("montant", montant);
+		namedParams.addValue("pseudo", pseudo);
+		namedParameterJdbcTemplate.update(DEBITER_ACQUEREUR, namedParams);
+	}
+
+	@Override
+	public void recrediterPrecedentEncherisseur(int montant, String pseudo) {
+		MapSqlParameterSource namedParams = new MapSqlParameterSource();
+		namedParams.addValue("montant", montant);
+		namedParams.addValue("pseudo", pseudo);
+		namedParameterJdbcTemplate.update(RECREDITER_UTILISATEUR, namedParams);
+	}
+
+	// SUPPRIMER MON PROFIL
+//		// Récupérer le no_adresse à partir du pseudo
+//		// Compter les utilisateurs ayant le même no_adresse
+//		public int countUsersByNoAdresse(int noAdresse) {
+//		    System.out.println("Début de la comptabilisation des utilisateurs ayant le même no_adresse : " + noAdresse);
+//		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+//		    namedParameters.addValue("noAdresse", noAdresse);
+//
+//		    int count = namedParameterJdbcTemplate.queryForObject(COUNT_USERS_BY_NO_ADRESSE, namedParameters, Integer.class);
+//		    System.out.println("Nombre d'utilisateurs avec no_adresse " + noAdresse + " : " + count);
+//
+//		    return count;
+//		}
+//
+//		// Supprimer un utilisateur par pseudo
+//		public void deleteByPseudo(String pseudo) {
+//		    System.out.println("Suppression de l'utilisateur avec le pseudo : " + pseudo);
+//		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+//		    namedParameters.addValue("pseudo", pseudo);
+//		    namedParameterJdbcTemplate.update(DELETE_USER_BY_PSEUDO, namedParameters);
+//		    System.out.println("Utilisateur avec le pseudo " + pseudo + " supprimé.");
+//		}
+//
+//		public void deleteAdresseByNoAdresse(int noAdresse) {
+//		    System.out.println("Suppression de l'adresse avec no_adresse : " + noAdresse);
+//		    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+//		    namedParameters.addValue("noAdresse", noAdresse);
+//		    namedParameterJdbcTemplate.update(DELETE_ADRESSE_BY_NO_ADRESSE, namedParameters);
+//		    System.out.println("Adresse avec no_adresse " + noAdresse + " supprimée.");
+//		}
 
 		// Supprimer un utilisateur par pseudo
 		public void deleteByPseudo(String pseudo) {
@@ -188,14 +250,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		
 		
 		//PAGE MON PROFIL
-		@Override
-		public Utilisateur readByPseudo(String pseudo) {
-			MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-			namedParameters.addValue("pseudo", pseudo);
-			return namedParameterJdbcTemplate.queryForObject(FIND_BY_PSEUDO,namedParameters,
-					new UtilisateurRowMapper()
-			);
-		}
 		
 		@Override
 		public String getTelephoneByPseudo(String pseudo) {

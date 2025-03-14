@@ -47,8 +47,10 @@ public class BusinessCode {
 	public static final String VALIDATION_DATE_FIN_ENCHERES_FUTURE = "validation.utilisateur.date.fin.future";
 
 	public static final String ERROR_CREATION_ARTICLE = "error.creation.article";
+	public static final String ERROR_AJOUT_ENCHERE = "error.ajout.enchere";
+	public static final String ERROR_DELETE_ARTICLE = "error.delete.article";
 
-
+	public static final String VALIDATION_ARTICLE_NULL = "validation.article.null";
 	public static final String VALIDATION_ARTICLE_CATEGORIE_NULL = "validation.article.categorie.null";
 	public static final String VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU = "validation.article.categorie.id.inconnu";
 	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_INCORRECT = "validation.chgt.motDePasse.incorrect";

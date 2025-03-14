@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-encheres(
+					titrePage=~{:: title},
+					contenuPage=~{:: main},
+					ressourcesSupp=~{:: #ressources-css})}">
+<head>
+    <title data-th-text="#{view-article-detail.title}"></title>
+    <th:block id="ressources-css">
+        <link rel="stylesheet" data-th-href="@{/css/general.css}">
+    </th:block>
+</head>
+<body>
+<main class="article-details-main">
+    <h1 data-th-text="#{view-article-detail.title}">Détail d'une vente</h1>
+    <section class="article-details-section">
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.name}"></p>
+            <p data-th-text="${article.nom}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.prix}"></p>
+            <p>
+                <span data-th-text="${article.prixInitial}"></span>
+                <span data-th-text="#{view-article-detail.points}"></span>
+            </p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.categorie}"></p>
+            <p>
+                <span data-th-text="${categorie.libelle}"></span>
+            </p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.offre}"></p>
+            <p>
+                <span data-th-text="${meilleureEnchere.montant > article.prixInitial ? meilleureEnchere.montant : article.prixInitial}"></span>
+                <span data-th-text="#{view-article-detail.points}"></span>
+                <span data-th-if="${meilleureEnchere.montant > article.prixInitial}" data-th-text="#{view-article-detail.par}"></span>
+                <span data-th-if="${meilleureEnchere.montant > article.prixInitial}" data-th-text="${meilleureEnchere.acquereur.pseudo}"></span>
+            </p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.description}"></p>
+            <p data-th-text="${article.description}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.fin.date}"></p>
+            <p data-th-text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></p>
+        </div>
+    </section>
+    <hr>
+    <section class="seller-details-section">
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.adresse}"></p>
+            <p data-th-text="${adresse.rue}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p></p>
+            <p data-th-text="${adresse.codePostal + ' ' + adresse.ville}"></p>
+        </div>
+        <div class="article-detail-div">
+            <p data-th-text="#{view-article-detail.vendeur}"></p>
+            <p data-th-text="${article.vendeur.pseudo}"></p>
+        </div>
+        <div>
+            <div data-th-if="${#authentication.name == article.vendeur.pseudo}">
+                <button><a href="/" data-th-text="#{view-article-detail.button.retour}"></a></button>
+            </div>
+            <form th:action="@{'/article/supprimer/{id}'(id=${article.id})}" th:method="DELETE"
+                    data-th-if="${#authentication.name == article.vendeur.pseudo && article.dateDebutEncheres.isAfter(#temporals.createToday())}"
+            >
+                <button type="submit">Supprimer
+                </button>
+            </form>
+        </div>
+        <div data-th-if="${meilleureEnchere.acquereur != null && #authentication.name == meilleureEnchere.acquereur.pseudo}">
+            <p>Félicitations, à ce jour, vous êtes le•a meilleur•e enchérisseur•euse</p>
+        </div>
+        <form
+                data-th-action="@{'/article/encherir?idArticle=' + ${article.id}}" method="POST"
+        >
+            <div
+                data-th-if="${#authentication.name != article.vendeur.pseudo && ((meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo != #authentication.name) || meilleureEnchere.montant <= 0)}">
+                <label for="inputBet" data-th-text="#{view-article-detail.enchere}"></label>
+                <input
+                        type="number"
+                        name="montantEnchere"
+                        id="inputBet"
+                        data-th-min="${article.prixVente + 1}"
+                        data-th-placeholder="${meilleureEnchere.montant > 0 ? (meilleureEnchere.montant + 1) : (article.prixInitial + 1)}"
+                        data-th-value="${meilleureEnchere.montant > 0 ? (meilleureEnchere.montant + 1) : (article.prixInitial + 1)}"
+                        data-th-disabled="${article.prixVente + 1 >= credit || article.vendeur.pseudo == #authentication.name || (meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo == #authentication.name)}"
+                />
+                <button type="submit" data-th-text="#{view-article-detail.button.encherir}" data-th-disabled="${article.prixVente + 1 >= credit || article.vendeur.pseudo == #authentication.name || (meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo == #authentication.name)}"></button>
+            </div>
+            <div data-th-if="${article.prixVente + 1 >= credit && #authentication.name != article.vendeur.pseudo && ((meilleureEnchere.acquereur != null && meilleureEnchere.acquereur.pseudo != #authentication.name) || meilleureEnchere.montant <= 0)}" data-th-text="#{view-article-detail.credit.epuise}"></div>
+        </form>
+    </section>
+</main>
+</body>
+</html>

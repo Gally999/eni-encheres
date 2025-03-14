@@ -20,4 +20,6 @@ public interface ArticleAVendreDAO {
 	List<ArticleAVendre> findEncheresEnCours(String currentUserName, List<Long> categoriesToRetrieve, String searchTerm);
 
 	List<ArticleAVendre> findArticlesEnVente(String currentUserName, List<Long> categoriesToRetrieve, String searchTerm, List<StatutEnchere> status);
+
+  void delete(long id);
 }

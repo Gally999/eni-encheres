@@ -5,10 +5,9 @@ import java.util.List;
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
-import fr.eni.ecole.projet.encheres.enums.AchatFilter;
+import fr.eni.ecole.projet.encheres.bo.Enchere;
 import fr.eni.ecole.projet.encheres.enums.AchatsOuVentesFilter;
-import fr.eni.ecole.projet.encheres.enums.FilterMode;
-import fr.eni.ecole.projet.encheres.enums.VenteFilter;
+
 
 public interface EncheresService {
 
@@ -18,7 +17,7 @@ public interface EncheresService {
 	
 	List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm);
 
-	List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm, FilterMode filterMode, AchatFilter achatFilter, VenteFilter venteFilter);
+	List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm, AchatsOuVentesFilter achatsOuVentesFilter);
 
 	List<Categorie> consulterCategories();
 
@@ -28,6 +27,12 @@ public interface EncheresService {
 
 	Categorie consulterCategorieParId(long id);
 
-	List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm,
-			AchatsOuVentesFilter achatsOuVentesFilter);
+	ArticleAVendre consulterArticle(long id);
+
+	Enchere consulterMeilleureEnchere(long id);
+
+	void encherirSurArticle(int montantEnchere, long idArticle, String name);
+
+	void supprimerArticle(long id);
 }
+

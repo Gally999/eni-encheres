@@ -38,12 +38,16 @@ public interface UtilisateurDAO {
 
 	void updateMotDePasse(Utilisateur utilisateur);
 
+
 	void deleteEnchereByPseudoe(String pseudo);
 
 	void deleteArticleByPseudo(String pseudo);
 
 	Utilisateur readByPseudoMDP(String pseudo);
 
+	void debiter(int montantEnchere, String pseudo);
+
+	void recrediterPrecedentEncherisseur(int montant, String pseudo);
 
 }
 
