@@ -40,10 +40,4 @@ public interface UtilisateurService {
 		int uniquePseudo(String pseudo);
 
 		int uniqueEmail(String email);
-
-		
-
-		
-
-
-	}
+}

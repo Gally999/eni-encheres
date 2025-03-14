@@ -24,39 +24,6 @@ public class EncheresController {
 		this.encheresService = encheresService;
   }
 
-<<<<<<< HEAD
-//	@GetMapping("/")
-//	public String afficherEncheresActives(
-//			@RequestParam(name = "categorieId", required = false) Long categorieId,
-//			@RequestParam(value = "keyword", required = false) String keyword,
-//			@RequestParam(value = "achatsOuVentes", required = false, defaultValue = "0") FilterMode achatsOuVentes, // 0 ou 1
-//			@RequestParam(value = "achats", required = false, defaultValue = "0") AchatFilter achats,
-//			@RequestParam(value = "ventes", required = false, defaultValue = "1") VenteFilter ventes,
-//			Model model,
-//			Principal principal
-//	) {
-//		System.out.println("EncheresController");
-//		model.addAttribute("achatsOuVentes", achatsOuVentes.getValue());
-//		model.addAttribute("achats", achats.getValue());
-//		model.addAttribute("ventes", ventes.getValue());
-//
-//		if (principal == null || principal.getName() == null) {
-//			// Récupérer les enchères actives de la BLL en mode déconnecté
-//			List<ArticleAVendre> encheresActives = encheresService.consulterEncheresActives(categorieId, keyword);
-//			model.addAttribute("encheresActives", encheresActives);
-//		} else {
-//			System.out.println("connexion par défaut");
-//			// Récupérer les enchères actives de la BLL en mode connecté
-//			List<ArticleAVendre> encheresFiltrees = encheresService.consulterEncheresActives(categorieId, keyword, achatsOuVentes.getValue() == 0 ? achats : ventes);
-//			model.addAttribute("encheresActives", encheresFiltrees);
-//		}
-//		// Ajout des enchères actives dans le model
-//		model.addAttribute("categorieId", categorieId);
-//		model.addAttribute("keyword", keyword);
-//
-//		return "view-encheres";
-//	}
-=======
 	@GetMapping("/")
 	public String afficherEncheresActives(
 			@RequestParam(name = "categorieId", required = false) Long categorieId,
@@ -86,7 +53,6 @@ public class EncheresController {
 
 		return "view-encheres";
 	}
->>>>>>> 7a358c056cf4a18ac1a92fb2366234f53e29aee5
 
 	@ModelAttribute("categoriesEnSession")
 	public List<Categorie> chargerCategories() {
