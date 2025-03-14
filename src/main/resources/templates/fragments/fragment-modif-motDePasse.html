@@ -1,52 +1,47 @@
 <form xmlns:th="http://www.thymeleaf.org"
-	data-th-fragment="frag-modif-motDePasse-form(action, titreForm)"
-	data-th-action="@{${action}}" data-th-object="${utilisateur}"
-	method="post">
+    data-th-fragment="frag-modif-motDePasse-form(action, titreForm)"
+    data-th-action="@{/modifier-motDePasse}" method="post">
+
 
 	<h1 data-th-text="${titreForm}"></h1>
-	<div
-		data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div>
-
-
+<!-- 	<div -->
+<!-- 		data-th-replace="~{fragments/errors/fragment-errors :: frag-errors}"></div> -->
 	<ul class="flex-outer">
-	
-	<!-- Champ caché pour envoyer le pseudo -->
-        <input type="hidden" th:field="*{pseudo}" />
-		
-		
-		<li>
-		
-			<label for="motDePasseSaisi" data-th-text="#{frag-utilisateur-motDePasseSaisi}"></label>
-			<input	type="password" id="mdpSais" required th:field="*{motDePasseSaisi}" />
-			<div th:replace="~{fragments/errors/fragment-error :: frag-error('motDePasseSaisi')}"></div>
-		
-		</li>
-		<li>
 
-			<label for="motDePasseNew" data-th-text="#{frag-utilisateur-motDePasseNew}"></label> 
-			<input type="password" id="mdpNew" required th:field="*{motDePasseNew}" />
-			<div th:replace="~{fragments/errors/fragment-error :: frag-error('motDePasseNew')}"></div>
+			<!-- Champ caché pour envoyer le pseudo -->
+			<input type="hidden" data-th-value="${pseudo}"/>
 
-		</li>
-		<li>
-
-			<label for="motDePasseConfirmation" data-th-text="#{frag-utilisateur-confirmation}"></label>
-			<input type="password" id="mdpConfirmation" required th:field="*{motDePasseConfirmation}" />
-			<div th:replace="~{fragments/errors/fragment-error :: frag-error('motDePasseConfirmation')}"></div>
-
-		</li>
-
-
-
-
-
-		<nav>
-			<button type="submit" class="validate-button" onclick="window.location.href='/modifier-motDePasse'"
-														data-th-text="#{frag-utilisateur-modifier}"></button>
-
-			<button type="button" class="cancel-button"	onclick="window.location.href='/monProfil'"
-														data-th-text="#{frag-utilisateur-annuler}"></button>
-		</nav>
-
+			<!-- Champ mot de passe Saisi -->
+			<li><label for="motDePasseSaisi"
+				data-th-text="#{frag-utilisateur-motDePasseSaisi}"></label> <input
+				type="password" id="motDePasseSaisi" name="motDePasseSaisi" required />
+			</li>
+			<li>
+				<!-- Champ nouveau mot de passe --> 
+				<label for="motDePasseNew"
+				data-th-text="#{frag-utilisateur-motDePasseNew}"></label> <input
+				type="password" id="motDePasseNew" name="motDePasseNew" required />
+			</li>
+			<li>
+				<!-- Champ confirmation mot de passe --> 
+			<label
+				for="motDePasseConfirmation"
+				data-th-text="#{frag-utilisateur-confirmation}"></label> <input
+				type="password" id="motDePasseConfirmation"
+				name="motDePasseConfirmation" required />
+			</li>
 	</ul>
+	<div class="button-container">
+	
+	
+			<button type="submit" class="validate-button" 
+				data-th-text="#{frag-utilisateur-modifier}"></button>
+				
+				
+			<button type="button" class="cancel-button"
+				onclick="window.location.href='/monProfil'"
+				data-th-text="#{frag-utilisateur-annuler}"></button>
+	</div>			
+	
+	
 </form>

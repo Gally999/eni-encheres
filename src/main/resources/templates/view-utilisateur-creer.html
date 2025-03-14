@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-	<html xmlns:th="http://www.thymeleaf.org" 
-		data-th-replace="~{layouts/layout :: layout-encheres( 
+<html xmlns:th="http://www.thymeleaf.org"
+	data-th-replace="~{layouts/layout :: layout-encheres( 
     	titrePage=~{:: title},
    		contenuPage=~{:: main},
     	ressourcesSupp=~{:: #ressources-css})}">
@@ -8,31 +8,35 @@
 
 <head>
 
-	<!-- Créer comme titre de page -->
-	 <title data-th-text="#{frag-utilisateur-inscription.title}"></title>
-	
-	<!-- Ajout de CSS utilisateur-form.css -->
-	<th:block id="ressources-css">
-		<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}" />
-		<link rel="stylesheet" data-th-href="@{/css/error.css}" />
-	</th:block>
-	
-	<!-- Ajouter le fichier JavaScript externe -->
-	<script src="/js/confirmationMDP.js" defer></script>
-	
+<!-- Créer comme titre de page -->
+<title data-th-text="#{frag-utilisateur-inscription.title}"></title>
+
+<!-- Ajout de CSS utilisateur-form.css -->
+<th:block id="ressources-css">
+	<link rel="stylesheet" data-th-href="@{/css/general.css}">
+	<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}">
+	<link rel="stylesheet" data-th-href="@{/css/error.css}">
+</th:block>
+
+<!-- Ajouter le fichier JavaScript externe -->
+<script src="/js/confirmationMDP.js" defer></script>
+
+
+
 </head>
 
 <body>
 
 	<main>
-	
+
 		<!-- Utilisation du fragment formulaire -->
-		<div data-th-replace="~{fragments/fragment-utilisateur-inscription :: 
+		<div
+			data-th-replace="~{fragments/fragment-utilisateur-inscription :: 
 		frag-utilisateur-inscription-form('/creer', 'Inscription')}">
 		</div>
-	
+
 	</main>
-	
+
 </body>
 
 </html>

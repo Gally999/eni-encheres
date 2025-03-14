@@ -40,6 +40,11 @@ public interface UtilisateurDAO {
 
 	void updateMotDePasse(Utilisateur utilisateur);
 
+	void deleteEnchereByPseudoe(String pseudo);
+
+	void deleteArticleByPseudo(String pseudo);
+
+	
 }
 
 

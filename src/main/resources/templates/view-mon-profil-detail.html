@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-	<html xmlns:th="http://www.thymeleaf.org" 
-		data-th-replace="~{layouts/layout :: layout-encheres( 
+<html xmlns:th="http://www.thymeleaf.org"
+	data-th-replace="~{layouts/layout :: layout-encheres( 
     	titrePage=~{:: title},
    		contenuPage=~{:: main},
     	ressourcesSupp=~{:: #ressources-css})}">
@@ -8,28 +8,53 @@
 
 <head>
 
-	<!-- Créer comme titre de page -->
-	 <title data-th-text="#{frag-utilisateur-monProfil.title}"></title>
-	
-	<!-- Ajout de CSS utilisateur-form.css -->
-	<th:block id="ressources-css">
-		<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}" />
-		<link rel="stylesheet" data-th-href="@{/css/error.css}" />
-	</th:block>
-	
+<!-- Créer comme titre de page -->
+<title data-th-text="#{frag-utilisateur-monProfil.title}"></title>
+
+<!-- Ajout de CSS utilisateur-form.css -->
+<th:block id="ressources-css">
+	<link rel="stylesheet" data-th-href="@{/css/utilisateur-form.css}" />
+	<link rel="stylesheet" data-th-href="@{/css/error.css}" />
+</th:block>
+
 </head>
 
 <body>
 
 	<main>
-	
+
 		<!-- Utilisation du fragment formulaire -->
-		<div data-th-replace="~{fragments/fragment-utilisateur-detail :: 
+		<div
+			data-th-replace="~{fragments/fragment-utilisateur-detail :: 
 		frag-utilisateur-form('/monProfil/detail', 'Mon Profil détail')}">
 		</div>
-	
+
+
+		<!-- Bouton  supprimer le compte -->
+		<form xmlns:th="http://www.thymeleaf.org"
+			data-th-action="@{/supprimer-compte}" data-th-object="${utilisateur}"
+			method="post"
+			onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
+			
+			<div class="button-container">
+        <!-- Bouton supprimer le compte -->
+        <button type="submit" class="validate-button"
+                data-th-text="#{frag-utilisateur-supprimerCompte}"></button>
+
+        <!-- Bouton Modifier Mot de passe -->
+        <button type="button"
+                onclick="window.location.href='/modifier-motDePasse'"
+                data-th-text="#{frag-utilisateur-modifierMotDePasse}"></button>
+
+        <!-- Bouton Accueil -->
+        <button type="button" onclick="window.location.href='/monProfil'"
+                data-th-text="#{frag-utilisateur-annuler}"></button>
+    </div>
+		</form>
+
+
 	</main>
-	
+
 </body>
 
 </html>

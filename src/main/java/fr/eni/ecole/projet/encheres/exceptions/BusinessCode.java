@@ -2,6 +2,14 @@ package fr.eni.ecole.projet.encheres.exceptions;
 
 public class BusinessCode {
 	// Clefs de validation des BO
+	
+	
+	public static final String VALIDATION_UTILISATEUR_NOM_VIDE = "validation.utilisateur.nom.null";
+	public static final String VALIDATION_UTILISATEUR_NOM_TAILLE = "validation.utilisateur.nom.taille";
+
+	public static final String VALIDATION_UTILISATEUR_PRENOM_VIDE = "validation.utilisateur.prenom.null";
+	public static final String VALIDATION_UTILISATEUR_PRENOM_TAILLE = "validation.utilisateur.prenom.taille";
+	
 	public static final String VALIDATION_UTILISATEUR_NULL = "validation.utilisateur.null";
 	public static final String VALIDATION_UTILISATEUR_DB_NULL = "validation.utilisateur.db.null";
 	public static final String BLL_UTILISATEURS_UPDATE_ERREUR = "miseAjour.utilisateur.erreur";
@@ -19,7 +27,8 @@ public class BusinessCode {
 
 	public static final String VALIDATION_UTILISATEUR_PASSWORD_CONFIRMATION_MISMATCH = "validation.utilisateur.motDePasse.confirmation";
 	public static final String VALIDATION_UTILISATEUR_CONFIRMATION_PASSWORD_BLANK = "validation.utilisateur.confirmationMotDePasse.blank";
-
+	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_VIDE="validation.utilisateur.confirmationMotDePasse.blank";
+	
 	public static final String VALIDATION_UTILISATEUR_RUE_BLANK = "validation.utilisateur.rue.blank";
 	public static final String VALIDATION_UTILISATEUR_RUE_PATTERN = "validation.utilisateur.rue.pattern";
 
@@ -43,4 +52,5 @@ public class BusinessCode {
 	public static final String VALIDATION_ARTICLE_CATEGORIE_NULL = "validation.article.categorie.null";
 	public static final String VALIDATION_ARTICLE_CATEGORIE_ID_INCONNU = "validation.article.categorie.id.inconnu";
 	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_INCORRECT = "validation.chgt.motDePasse.incorrect";
+	public static final String BLL_UTILISATEURS_MOT_DE_PASSE_CONFIRMATION_INCORRECT = "validation.confirmation.incorrecte";
 }

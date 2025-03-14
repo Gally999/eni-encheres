@@ -1,6 +1,9 @@
 
 package fr.eni.ecole.projet.encheres.configuration.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -8,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -35,6 +40,17 @@ public class EncheresSecurityConfig {
 					// permettre à tout le monde d'accéder à l'URL racine
 					.requestMatchers(HttpMethod.GET, "/article/creer").authenticated()
 					.requestMatchers(HttpMethod.POST, "/article/creer").authenticated()
+					
+					.requestMatchers(HttpMethod.GET, "/monProfil/detail").authenticated()
+					.requestMatchers(HttpMethod.POST, "/monProfil/detail").authenticated()
+
+					.requestMatchers(HttpMethod.GET, "/modifier-motDePasse").authenticated()
+					.requestMatchers(HttpMethod.POST,"/modifier-motDePasse").authenticated()
+					
+					.requestMatchers(HttpMethod.GET, "/supprimer-compte").authenticated()
+					.requestMatchers(HttpMethod.POST, "/supprimer-compte").authenticated()
+					
+					
 					.requestMatchers("/*").permitAll()
 
 					// Permettre à tous les utilisateurs d'afficher correctement les images et la css
@@ -66,10 +82,6 @@ public class EncheresSecurityConfig {
 		return http.build();
 	}
 	
-	@Bean
-    PasswordEncoder passwordEncoder() {
-        // Crée un PasswordEncoder délégué avec un encodage bcrypt par défaut
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
+	
 }
+

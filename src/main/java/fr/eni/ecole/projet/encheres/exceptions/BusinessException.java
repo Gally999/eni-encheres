@@ -14,8 +14,8 @@ public class BusinessException extends RuntimeException {
         super();
     }
     
-    public BusinessException(Throwable cause) {
-        super(cause);
+    public BusinessException(String string) {
+        super(string);
     }
     
     public List<String> getClefsExternalisations() {

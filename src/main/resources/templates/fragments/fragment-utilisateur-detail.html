@@ -25,7 +25,7 @@
             <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('prenom')}"></div>
 
             <label for="inputEmail" data-th-text="#{frag-utilisateur-email}"></label> 
-            <input type="text" id="inputEmail" name="email" required data-th-field="*{email}"  data-th-readonly="${#strings.contains(action,'detail')}"/>
+            <input type="text" id="inputEmail" name="email" required data-th-field="*{email}"  />
             <th:block data-th-if="${#strings.contains(action,'creer')}">
                 <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('email')}"></div>
             </th:block>
@@ -40,7 +40,7 @@
 		
 
 
-		<!-- Champ adresse Modifier -->
+		<!-- Champ adresse  -->
 		<li data-th-if="${#authorization.expression('isAuthenticated()')}">
    			 <label for="inputAdresse" data-th-text="#{frag-utilisateur-adresse}"></label>
    			 <div class="error-message" data-th-replace="~{fragments/errors/fragment-error :: frag-error('adresse')}"></div>
@@ -52,36 +52,32 @@
    			</div>
 		</li>
 
-
-		<!-- Gestion du Mot De Passe -->
-       
-
-        <li data-th-if="${#authorization.expression('isAuthenticated()')}">
+		<!-- Champ crédit -->
+		<li data-th-if="${#authorization.expression('isAuthenticated()')}">
             <label for="monCredit" data-th-text="#{frag-utilisateur-monCredit}"></label> 
-            <input type="number" id="monCredit" name="credit" th:value="${credit}" disabled="disabled" />
+            <input type="number" id="monCredit" name="credit" th:value="*{credit}" disabled="disabled" />
         </li>
         
 
-		
+		<!-- Bouton  Modifier -->
         <nav data-th-if="${#authorization.expression('isAuthenticated()')}">
-       		 <form action="/monProfil/detail" method="get">
+       		 <div action="/monProfil/detail" method="get"
+       		 						onsubmit="return confirm('Êtes-vous sûr de vouloir modifier votre profil ?');">
            		 <button type="submit"  onclick="window.location.href='/monProfil/detail'"
             											data-th-text="#{frag-utilisateur-modifier}"></button>
-            </form>
+            </div>
             
-            <button type="button" onclick="window.location.href='/modifier-motDePasse'"
-        												 data-th-text="#{frag-utilisateur-modifierMotDePasse}"></button>
-
-			<form action="/supprimer-compte" method="POST" 
-									onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
-    			<button type="submit" class="validate-button" data-th-text="#{frag-utilisateur-supprimerCompte}"></button>
-			</form>
-		
-
-            <button type="button" onclick="window.location.href='/monProfil'" 
-            											data-th-text="#{frag-utilisateur-annuler}"></button>
+           
         </nav> 
 	
        
     </ul>
 </form>
+
+
+
+
+
+
+
+

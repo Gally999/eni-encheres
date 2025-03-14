@@ -6,6 +6,7 @@ import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.encheres.bo.Categorie;
 import fr.eni.ecole.projet.encheres.enums.AchatFilter;
+import fr.eni.ecole.projet.encheres.enums.AchatsOuVentesFilter;
 import fr.eni.ecole.projet.encheres.enums.FilterMode;
 import fr.eni.ecole.projet.encheres.enums.VenteFilter;
 
@@ -26,4 +27,7 @@ public interface EncheresService {
 	Adresse consulterAdresseParId(long id);
 
 	Categorie consulterCategorieParId(long id);
+
+	List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm,
+			AchatsOuVentesFilter achatsOuVentesFilter);
 }

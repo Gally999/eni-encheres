@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.eni.ecole.projet.encheres.bo.Adresse;
 import fr.eni.ecole.projet.encheres.bo.Utilisateur;
+import fr.eni.ecole.projet.encheres.exceptions.BusinessException;
 
 public interface UtilisateurService {
 
@@ -16,12 +17,6 @@ public interface UtilisateurService {
 		
 		Utilisateur findByPseudo(String pseudo);
 
-		void update(Utilisateur utilisateur);
-		
-		int uniqueEmail(String email);
-
-		int uniquePseudo(String pseudo);
-
 		long verifierEtAffecterAdresse(Adresse adresse);
 
 		String getTelephoneDeLUtilisateurConnecte(String pseudo);
@@ -29,6 +24,22 @@ public interface UtilisateurService {
 		int getCreditDeLUtilisateurConnecte(String pseudo);
 
 		Adresse getAdresseDeLUtilisateurConnecte(String pseudo);
+
+		boolean supprimerUtilisateur(String pseudo);
+
+		void mettreAjourUtilisateur(Utilisateur utilisateur);
+
+		void save(Utilisateur utilisateur);
+
+		boolean verifierMotDePasse(String motDePasseSaisi, Utilisateur utilisateur);
+
+		void mettreAjourMotDePasse(String motDePasseNew, Utilisateur utilisateur) throws BusinessException;
+
+		boolean validerPseudo(String pseudo, BusinessException be);
+
+		
+
+		
 
 
 	}

@@ -3,7 +3,7 @@
 		data-th-replace="~{layouts/layout :: layout-encheres( 
     	titrePage=~{:: title},
    		contenuPage=~{:: main},
-    	ressourcesSupp=~{:: #ressources-css})}">
+    	ressourcesSupp=~{:: #ressources-css})}" method="post">
 
 
 <head>
@@ -27,6 +27,20 @@
 		<div data-th-replace="~{fragments/fragment-modif-motDePasse :: 
 		frag-modif-motDePasse-form('/modifier-motDePasse', 'Modifier mot de passe')}">
 		</div>
+		
+		
+<!-- 		<div class="button-container"> -->
+		<!-- Bouton  supprimer le compte -->
+<!-- 		<form xmlns:th="http://www.thymeleaf.org" -->
+<!-- 			data-th-action="@{/modifier-motDePasseD}" data-th-object="${utilisateur}" -->
+<!-- 			method="post" -->
+<!-- 			onsubmit="return confirm('Êtes-vous sûr de vouloir modifier votre mot de passe ?');"> -->
+			
+			
+			
+<!-- 		</form> -->
+		
+		
 	
 	</main>
 	

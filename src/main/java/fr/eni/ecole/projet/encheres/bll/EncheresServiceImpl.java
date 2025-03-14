@@ -214,4 +214,11 @@ public class EncheresServiceImpl implements EncheresService {
     }
     return true;
 	}
+
+	@Override
+	public List<ArticleAVendre> consulterEncheresActives(Long categorieId, String searchTerm, FilterMode filterMode,
+			AchatFilter achatFilter, VenteFilter venteFilter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

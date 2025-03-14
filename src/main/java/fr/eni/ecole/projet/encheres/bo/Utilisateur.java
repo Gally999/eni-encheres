@@ -14,7 +14,7 @@ public class Utilisateur implements Serializable {
 	private static final long serialVersionUID = 1L;
 		
 	@NotBlank
-	@Size(min = 4, max = 40)
+	@Size(min = 2, max = 40)
 	private String nom;
 	
 	@NotBlank
@@ -35,18 +35,6 @@ public class Utilisateur implements Serializable {
 	
 	private Adresse adresse;
 		
-	@NotNull(message = "Le mot de passe actuel ne peut pas être nul")
-    private String motDePasseSaisi;
-
-    @NotNull(message = "Le nouveau mot de passe ne peut pas être nul")
-    @Size(min = 6, message = "Le nouveau mot de passe doit contenir au moins 6 caractères")
-    private String motDePasseNew;
-
-    @NotNull(message = "La confirmation du mot de passe ne peut pas être nulle")
-    private String motDePasseConfirmation;
-
-	
-	
 	public Utilisateur() {
 	}
 	
@@ -67,16 +55,13 @@ public class Utilisateur implements Serializable {
 	
 
 	public Utilisateur(@NotBlank @Size(min = 4, max = 40) String nom, @NotBlank @Size(min = 4, max = 50) String prenom,
-			@NotBlank @Size(min = 4, max = 30) String pseudo, String motDePasse, String motDePasseConfirmation,
-			String motDePasseSaisi, String motDePasseNew) {
+			@NotBlank @Size(min = 4, max = 30) String pseudo, String motDePasse) {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
 		this.pseudo = pseudo;
 		this.motDePasse = motDePasse;
-		this.motDePasseConfirmation = motDePasseConfirmation;
-		this.motDePasseSaisi = motDePasseSaisi;
-		this.motDePasseNew = motDePasseNew;
+		
 	}
 
 
@@ -170,49 +155,23 @@ public class Utilisateur implements Serializable {
 	}
 
 
-	public String getMotDePasseConfirmation() {
-		return motDePasseConfirmation;
-	}
-
-
-	public void setMotDePasseConfirmation(String motDePasseConfirmation) {
-		this.motDePasseConfirmation = motDePasseConfirmation;
-	}
-
-
-	public String getMotDePasseSaisi() {
-		return motDePasseSaisi;
-	}
-
-
-	public void setMotDePasseSaisi(String motDePasseSaisi) {
-		this.motDePasseSaisi = motDePasseSaisi;
-	}
-
-
-	public String getMotDePasseNew() {
-		return motDePasseNew;
-	}
-
-
-	public void setMotDePasseNew(String motDePasseNew) {
-		this.motDePasseNew = motDePasseNew;
-	}
-
+	
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Utilisateur [pseudo=");
-		builder.append(pseudo);
-		builder.append(", lastName=");
+		builder.append("Utilisateur [nom=");
 		builder.append(nom);
 		builder.append(", prenom=");
 		builder.append(prenom);
+		builder.append(", pseudo=");
+		builder.append(pseudo);
 		builder.append(", email=");
 		builder.append(email);
 		builder.append(", telephone=");
 		builder.append(telephone);
+		builder.append(", motDePasse=");
+		builder.append(motDePasse);
 		builder.append(", credit=");
 		builder.append(credit);
 		builder.append(", admin=");
@@ -222,6 +181,7 @@ public class Utilisateur implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+
 
 	@Override
 	public int hashCode() {
@@ -241,13 +201,6 @@ public class Utilisateur implements Serializable {
 				&& Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo);
 	}
 
-//	// Méthode pour vérifier que le mot de passe et sa confirmation sont identiques
-//    public boolean isMotDePasseValide() {
-//        return this.motDePasse != null && this.motDePasse.equals(this.motDePasseConfirmation);
-//    }
-//    
-    
-	
 
 
 	
