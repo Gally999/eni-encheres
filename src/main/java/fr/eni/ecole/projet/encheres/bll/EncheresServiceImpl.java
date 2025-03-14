@@ -192,12 +192,17 @@ public class EncheresServiceImpl implements EncheresService {
 	public void supprimerArticle(long id) {
 		BusinessException be = new BusinessException();
 		if (id > 0) {
-      try {
-        articleDAO.delete(id);
-      } catch (DataAccessException e) {
+			ArticleAVendre article = articleDAO.read(id);
+			if (article.getDateDebutEncheres().isAfter(LocalDate.now())) {
+				try {
+					articleDAO.delete(id);
+				} catch (DataAccessException e) {
+					be.add(BusinessCode.ERROR_DELETE_ARTICLE);
+					throw be;
+				}
 				be.add(BusinessCode.ERROR_DELETE_ARTICLE);
 				throw be;
-      }
+			}
     } else {
 			throw be;
 		}
