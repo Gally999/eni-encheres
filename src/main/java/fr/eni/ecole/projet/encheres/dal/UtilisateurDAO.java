@@ -12,8 +12,6 @@ public interface UtilisateurDAO {
 
 	Utilisateur read(String emailUtilisateur);
 
-	Utilisateur readByPseudo(String pseudo);
-
 	void update(Utilisateur utilisateur);
 
 	List<Utilisateur> findAll();
@@ -38,16 +36,17 @@ public interface UtilisateurDAO {
 
 	void updateMotDePasse(Utilisateur utilisateur);
 
-
 	void deleteEnchereByPseudoe(String pseudo);
 
 	void deleteArticleByPseudo(String pseudo);
 
-	Utilisateur readByPseudoMDP(String pseudo);
-
 	void debiter(int montantEnchere, String pseudo);
 
 	void recrediterPrecedentEncherisseur(int montant, String pseudo);
+
+	Utilisateur readByPseudo(String pseudo);
+
+	int countPassword(String motDePasseNewCrypte);
 
 }
 

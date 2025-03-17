@@ -29,17 +29,12 @@ public interface UtilisateurService {
 
 		void mettreAjourUtilisateur(Utilisateur utilisateur);
 
-		boolean verifierMotDePasse(String motDePasseSaisi, Utilisateur utilisateur);
-
-		void mettreAjourMotDePasse(String motDePasseNew, Utilisateur utilisateur) throws BusinessException;
-
-		boolean validerPseudo(String pseudo, BusinessException be);
-
-		Utilisateur findByPseudoMDP(String pseudo);
-
 		int uniquePseudo(String pseudo);
 
 		int uniqueEmail(String email);
+
+		void mettreAjourMotDePasse(String motDePasseNew, String motDePasseSaisi, Utilisateur utilisateur)
+				throws BusinessException;
 
 		
 

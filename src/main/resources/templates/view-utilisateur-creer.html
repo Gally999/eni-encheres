@@ -11,6 +11,9 @@
 <!-- Créer comme titre de page -->
 <title data-th-text="#{frag-utilisateur-inscription.title}"></title>
 
+<!-- Ajouter la meta viewport -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <!-- Ajout de CSS utilisateur-form.css -->
 <th:block id="ressources-css">
 	<link rel="stylesheet" data-th-href="@{/css/general.css}">
@@ -21,6 +24,9 @@
 <!-- Ajouter le fichier JavaScript externe -->
 <script src="/js/confirmationMDP.js" defer></script>
 
+<!-- Lien vers le fichier JavaScript pour afficher les popups -->
+<script src="/static/js/popup.js" defer></script>
+
 
 
 </head>
@@ -28,6 +34,16 @@
 <body>
 
 	<main>
+	
+	
+		<!-- Affichage des messages flash -->
+        <div id="popup-container"></div>
+
+        <!-- Message de succès (affiché si présent) -->
+        <div th:if="${message}" id="message" th:text="${message}" style="display:none;"></div>
+
+        <!-- Message d'erreur (affiché si présent) -->
+        <div th:if="${error}" id="error" th:text="${error}" style="display:none;"></div>
 
 		<!-- Utilisation du fragment formulaire -->
 		<div

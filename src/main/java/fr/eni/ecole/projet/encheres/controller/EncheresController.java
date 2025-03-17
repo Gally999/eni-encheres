@@ -24,7 +24,7 @@ public class EncheresController {
 		this.encheresService = encheresService;
   }
 
-<<<<<<< HEAD
+
 //	@GetMapping("/")
 //	public String afficherEncheresActives(
 //			@RequestParam(name = "categorieId", required = false) Long categorieId,
@@ -56,7 +56,7 @@ public class EncheresController {
 //
 //		return "view-encheres";
 //	}
-=======
+
 	@GetMapping("/")
 	public String afficherEncheresActives(
 			@RequestParam(name = "categorieId", required = false) Long categorieId,
@@ -86,7 +86,7 @@ public class EncheresController {
 
 		return "view-encheres";
 	}
->>>>>>> 7a358c056cf4a18ac1a92fb2366234f53e29aee5
+
 
 	@ModelAttribute("categoriesEnSession")
 	public List<Categorie> chargerCategories() {

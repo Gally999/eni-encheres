@@ -199,5 +199,27 @@ hr {
 }
 
 
+/* Style pour les popups */
+.popup {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+/* Popup succès (vert) */
+.popup.success {
+    background-color: #4CAF50;
+}
+
+/* Popup erreur (rouge) */
+.popup.error {
+    background-color: #f44336;
+}
 
 
