@@ -1,6 +1,6 @@
 # 🛒 ENI ENCHERES – Application Spring Boot
 
-Une application d'enchères développée avec **Java 17**, **Spring Boot 3.4.3**, **Thymeleaf** et **SQL Server** par **Cécile Daguin** et **Laëtita Petit**.
+Une application d'enchères développée avec **Java 17**, **Spring Boot 3.4.3**, **Thymeleaf** et **SQL Server** par **Cécile Daguin** et **Laëtitia Petit**.
 
 ---
 
