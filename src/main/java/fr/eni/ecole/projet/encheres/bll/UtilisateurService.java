@@ -32,17 +32,8 @@ public interface UtilisateurService {
 		int uniquePseudo(String pseudo);
 
 		int uniqueEmail(String email);
-<<<<<<< HEAD
 
 		void mettreAjourMotDePasse(String motDePasseNew, String motDePasseSaisi, Utilisateur utilisateur)
 				throws BusinessException;
 
-		
-
-		
-
-
-	}
-=======
 }
->>>>>>> b48b7685f8f9a316f16766f47dbadadeee53782f
