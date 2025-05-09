@@ -22,8 +22,8 @@ Une application d'enchères développée avec **Java 17**, **Spring Boot 3.4.3**
 ### 1. Cloner le projet
 
 ```bash
-git clone https://github.com/Gally999/Encheres.git
-cd Encheres
+git clone https://github.com/Gally999/eni-encheres.git
+cd eni-encheres
 ```
 
 ### 2. Configurer la base de données
